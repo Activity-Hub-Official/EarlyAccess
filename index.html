@@ -5,13 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <title>Activity Hub – Explore (v25)</title>
-
-  <!-- App & site icons -->
-  <link rel="apple-touch-icon" sizes="180x180" href="https://i.imgur.com/7dO0mhL.png">
-  <link rel="icon" type="image/png" href="https://i.imgur.com/SeNBgAx.png">
-  <link rel="shortcut icon" href="https://i.imgur.com/SeNBgAx.png">
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   
 <script>
 // --- DuckDuckGo favicon helpers (GLOBAL). Must load before renderDetail ---
@@ -84,38 +78,8 @@
     const href = window.normPlatform(platform, raw);
     return href ? { platform, href, icon: window.faviconFor(platform, href) } : null;
   };
-
-
-  function goToSearch(q){
-    if (!q) return;
-    // TODO: change to your actual search results page route if different
-    const url = './search.html?q=' + encodeURIComponent(q);
-    location.href = url;
-  }
-
-  // Switch from presearch to results once user types
-  const searchInput = document.getElementById('mobileSearchInput');
-  const pre = document.getElementById('mobileSearchPre');
-  const results = document.getElementById('mobileSearchResults');
-  if (searchInput){
-    searchInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ const q = searchInput.value.trim(); if(q){ goToSearch(q); } } });
-    searchInput.addEventListener('input', () => {
-      const q = searchInput.value.trim();
-      if (q.length === 0){
-        pre.classList.remove('hidden');
-        results.classList.add('hidden');
-        results.innerHTML = '';
-      } else {
-        pre.classList.add('hidden');
-        results.classList.remove('hidden');
-        // TODO: integrate your real search. For now, show a placeholder.
-        results.innerHTML = `<div class="text-sm text-gray-600">Searching for "<b>${q.replace(/</g,'&lt;')}</b>"…</div>`;
-      }
-    });
-  }
 })();
 </script>
-
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
@@ -286,43 +250,23 @@ input, textarea, select { font-size: 16px; }
   #shareModal .share-chip__label { font-size: 13px; color:#111827; }
 </style>
 
-<style id="ah-logo-fix">
-/* Ensure the sidebar badge image fills the container perfectly and stays sharp */
-.ah-grad{ overflow: hidden; padding: 0 !important; }
-.ah-grad > img{
-  width: 100% !important;
-  height: 100% !important;
-  display: block;
-  object-fit: cover;
-  border-radius: inherit;
-  /* Improve sharpness on hidpi & scaling */
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: auto;
-}
-/* Optionally allow a slightly larger badge in the sidebar */
-.sidebar .ah-brand-badge{ width: 40px; height: 40px; }
-</style>
-
-
-<style id="mobile-bottom-nav-styles">
-:root{ --safe-bottom: env(safe-area-inset-bottom); }
-.mb-safe{ padding-bottom: max(0.5rem, var(--safe-bottom)); }
-#mobileBottomNav{ -webkit-backdrop-filter: saturate(180%) blur(12px); backdrop-filter: saturate(180%) blur(12px); }
-</style>
-
-
-<style id="mobile-bottom-nav-styles-v2">
+<style id="mobile-bottom-nav-tune">
 :root{
   --safe-bottom: env(safe-area-inset-bottom);
-  --mbnav-h: 68px; /* slightly shorter bottom bar */
+  --mbnav-h: 68px; /* tuned shorter bar */
 }
-.mb-safe{ padding-bottom: max(0.5rem, var(--safe-bottom)); }
-#mobileBottomNav{
-  -webkit-backdrop-filter: saturate(180%) blur(12px);
-  backdrop-filter: saturate(180%) blur(12px);
-}
-/* Ensure the page content stays above the bar */
 html{ padding-bottom: calc(var(--mbnav-h) + var(--safe-bottom)); }
+#mobileBottomNav{ -webkit-backdrop-filter:saturate(180%) blur(12px); backdrop-filter:saturate(180%) blur(12px); }
+#mobileBottomNav button{ color:#4b5563; } /* text-gray-600 */
+#mobileBottomNav button[aria-current="page"]{ color:#1d4ed8; } /* active (blue) */
+#mobileBottomNav button[aria-current="page"] i{ transform: translateY(-1px); }
+#mobileBottomNav button:active i{ transform: translateY(1px); }
+/* Overlays should stop above the bar so the bar stays visible */
+.mobile-overlay-frame{
+  position: fixed; inset-inline: 0; top: 0;
+  bottom: calc(var(--mbnav-h) + var(--safe-bottom));
+  z-index: 70;
+}
 </style>
 
 </head>
@@ -331,7 +275,7 @@ html{ padding-bottom: calc(var(--mbnav-h) + var(--safe-bottom)); }
     <!-- ====== SIDEBAR ====== -->
     <aside class="hidden lg:flex lg:w-64 xl:w-72 lg:shrink-0 lg:sticky lg:top-0 lg:self-start lg:h-[100dvh] lg:overflow-y-auto border-r border-gray-200 sidebar-grad flex-col">
       <div class="flex items-center gap-3 p-4">
-        <div class="w-9 h-9 grid place-items-center rounded-xl ah-grad text-white font-bold ah-brand-badge"><img src="https://i.imgur.com/7dO0mhL.png" alt="Activity Hub" class="w-6 h-6 object-contain pointer-events-none" loading="lazy"/ class="w-full h-full object-cover pointer-events-none" loading="lazy" srcset="https://i.imgur.com/7dO0mhL.png 1x, https://i.imgur.com/7dO0mhL.png 2x" sizes="40px"></div>
+        <div class="w-9 h-9 grid place-items-center rounded-xl ah-grad text-white font-bold">AH</div>
         <span class="font-semibold text-gray-800">Activity Hub</span>
       </div>
       <nav class="px-2 py-3 space-y-1 text-sm">
@@ -341,7 +285,7 @@ html{ padding-bottom: calc(var(--mbnav-h) + var(--safe-bottom)); }
         <a href="?view=businesses" data-route="businesses" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-briefcase text-[18px]"></i> Businesses</a>
         <a href="?view=projects" data-route="projects" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-diagram-project text-[18px]"></i> Projects</a>
         <a href="?view=events" data-route="events" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 items-center gap-2"><i class="fa-solid fa-calendar-days text-[18px]"></i> Events<span class="ml-2 inline-flex items-center gap-1 h-5 px-2 text-[11px] font-semibold rounded-full bg-gradient-to-r from-emerald-100 to-emerald-200 text-emerald-900 border border-emerald-200 ring-1 ring-emerald-300/40 shadow-[inset_0_1px_0_rgba(255,255,255,.7)] transition hover:from-emerald-200 hover:to-emerald-300 hover:ring-emerald-400/60">✨ Closed beta</span></a>
-        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" aria-current="page"><i class="fa-solid fa-graduation-cap text-[18px]"></i> Schools</a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-graduation-cap text-[18px]"></i> Schools</a>
       </nav>
       <div class="mt-auto p-4">
         <div class="rounded-xl border border-gray-200 p-4 shadow-card">
@@ -358,19 +302,19 @@ html{ padding-bottom: calc(var(--mbnav-h) + var(--safe-bottom)); }
       <aside id="drawer-panel" class="absolute left-0 top-0 h-full w-72 max-w-[85vw] bg-white border-r border-gray-200 shadow-xl -translate-x-full transition-transform duration-300">
         <div class="flex items-center justify-between p-4">
           <div class="flex items-center gap-3">
-            <div class="w-9 h-9 grid place-items-center rounded-xl ah-grad text-white font-bold"><img src="https://i.imgur.com/7dO0mhL.png" alt="Activity Hub" class="w-6 h-6 object-contain pointer-events-none" loading="lazy"/ class="w-full h-full object-cover pointer-events-none" loading="lazy"></div>
+            <div class="w-9 h-9 grid place-items-center rounded-xl ah-grad text-white font-bold">AH</div>
             <span class="font-semibold text-gray-800">Activity Hub</span>
           </div>
           <button id="close-drawer" class="p-2 rounded-md hover:bg-gray-100" aria-label="Close sidebar"><i class="fa-solid fa-xmark text-[18px]"></i></button>
         </div>
         <nav class="px-2 pb-3 space-y-1 text-sm">
-          <a href="?view=home" data-route="explore" class="flex items-center gap-3 px-3 py-2 rounded-lg nav-active"><i class="fa-solid fa-compass text-[18px]"></i> Home</a>
+          <a href="?view=home" data-route="explore" class="flex items-center gap-3 px-3 py-2 rounded-lg nav-active"><i class="fa-solid fa-compass text-[18px]"></i> Explore</a>
           <div class="h-px bg-gray-100 my-2"></div>
           <a href="?view=orgs" data-route="orgs" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-users text-[18px]"></i> Organizations</a>
           <a href="?view=businesses" data-route="businesses" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-briefcase text-[18px]"></i> Businesses</a>
           <a href="?view=projects" data-route="projects" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-diagram-project text-[18px]"></i> Projects</a>
           <a href="?view=events" data-route="events" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-calendar-days text-[18px]"></i> Events</a>
-          <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" aria-current="page"><i class="fa-solid fa-graduation-cap text-[18px]"></i> Schools</a>
+          <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-graduation-cap text-[18px]"></i> Schools</a>
         </nav>
         <div class="mt-auto p-4 border-t border-gray-100">
           <div class="rounded-xl border border-gray-200 p-4 shadow-card mb-3">
@@ -389,7 +333,7 @@ html{ padding-bottom: calc(var(--mbnav-h) + var(--safe-bottom)); }
         <div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 h-14 flex items-center gap-3">
           <div class="flex items-center gap-3">
             <button id="open-sidebar-btn" class="p-2 rounded-md hover:bg-gray-100 lg:hidden" aria-label="Open sidebar"><i class="fa-solid fa-bars text-[20px]"></i></button>
-            <div class="w-8 h-8 grid place-items-center rounded-lg ah-grad text-white font-bold lg:hidden"><img src="https://i.imgur.com/7dO0mhL.png" alt="Activity Hub" class="w-6 h-6 object-contain pointer-events-none" loading="lazy"/ class="w-full h-full object-cover pointer-events-none" loading="lazy"></div>
+            <div class="w-8 h-8 grid place-items-center rounded-lg ah-grad text-white font-bold lg:hidden">AH</div>
             <div id="nav-current-view" class="hidden lg:flex items-center gap-2 text-lg font-semibold text-ah-900"><i id="nav-current-icon" class="fa-solid fa-house text-[18px] text-ah-600"></i> <span id="nav-current-label">Home</span></div>
           </div>
 
@@ -405,7 +349,7 @@ html{ padding-bottom: calc(var(--mbnav-h) + var(--safe-bottom)); }
                      class="w-full rounded-full bg-gray-50 border border-gray-200 pl-10 pr-24 py-2.5 text-sm placeholder-gray-400 shadow-sm focus:border-ah-600 focus:ring-2 focus:ring-ah-500/20 outline-none transition search-soft"
                      placeholder="Search clubs, businesses, projects…" />
               <button id="clear-search" class="hidden absolute right-9 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" aria-label="Clear"><i class="fa-solid fa-xmark"></i></button>
-              <span class="pointer-events-none flex items-center justify-center absolute right-3 top-1/2 -translate-y-1/2 select-none rounded-md border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] tracking-wider text-gray-500 shadow-sm">/</span>
+              <span class="pointer-events-none hidden sm:flex items-center justify-center absolute right-3 top-1/2 -translate-y-1/2 select-none rounded-md border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] tracking-wider text-gray-500 shadow-sm">/</span>
 
               <!-- Dropdown menu -->
               <div id="search-menu" class="search-menu hidden">
@@ -676,7 +620,7 @@ html{ padding-bottom: calc(var(--mbnav-h) + var(--safe-bottom)); }
                       </button>
 
                       <button id="shareBtn" class="shrink-0 inline-flex items-center gap-2 h-9 px-3 rounded-lg border border-gray-200 text-sm hover:bg-gray-50">
-                      <i class="fa-solid fa-share-nodes"></i><span class="inline">Share</span>
+                      <i class="fa-solid fa-share-nodes"></i><span class="hidden sm:inline">Share</span>
                     </button>
 
                     </div>
@@ -749,19 +693,19 @@ html{ padding-bottom: calc(var(--mbnav-h) + var(--safe-bottom)); }
           </button>
         </div><div id="shareRowWrap" class="mt-1">
 <div class="share-row">
-    <a id="shareWhatsApp" class="share-chip" href="#" aria-label="Share via WhatsApp" rel="noopener" target="_blank" aria-current="page">
+    <a id="shareWhatsApp" class="share-chip" href="#" aria-label="Share via WhatsApp" rel="noopener" target="_blank">
       <span class="share-chip__circle"><img alt="" src="https://i.imgur.com/qOttODu.png" class="share-chip__icon" /></span>
       <span class="share-chip__label">WhatsApp</span>
     </a>
-    <a id="shareX" class="share-chip" href="#" aria-label="Share on X (Twitter)" rel="noopener" target="_blank" aria-current="page">
+    <a id="shareX" class="share-chip" href="#" aria-label="Share on X (Twitter)" rel="noopener" target="_blank">
       <span class="share-chip__circle"><img alt="" src="https://i.imgur.com/PLQsGra.png" class="share-chip__icon" /></span>
       <span class="share-chip__label">X</span>
     </a>
-    <a id="shareEmail" class="share-chip" href="#" aria-label="Share via Email" rel="noopener" target="_blank" aria-current="page">
+    <a id="shareEmail" class="share-chip" href="#" aria-label="Share via Email" rel="noopener" target="_blank">
       <span class="share-chip__circle"><img alt="" src="https://i.imgur.com/cBOGtrb.png" class="share-chip__icon" /></span>
       <span class="share-chip__label">Email</span>
     </a>
-    <a id="shareLinkedIn" class="share-chip" href="#" aria-label="Share via LinkedIn" rel="noopener" target="_blank" aria-current="page">
+    <a id="shareLinkedIn" class="share-chip" href="#" aria-label="Share via LinkedIn" rel="noopener" target="_blank">
       <span class="share-chip__circle"><img alt="" src="https://i.imgur.com/PEw6T9z.png" class="share-chip__icon" /></span>
       <span class="share-chip__label">LinkedIn</span>
     </a>
@@ -1917,38 +1861,8 @@ function wireClaimButton(current){
     });
     obs.observe(modal, { attributes: true, attributeFilter: ['class', 'style', 'open'] });
   }
-
-
-  function goToSearch(q){
-    if (!q) return;
-    // TODO: change to your actual search results page route if different
-    const url = './search.html?q=' + encodeURIComponent(q);
-    location.href = url;
-  }
-
-  // Switch from presearch to results once user types
-  const searchInput = document.getElementById('mobileSearchInput');
-  const pre = document.getElementById('mobileSearchPre');
-  const results = document.getElementById('mobileSearchResults');
-  if (searchInput){
-    searchInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ const q = searchInput.value.trim(); if(q){ goToSearch(q); } } });
-    searchInput.addEventListener('input', () => {
-      const q = searchInput.value.trim();
-      if (q.length === 0){
-        pre.classList.remove('hidden');
-        results.classList.add('hidden');
-        results.innerHTML = '';
-      } else {
-        pre.classList.add('hidden');
-        results.classList.remove('hidden');
-        // TODO: integrate your real search. For now, show a placeholder.
-        results.innerHTML = `<div class="text-sm text-gray-600">Searching for "<b>${q.replace(/</g,'&lt;')}</b>"…</div>`;
-      }
-    });
-  }
 })();
 </script>
-
 <script>
 document.addEventListener('click', (e) => {
   const t = e.target.closest('[data-facet][data-value][data-type]');
@@ -1983,38 +1897,8 @@ document.addEventListener('click', (e) => {
       });
     });
   });
-
-
-  function goToSearch(q){
-    if (!q) return;
-    // TODO: change to your actual search results page route if different
-    const url = './search.html?q=' + encodeURIComponent(q);
-    location.href = url;
-  }
-
-  // Switch from presearch to results once user types
-  const searchInput = document.getElementById('mobileSearchInput');
-  const pre = document.getElementById('mobileSearchPre');
-  const results = document.getElementById('mobileSearchResults');
-  if (searchInput){
-    searchInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ const q = searchInput.value.trim(); if(q){ goToSearch(q); } } });
-    searchInput.addEventListener('input', () => {
-      const q = searchInput.value.trim();
-      if (q.length === 0){
-        pre.classList.remove('hidden');
-        results.classList.add('hidden');
-        results.innerHTML = '';
-      } else {
-        pre.classList.add('hidden');
-        results.classList.remove('hidden');
-        // TODO: integrate your real search. For now, show a placeholder.
-        results.innerHTML = `<div class="text-sm text-gray-600">Searching for "<b>${q.replace(/</g,'&lt;')}</b>"…</div>`;
-      }
-    });
-  }
 })();
 </script>
-
 
 <script>
     // Post-render hook: if a listing object `window.currentListing` exists, rebuild links.
@@ -2111,38 +1995,8 @@ document.addEventListener('click', function(e){
     });
   };
   document.addEventListener('DOMContentLoaded', ()=>applyThemePillEmojis());
-
-
-  function goToSearch(q){
-    if (!q) return;
-    // TODO: change to your actual search results page route if different
-    const url = './search.html?q=' + encodeURIComponent(q);
-    location.href = url;
-  }
-
-  // Switch from presearch to results once user types
-  const searchInput = document.getElementById('mobileSearchInput');
-  const pre = document.getElementById('mobileSearchPre');
-  const results = document.getElementById('mobileSearchResults');
-  if (searchInput){
-    searchInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ const q = searchInput.value.trim(); if(q){ goToSearch(q); } } });
-    searchInput.addEventListener('input', () => {
-      const q = searchInput.value.trim();
-      if (q.length === 0){
-        pre.classList.remove('hidden');
-        results.classList.add('hidden');
-        results.innerHTML = '';
-      } else {
-        pre.classList.add('hidden');
-        results.classList.remove('hidden');
-        // TODO: integrate your real search. For now, show a placeholder.
-        results.innerHTML = `<div class="text-sm text-gray-600">Searching for "<b>${q.replace(/</g,'&lt;')}</b>"…</div>`;
-      }
-    });
-  }
 })();
 </script>
-
 
 
 <script>
@@ -2167,38 +2021,8 @@ document.addEventListener('click', function(e){
     if (labEl) labEl.textContent = x.label;
   };
   document.addEventListener('DOMContentLoaded', ()=>{ try{ updateNavCurrent(window.VIEW_MODE || 'home'); }catch(e){} });
-
-
-  function goToSearch(q){
-    if (!q) return;
-    // TODO: change to your actual search results page route if different
-    const url = './search.html?q=' + encodeURIComponent(q);
-    location.href = url;
-  }
-
-  // Switch from presearch to results once user types
-  const searchInput = document.getElementById('mobileSearchInput');
-  const pre = document.getElementById('mobileSearchPre');
-  const results = document.getElementById('mobileSearchResults');
-  if (searchInput){
-    searchInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ const q = searchInput.value.trim(); if(q){ goToSearch(q); } } });
-    searchInput.addEventListener('input', () => {
-      const q = searchInput.value.trim();
-      if (q.length === 0){
-        pre.classList.remove('hidden');
-        results.classList.add('hidden');
-        results.innerHTML = '';
-      } else {
-        pre.classList.add('hidden');
-        results.classList.remove('hidden');
-        // TODO: integrate your real search. For now, show a placeholder.
-        results.innerHTML = `<div class="text-sm text-gray-600">Searching for "<b>${q.replace(/</g,'&lt;')}</b>"…</div>`;
-      }
-    });
-  }
 })();
 </script>
-
 
 
 <!-- Get the app (QR) modal -->
@@ -2267,80 +2091,28 @@ document.addEventListener('click', function(e){
     copyBtn?.addEventListener('click', async ()=>{
       try{ await navigator.clipboard.writeText(urlIn.value); copied.classList.remove('hidden'); }catch(e){}
     });
-  
-
-  function goToSearch(q){
-    if (!q) return;
-    // TODO: change to your actual search results page route if different
-    const url = './search.html?q=' + encodeURIComponent(q);
-    location.href = url;
-  }
-
-  // Switch from presearch to results once user types
-  const searchInput = document.getElementById('mobileSearchInput');
-  const pre = document.getElementById('mobileSearchPre');
-  const results = document.getElementById('mobileSearchResults');
-  if (searchInput){
-    searchInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ const q = searchInput.value.trim(); if(q){ goToSearch(q); } } });
-    searchInput.addEventListener('input', () => {
-      const q = searchInput.value.trim();
-      if (q.length === 0){
-        pre.classList.remove('hidden');
-        results.classList.add('hidden');
-        results.innerHTML = '';
-      } else {
-        pre.classList.add('hidden');
-        results.classList.remove('hidden');
-        // TODO: integrate your real search. For now, show a placeholder.
-        results.innerHTML = `<div class="text-sm text-gray-600">Searching for "<b>${q.replace(/</g,'&lt;')}</b>"…</div>`;
-      }
-    });
-  }
-})();
+  })();
 </script>
 
 
-
-<!-- Mobile Bottom Navigation (md:hidden) -->
-<nav id="mobileBottomNav" class="md:hidden fixed bottom-0 inset-x-0 z-[60] border-t border-gray-200 bg-white/95" style="padding-bottom: calc(var(--safe-bottom) + 6px);">
-  <ul class="grid grid-cols-5 h-[68px] items-center px-2">
-    <li><button data-tab="home" class="mx-auto flex flex-col items-center gap-1 text-gray-600 aria-[current=page]:text-ah-700" aria-current="page" aria-label="Home">
-      <i class="fa-solid fa-house text-[20px]"></i><span class="text-[11px]">Home</span>
-    </button></li>
-    <li><button data-tab="search" class="mx-auto flex flex-col items-center gap-1 text-gray-600" aria-label="Search">
-      <i class="fa-solid fa-magnifying-glass text-[20px]"></i><span class="text-[11px]">Search</span>
-    </button></li>
-    <li><button data-tab="explore" class="mx-auto flex flex-col items-center gap-1 text-gray-600" aria-label="Explore">
-      <i class="fa-solid fa-compass text-[20px]"></i><span class="text-[11px]">Explore</span>
-    </button></li>
-    <li><button data-tab="events" class="mx-auto flex flex-col items-center gap-1 text-gray-600" aria-label="Events">
-      <i class="fa-solid fa-calendar-days text-[20px]"></i><span class="text-[11px]">Events</span>
-    </button></li>
-    <li><button data-tab="news" class="mx-auto flex flex-col items-center gap-1 text-gray-600" aria-label="News">
-      <i class="fa-solid fa-newspaper text-[20px]"></i><span class="text-[11px]">News</span>
-    </button></li>
-  </ul>
-</nav>
-
-
-<!-- Full-screen Search overlay -->
-<div id="mobileSearchOverlay" class="fixed z-[70] hidden inset-x-0 top-0" style="bottom: calc(var(--mbnav-h) + var(--safe-bottom));">
+<!-- Mobile Search (full-page) -->
+<div id="mobileSearchOverlay" class="mobile-overlay-frame hidden">
   <div class="absolute inset-0 bg-gray-900/60" data-close="search"></div>
-  <div class="relative h-full w-full bg-white flex flex-col">
+  <div class="relative h-full w-full bg-white flex flex-col border-t border-gray-200">
     <div class="h-14 px-3 flex items-center gap-2 border-b border-gray-200">
-      <button class="h-9 w-9 grid place-items-center rounded-lg border border-gray-200" data-close="search" aria-label="Close search">
-        <i class="fa-solid fa-chevron-left"></i>
-      </button>
-      <input id="mobileSearchInput" type="search" placeholder="Search clubs, businesses, projects…" class="flex-1 h-10 rounded-lg border border-gray-200 px-3 focus:outline-none" />
+      <!-- no back button per spec -->
+      <input id="mobileSearchInput" type="search"
+             placeholder="Search clubs, businesses, projects…"
+             class="flex-1 h-10 rounded-lg border border-gray-200 px-3 focus:outline-none" />
     </div>
-    <!-- Presearch content mirroring desktop dropdown -->
+    <!-- Presearch content (matches desktop dropdown, reformatted) -->
     <div id="mobileSearchPre" class="flex-1 overflow-y-auto">
       <div class="border-b border-gray-200">
-        <div class="flex items-center gap-3 px-3 h-12">
-          <button class="px-3 h-10 rounded-lg bg-gray-900 text-white text-sm">All</button>
-          <button class="px-3 h-10 rounded-lg text-gray-700 hover:bg-gray-50 text-sm">Orgs</button>
-          <button class="px-3 h-10 rounded-lg text-gray-700 hover:bg-gray-50 text-sm">Businesses</button>
-          <button class="px-3 h-10 rounded-lg text-gray-700 hover:bg-gray-50 text-sm">Projects</button>
+        <div class="flex items-center gap-2 px-3 h-12">
+          <button class="px-3 h-9 rounded-lg bg-gray-900 text-white text-sm">All</button>
+          <button class="px-3 h-9 rounded-lg text-gray-700 hover:bg-gray-50 text-sm">Orgs</button>
+          <button class="px-3 h-9 rounded-lg text-gray-700 hover:bg-gray-50 text-sm">Businesses</button>
+          <button class="px-3 h-9 rounded-lg text-gray-700 hover:bg-gray-50 text-sm">Projects</button>
           <div class="ml-auto hidden sm:block text-xs text-gray-500">↑/↓ to navigate • Enter to open</div>
         </div>
       </div>
@@ -2351,7 +2123,7 @@ document.addEventListener('click', function(e){
           <li class="flex items-start gap-3">
             <div class="h-10 w-10 rounded-md overflow-hidden ring-1 ring-gray-200 bg-gray-100"></div>
             <div class="flex-1">
-              <div class="text-sm font-medium">Haitian Society <span class="align-middle text-ah-600"><i class="fa-solid fa-circle-check"></i></span> <span class="ml-1 text-xs text-gray-600">Org</span></div>
+              <div class="text-sm font-medium">Haitian Society <span class="ml-1 text-xs text-gray-600">Org</span></div>
               <div class="text-xs text-gray-600 line-clamp-1">The mission of Haitian Society at St. John's University…</div>
             </div>
           </li>
@@ -2368,16 +2140,14 @@ document.addEventListener('click', function(e){
     <div id="mobileSearchResults" class="hidden flex-1 overflow-y-auto p-3"></div>
   </div>
 </div>
-<!-- Explore drop-up sheet -->
 
-<div id="exploreSheet" class="fixed inset-x-0 bottom-0 z-[70] hidden">
+
+<!-- Explore drop-up sheet -->
+<div id="exploreSheet" class="mobile-overlay-frame hidden">
   <div class="absolute inset-0 bg-gray-900/60" data-close="explore"></div>
-  <div class="relative mx-auto max-w-md bg-white rounded-t-2xl shadow-xl border border-gray-200">
+  <div class="relative mx-auto max-w-md bg-white rounded-t-2xl shadow-xl border border-gray-200 mt-auto">
     <div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
       <h3 class="text-base font-semibold">Explore</h3>
-      <button class="h-9 w-9 grid place-items-center rounded-lg border border-gray-200" data-close="explore" aria-label="Close">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
     </div>
     <div class="p-2">
       <button class="w-full h-12 rounded-xl flex items-center gap-3 px-3 hover:bg-gray-50" data-explore="orgs">
@@ -2395,14 +2165,11 @@ document.addEventListener('click', function(e){
 </div>
 
 
-<!-- News Page (full screen) -->
-<div id="newsOverlay" class="fixed z-[70] hidden inset-x-0 top-0" style="bottom: calc(var(--mbnav-h) + var(--safe-bottom));">
+<!-- News (full-page) -->
+<div id="newsOverlay" class="mobile-overlay-frame hidden">
   <div class="absolute inset-0 bg-gray-900/60" data-close="news"></div>
-  <div class="relative h-full w-full bg-white flex flex-col">
+  <div class="relative h-full w-full bg-white flex flex-col border-t border-gray-200">
     <div class="h-14 px-3 flex items-center gap-2 border-b border-gray-200">
-      <button class="h-9 w-9 grid place-items-center rounded-lg border border-gray-200" data-close="news" aria-label="Close news">
-        <i class="fa-solid fa-chevron-left"></i>
-      </button>
       <div class="text-base font-semibold">News</div>
     </div>
     <div class="flex-1 grid place-items-center p-6 text-center">
@@ -2418,100 +2185,116 @@ document.addEventListener('click', function(e){
 </div>
 
 
-<script id="mobile-bottom-nav-script">
+<!-- Mobile Bottom Navigation -->
+<nav id="mobileBottomNav" class="md:hidden fixed bottom-0 inset-x-0 z-[60] border-t border-gray-200 bg-white/95"
+     style="padding-bottom: calc(var(--safe-bottom) + 6px);">
+  <ul class="grid grid-cols-5 h-[68px] items-center px-2">
+    <li><button data-tab="home"   aria-current="page" class="mx-auto flex flex-col items-center gap-1">
+      <i class="fa-solid fa-house text-[20px]"></i><span class="text-[11px]">Home</span>
+    </button></li>
+    <li><button data-tab="search" class="mx-auto flex flex-col items-center gap-1">
+      <i class="fa-solid fa-magnifying-glass text-[20px]"></i><span class="text-[11px]">Search</span>
+    </button></li>
+    <li><button data-tab="explore" class="mx-auto flex flex-col items-center gap-1">
+      <i class="fa-solid fa-compass text-[20px]"></i><span class="text-[11px]">Explore</span>
+    </button></li>
+    <li><button data-tab="events" class="mx-auto flex flex-col items-center gap-1">
+      <i class="fa-solid fa-calendar-days text-[20px]"></i><span class="text-[11px]">Events</span>
+    </button></li>
+    <li><button data-tab="news"   class="mx-auto flex flex-col items-center gap-1">
+      <i class="fa-solid fa-newspaper text-[20px]"></i><span class="text-[11px]">News</span>
+    </button></li>
+  </ul>
+</nav>
+
+
+<script id="mbnav-logic">
 (() => {
-  // Add bottom padding so content isn't hidden behind the nav
-  document.documentElement.classList.add('pb-20', 'md:pb-0');
-
-  const routes = {
-    home: '#home',           // TODO: replace if you have proper pages
-    events: '#events',
-    orgs: '#orgs',
-    biz: '#businesses',
-    proj: '#projects'
-  };
-
   const nav = document.getElementById('mobileBottomNav');
   const searchOverlay = document.getElementById('mobileSearchOverlay');
-  const exploreSheet = document.getElementById('exploreSheet');
-  const newsOverlay = document.getElementById('newsOverlay');
+  const exploreSheet  = document.getElementById('exploreSheet');
+  const newsOverlay   = document.getElementById('newsOverlay');
 
-  function open(el){ el.classList.remove('hidden'); document.documentElement.style.overflow='hidden'; }
-  function close(el){ el.classList.add('hidden'); document.documentElement.style.overflow=''; }
+  function setActive(tab){
+    if(!nav) return;
+    nav.querySelectorAll('button[data-tab]').forEach(b=>{
+      b.setAttribute('aria-current', b.dataset.tab === tab ? 'page' : 'false');
+    });
+  }
+  function goTo(hashOrUrl){
+    if (!hashOrUrl) return;
+    if (hashOrUrl.startsWith('#')) location.hash = hashOrUrl;
+    else location.href = hashOrUrl;
+  }
+  const open = el => { if(!el) return; el.classList.remove('hidden'); document.documentElement.style.overflow='hidden'; };
+  const close = el => { if(!el) return; el.classList.add('hidden');   document.documentElement.style.overflow=''; };
 
-  nav.addEventListener('click', (e) => {
-    const btn = e.target.closest('button[data-tab]');
-    if (!btn) return;
+  // Immediate switching + active state
+  nav?.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-tab]'); if(!btn) return;
     const tab = btn.dataset.tab;
-    switch(tab){
-      case 'home':
-        location.hash = routes.home;
-        break;
-      case 'search':
-        open(searchOverlay);
-        // no autofocus on open
-        break;
-      case 'explore':
-        open(exploreSheet);
-        break;
-      case 'events':
-        location.hash = routes.events;
-        break;
-      case 'news':
-        open(newsOverlay);
-        break;
+    switch (tab) {
+      case 'home':   setActive('home');   goTo('#home');   break;
+      case 'search': setActive('search'); open(searchOverlay); break;
+      case 'explore':setActive('explore');open(exploreSheet);  break;
+      case 'events': setActive('events'); goTo('#events'); break;
+      case 'news':   setActive('news');   open(newsOverlay);   break;
     }
   });
 
-  // Close handlers
-  document.querySelectorAll('[data-close="search"]').forEach(el => el.addEventListener('click', () => close(searchOverlay)));
-  document.querySelectorAll('[data-close="explore"]').forEach(el => el.addEventListener('click', () => close(exploreSheet)));
-  document.querySelectorAll('[data-close="news"]').forEach(el => el.addEventListener('click', () => close(newsOverlay)));
+  // Close via dimmer taps
+  document.querySelectorAll('[data-close="news"]').forEach(el => el.addEventListener('click', ()=>close(newsOverlay)));
+  document.querySelectorAll('[data-close="explore"]').forEach(el => el.addEventListener('click', ()=>close(exploreSheet)));
+  document.querySelectorAll('[data-close="search"]').forEach(el => el.addEventListener('click', ()=>close(searchOverlay)));
 
-  // Explore selections
-  exploreSheet.addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-explore]');
-    if (!btn) return;
-    const which = btn.dataset.explore;
-    close(exploreSheet);
-    location.hash = routes[which] || '#';
+  // Explore choices → navigate to sections
+  exploreSheet?.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-explore]'); if(!b) return;
+    const routes = { orgs:'#orgs', biz:'#businesses', proj:'#projects' };
+    close(exploreSheet); setActive('explore'); goTo(routes[b.dataset.explore] || '#');
   });
 
-  // Optional: hide old hamburger on mobile if present
-  const hamburger = document.querySelector('[data-drawer-trigger]') || document.querySelector('#hamburger');
-  if (hamburger) hamburger.classList.add('hidden', 'md:flex');
+  // Mobile search behavior: pre-search template + Enter→results page
+  const input   = document.getElementById('mobileSearchInput');
+  const pre     = document.getElementById('mobileSearchPre');
+  const results = document.getElementById('mobileSearchResults');
 
-
-  function goToSearch(q){
-    if (!q) return;
-    // TODO: change to your actual search results page route if different
+  function goToSearchPage(q){
+    if(!q) return;
+    // Update if your real results page differs
     const url = './search.html?q=' + encodeURIComponent(q);
     location.href = url;
   }
 
-  // Switch from presearch to results once user types
-  const searchInput = document.getElementById('mobileSearchInput');
-  const pre = document.getElementById('mobileSearchPre');
-  const results = document.getElementById('mobileSearchResults');
-  if (searchInput){
-    searchInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ const q = searchInput.value.trim(); if(q){ goToSearch(q); } } });
-    searchInput.addEventListener('input', () => {
-      const q = searchInput.value.trim();
-      if (q.length === 0){
-        pre.classList.remove('hidden');
-        results.classList.add('hidden');
-        results.innerHTML = '';
-      } else {
-        pre.classList.add('hidden');
-        results.classList.remove('hidden');
-        // TODO: integrate your real search. For now, show a placeholder.
-        results.innerHTML = `<div class="text-sm text-gray-600">Searching for "<b>${q.replace(/</g,'&lt;')}</b>"…</div>`;
+  if (input){
+    input.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter'){
+        const q = input.value.trim();
+        if(q){ goToSearchPage(q); }
+      }
+    });
+    input.addEventListener('input', ()=>{
+      const q = input.value.trim();
+      if(q.length === 0){
+        pre?.classList.remove('hidden');
+        results?.classList.add('hidden');
+        if(results) results.innerHTML = '';
+      }else{
+        pre?.classList.add('hidden');
+        results?.classList.remove('hidden');
+        // Hook your desktop dropdown renderer here for identical results
+        // renderSearchResults(results, queryData(q));
+        if(results) results.innerHTML = `<div class="text-sm text-gray-600">Searching for "<b>${q.replace(/</g,'&lt;')}</b>"…</div>`;
       }
     });
   }
+
+  // Initialize active state by current hash
+  const current = (location.hash || '#home').slice(1);
+  const map = { home:'home', events:'events', orgs:'explore', businesses:'explore', projects:'explore' };
+  setActive(map[current] || 'home');
 })();
 </script>
-
 
 </body>
 </html>
