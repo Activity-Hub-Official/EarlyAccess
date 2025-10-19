@@ -175,6 +175,29 @@ input, textarea, select { font-size: 16px; }
 .card-elev:hover{ box-shadow:0 8px 20px rgba(17,24,39,.08) !important; transform: translateY(-1px) scale(1.01) }
 .sidebar-grad{ background: linear-gradient(180deg,#f8fafc 0%, #f0f4f9 100%); }
 
+
+/* === Contact info one-line on mobile (and desktop) === */
+#d_links { display: flex; flex-wrap: wrap; gap: 8px; }
+#d_links a { 
+  display: inline-flex !important; 
+  align-items: center !important; 
+  gap: 8px !important; 
+  white-space: nowrap !important;
+  line-height: 1.2;
+}
+#d_links a > span { white-space: nowrap !important; }
+#panel-contact a, #panel-contact .contact-item {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  white-space: nowrap !important;
+}
+@media (max-width: 640px){
+  /* keep chips compact on mobile so they don't force line breaks */
+  #d_links a { padding-left: 10px; padding-right: 10px; }
+  #d_links img { width: 18px; height: 18px; }
+}
+
 </style>
 <style>
   /* Scoped to the share modal only */
@@ -273,18 +296,6 @@ input, textarea, select { font-size: 16px; }
 .sidebar .ah-brand-badge{ width: 40px; height: 40px; }
 </style>
 
-<script>
-/* === Emoji-safe facet helpers (injected) === */
-window.stripEmojiLeading = window.stripEmojiLeading || function(s){
-  return String(s ?? '')
-    .replace(/^[\p{Extended_Pictographic}\p{Emoji_Presentation}\p{S}\p{P}\s]+/gu, '')
-    .trim();
-};
-window.fold = window.fold || function(s){ return String(s ?? '').trim().toLowerCase(); };
-window.cleanFacet = window.cleanFacet || function(s){ return window.fold(window.stripEmojiLeading(s)); };
-/* === End helpers === */
-
-</script>
 </head>
 <body class="min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
   <div class="flex w-full">
@@ -621,8 +632,8 @@ window.cleanFacet = window.cleanFacet || function(s){ return window.fold(window.
 <p id="d_meta" class="mt-1 text-[13px] text-gray-500"></p>
 
                       <div class="mt-2 flex flex-wrap gap-2 justify-center md:justify-start">
-                        <span id="d_theme"   class="hidden inline-flex items-center text-[11px] px-2.5 py-1 rounded-full bg-gray-100 border border-gray-200" data-raw=""></span>
-                        <span id="d_industry"class="hidden inline-flex items-center text-[11px] px-2.5 py-1 rounded-full bg-gray-100 border border-gray-200" data-raw=""></span>
+                        <span id="d_theme"   class="hidden inline-flex items-center text-[11px] px-2.5 py-1 rounded-full bg-gray-100 border border-gray-200"></span>
+                        <span id="d_industry"class="hidden inline-flex items-center text-[11px] px-2.5 py-1 rounded-full bg-gray-100 border border-gray-200"></span>
                         
                       </div>
                     </div>
@@ -931,10 +942,8 @@ const logo = $('#d_logo'); const ph = $('#d_fallback');
         const attach = (el, facet) => {
           if(!el) return;
           el.classList.add('cursor-pointer');
-          el.dataset.raw = o[facet] || el.textContent;
-          const label = (window.stripEmojiLeading ? stripEmojiLeading(el.dataset.raw) : el.dataset.raw);
-          el.setAttribute('title', `Show ${mapScope(o.kind)} with ${facet} “${label}”`);
-          el.onclick = () => navigateToFacet(facet, label, o.kind, o.slug);
+          el.setAttribute('title', `Show ${mapScope(o.kind)} with ${facet} “${el.textContent}”`);
+          el.onclick = () => navigateToFacet(facet, el.textContent, o.kind, o.slug);
         };
         if(o.theme) attach(t, 'theme');
         if(o.industry) attach(i, 'industry');
@@ -1047,7 +1056,7 @@ $('#shareBtn').onclick = ()=>{
       `).join('');
     }
 
-    const filteredByTheme = (arr)=> selectedThemes.size ? arr.filter(x=> selectedThemes.has((window.cleanFacet?cleanFacet(x.theme):String(x.theme||'').trim().toLowerCase()))) : arr;
+    const filteredByTheme = (arr)=> selectedThemes.size ? arr.filter(x=> selectedThemes.has(x.theme)) : arr;
 
     function setSectionTitles(){
       $('#title-orgs').textContent  = (VIEW_MODE==='orgs')       ? 'All organizations' : 'Top organizations';
@@ -1561,13 +1570,13 @@ function renderSearchResults(q, scope='all'){
         const facet = url.searchParams.get('facet');
         const value = url.searchParams.get('value');
         const exclude = url.searchParams.get('exclude');
-        const clean = (s)=> (window.cleanFacet ? window.cleanFacet(s) : String(s||'').trim().toLowerCase());
+        const fold = s => String(s||'').trim().toLowerCase();
         if (facet && value){
-          const val = clean(value);
+          const val = fold(value);
           pool = pool.filter(x=>{
             if (exclude && (x.slug===exclude || x.id===exclude)) return false;
-            if (facet==='theme') return [x.theme].concat(x.themes||[]).some(v=>clean(v)===val);
-            if (facet==='industry') return [x.industry].concat(x.industries||[]).some(v=>clean(v)===val);
+            if (facet==='theme') return [x.theme].concat(x.themes||[]).some(v=>fold(v)===val);
+            if (facet==='industry') return [x.industry].concat(x.industries||[]).some(v=>fold(v)===val);
             return true;
           });
           // Improve title when no text query
@@ -1652,18 +1661,16 @@ function renderSearchResults(q, scope='all'){
     $$('#browse-chips .ah-chip').forEach(chip=>{
       chip.addEventListener('click', ()=>{
         const label = chip.textContent.trim();
-        const raw = (chip.dataset.raw || (window.stripEmojiLeading ? stripEmojiLeading(label) : label)).trim();
-        const key = (window.cleanFacet ? cleanFacet(raw) : raw.toLowerCase());
-        const isAll = raw.toLowerCase()==='all';
+        const isAll = label.toLowerCase()==='all';
         if(isAll){
           $$('#browse-chips .ah-chip').forEach(c=>c.setAttribute('data-selected', c===chip?'true':'false'));
           selectedThemes.clear();
         }else{
           const newState = chip.getAttribute('data-selected')!=='true';
           chip.setAttribute('data-selected', newState?'true':'false');
-          const allChip = $$('#browse-chips .ah-chip').find(c=>(c.dataset.raw||c.textContent).trim().toLowerCase()==='all');
+          const allChip = $$('#browse-chips .ah-chip').find(c=>c.textContent.trim().toLowerCase()==='all');
           if (allChip) allChip.setAttribute('data-selected','false');
-          if(newState) selectedThemes.add(key); else selectedThemes.delete(key);
+          if(newState) selectedThemes.add(label); else selectedThemes.delete(label);
           if(selectedThemes.size===0 && allChip) allChip.setAttribute('data-selected','true');
         }
         applyFiltersAndRender();
@@ -2009,7 +2016,6 @@ document.addEventListener('click', function(e){
       if (btn.dataset.emojiized === '1') return;
       const text = btn.textContent.trim();
       const emoji = window.themeEmoji(text);
-      btn.dataset.raw = text;
       btn.textContent = `${emoji} ${text}`;
       btn.dataset.emojiized = '1';
     });
@@ -2112,26 +2118,6 @@ document.addEventListener('click', function(e){
       try{ await navigator.clipboard.writeText(urlIn.value); copied.classList.remove('hidden'); }catch(e){}
     });
   })();
-</script>
-
-
-<script>
-// Normalize incoming facet deep-links once on load
-(function(){
-  try{
-    const usp = new URLSearchParams(location.search);
-    const facet = usp.get('facet');
-    const value = usp.get('value');
-    if (facet && value) {
-      const clean = window.cleanFacet(value);
-      if (clean !== value) {
-        usp.set('value', clean);
-        const url = location.pathname + '?' + usp.toString();
-        history.replaceState(null, '', url);
-      }
-    }
-  }catch(e){}
-})();
 </script>
 
 </body>
