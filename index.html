@@ -212,28 +212,6 @@ input, textarea, select { font-size: 16px; }
   .tab-btn{ padding-left:10px !important; padding-right:10px !important; }
 }
 
-
-/* --- Full-screen mobile search menu --- */
-@media (max-width: 767px){
-  #m-search-menu.fullscreen{
-    position: fixed !important;
-    inset: 0 !important;
-    margin: 0 !important;
-    z-index: 80 !important;
-  }
-  #m-search-menu.fullscreen > .rounded-xl{
-    border-radius: 0 !important;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-  #m-search-menu.fullscreen #search-results{
-    max-height: none !important;
-    height: 100%;
-    overflow: auto;
-  }
-}
-
 </style>
 <style>
   /* Scoped to the share modal only */
@@ -332,7 +310,36 @@ input, textarea, select { font-size: 16px; }
 .sidebar .ah-brand-badge{ width: 40px; height: 40px; }
 </style>
 
-</head>
+<style>
+/* === AH: Mobile full-bleed search dropdown === */
+.ah-search-dropdown{
+  position:absolute; inset:auto auto auto 0; z-index:50;
+  width:100%; max-width:720px; border-radius:16px;
+  box-shadow:0 8px 24px rgba(0,0,0,.12); background:#fff;
+}
+@media (max-width: 768px){
+  .ah-search-dropdown{
+    position:fixed; left:0; right:0; bottom:0;
+    top:var(--search-top, 56px); max-width:none; width:100vw;
+    border-radius:0; margin:0; background:var(--surface, #fff);
+  }
+  .ah-search-scroller{
+    height:100%; overflow:auto; -webkit-overflow-scrolling:touch;
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  .ah-search-close{
+    position:sticky; top:0; left:0; z-index:2;
+    display:inline-flex; align-items:center; gap:.5rem;
+    padding:14px 16px; border:0; background:transparent; font-size:18px;
+  }
+}
+.ah-search-backdrop{
+  position:fixed; inset:0; z-index:40;
+  background:rgba(0,0,0,.25); backdrop-filter:saturate(120%) blur(2px);
+}
+[hidden]{ display:none !important; }
+/* === /AH === */
+</style></head>
 <body class="min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
   <div class="flex w-full">
     <!-- ====== SIDEBAR ====== -->
@@ -2157,64 +2164,52 @@ document.addEventListener('click', function(e){
 </script>
 
 
+<!-- === AH: Mobile full-bleed SEARCH DROPDOWN (edge-to-edge) === -->
+<div id="searchDropdown" class="ah-search-dropdown" hidden aria-modal="true" role="dialog">
+  <button class="ah-search-close" type="button" aria-label="Close search">
+    &larr; <span class="sr-only">Close</span>
+  </button>
+  <div class="ah-search-scroller">
+    <!-- Place your existing dropdown inner markup (tabs/input/results) here if you are rendering it server-side.
+         If you render dynamically, ensure you mount the content inside this element at open time. -->
+  </div>
+</div>
+<div id="searchBackdrop" class="ah-search-backdrop" hidden></div>
+<!-- === /AH === -->
+
+
 <script>
-// --- Mobile full-screen search enhancement ---
 (function(){
-  const isMobile = () => window.matchMedia('(max-width: 767px)').matches;
-  const wrap   = document.getElementById('mobile-search');   // mSearchWrap
-  const input  = document.getElementById('mobile-global-search'); // mSearchInput
-  const menu   = document.getElementById('m-search-menu');   // mMenu
+  const dd = document.getElementById('searchDropdown');
+  const bd = document.getElementById('searchBackdrop');
+  if (!dd || !bd) return;
 
-  // Create a top bar with a back arrow for full-screen mode
-  let header = document.getElementById('m-search-header');
-  if (!header && wrap) {
-    header = document.createElement('div');
-    header.id = 'm-search-header';
-    header.className = 'hidden items-center gap-3 px-3 py-3 border-b border-gray-200 bg-white';
-    header.innerHTML = `
-      <button id="m-search-back" class="p-2 rounded-md hover:bg-gray-100" aria-label="Close search">
-        <i class="fa-solid fa-arrow-left text-[18px]"></i>
-      </button>
-      <div class="text-sm text-gray-600">Search</div>
-    `;
-    wrap.insertBefore(header, wrap.firstChild);
+  function computeTopOffset(){
+    const tb = document.getElementById('topbar');
+    const top = tb ? (tb.getBoundingClientRect().bottom + window.scrollY) : 0;
+    dd.style.setProperty('--search-top', top + 'px');
   }
-
-  function enterFullscreen(){
-    if(!isMobile() || !menu) return;
-    document.documentElement.style.overflow='hidden';
-    document.body.style.overflow='hidden';
-    menu.classList.add('fullscreen');
-    if (header) header.classList.remove('hidden');
+  function lockScroll(lock){
+    const html = document.documentElement, body = document.body;
+    if (lock) { html.style.overflow = 'hidden'; body.style.overflow = 'hidden'; }
+    else { html.style.overflow = ''; body.style.overflow = ''; }
   }
-  function exitFullscreen(){
-    if(!menu) return;
-    document.documentElement.style.overflow='';
-    document.body.style.overflow='';
-    menu.classList.remove('fullscreen');
-    if (header) header.classList.add('hidden');
-  }
-
-  // Wire focus/open to enter fullscreen
-  if (input) {
-    input.addEventListener('focus', ()=>{ if(isMobile()) enterFullscreen(); });
-    input.addEventListener('keydown', ()=>{ if(isMobile()) enterFullscreen(); });
-  }
-  // Back button
-  document.getElementById('m-search-back')?.addEventListener('click', ()=>{
-    exitFullscreen();
-    // Hide whole mobile search container and close menu if present
-    const wrapEl = document.getElementById('mobile-search');
-    if (wrapEl) wrapEl.classList.add('hidden');
-    if (menu) menu.classList.add('hidden');
-    input?.blur();
+  window.openSearchDropdown = function(){
+    computeTopOffset();
+    dd.hidden = false; bd.hidden = false; lockScroll(true);
+    const inp = dd.querySelector('input[type="search"], input[type="text"]');
+    if (inp) setTimeout(()=>{ try{ inp.focus({preventScroll:true}); }catch(_){ inp.focus(); } }, 0);
+  };
+  window.closeSearchDropdown = function(){
+    dd.hidden = true; bd.hidden = true; lockScroll(false);
+  };
+  document.addEventListener('click', (e)=>{
+    if (e.target.closest('.js-open-search,[data-open-search]')) { e.preventDefault(); openSearchDropdown(); }
+    if (e.target.closest('.ah-search-close')) { e.preventDefault(); closeSearchDropdown(); }
+    if (e.target === bd) { closeSearchDropdown(); }
   });
-  // Also exit on Esc
-  document.addEventListener('keydown', (e)=>{
-    if (e.key === 'Escape' && menu?.classList.contains('fullscreen')) {
-      exitFullscreen();
-    }
-  });
+  window.addEventListener('resize', ()=>{ if (!dd.hidden) computeTopOffset(); });
+  window.addEventListener('orientationchange', ()=>{ if (!dd.hidden) computeTopOffset(); });
 })();
 </script>
 
