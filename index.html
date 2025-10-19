@@ -10,7 +10,7 @@
 <link href="https://i.imgur.com/7dO0mhL.png" rel="apple-touch-icon" sizes="180x180"/>
 <link href="https://i.imgur.com/SeNBgAx.png" rel="icon" type="image/png"/>
 <link href="https://i.imgur.com/SeNBgAx.png" rel="shortcut icon"/>
-<link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer" rel="stylesheet">
+<link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer" rel="stylesheet"/>
 <script>
 // --- DuckDuckGo favicon helpers (GLOBAL). Must load before renderDetail ---
 (function(){
@@ -315,7 +315,10 @@ input, textarea, select { font-size: 16px; }
 /* Ensure the page content stays above the bar */
 html{ padding-bottom: calc(var(--mbnav-h) + var(--safe-bottom)); }
 </style>
-</link></head>
+<style>
+/* In explore context, if a generic #home-toolbar exists, hide it */
+body.is-explore #home-toolbar { display: none !important; }
+</style></head>
 <body class="min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
 <div class="flex w-full">
 <!-- ====== SIDEBAR ====== -->
@@ -387,7 +390,6 @@ html{ padding-bottom: calc(var(--mbnav-h) + var(--safe-bottom)); }
 </div>
 </div>
 </div>
-
 <!-- Top bar -->
 <div class="sticky top-0 z-30 bg-white/80 topbar border-b border-gray-200">
 <div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 h-14 flex items-center gap-3">
@@ -638,7 +640,6 @@ html{ padding-bottom: calc(var(--mbnav-h) + var(--safe-bottom)); }
 <div class="mt-2 flex flex-wrap gap-2">
 <span class="hidden inline-flex items-center text-[11px] px-2.5 py-1 rounded-full bg-gray-100 border border-gray-200" id="d_theme"></span>
 <span class="hidden inline-flex items-center text-[11px] px-2.5 py-1 rounded-full bg-gray-100 border border-gray-200" id="d_industry"></span>
-
 </div>
 </div>
 <div class="flex items-center gap-2">
@@ -1763,11 +1764,11 @@ if(q){
 </button>
 </div>
 <form class="p-5 space-y-4" id="claim-form">
-<input id="claim-listing-id" name="listing_id" type="hidden">
+<input id="claim-listing-id" name="listing_id" type="hidden"/>
 <div>
 <label class="block text-sm font-medium mb-1" for="claim-name">Your name</label>
-<input class="w-full rounded-xl border border-gray-300 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500" id="claim-name" name="name" required="" type="text"/>
-</div>
+<input class="w-full rounded-xl border border-gray-300 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500" id="claim-name" name="name" required="" type="text">
+</input></div>
 <div>
 <label class="block text-sm font-medium mb-1" for="claim-email">Work/School email</label>
 <input class="w-full rounded-xl border border-gray-300 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500" id="claim-email" name="email" required="" type="email"/>
@@ -1780,7 +1781,7 @@ if(q){
 <button class="px-4 py-2 rounded-xl border border-gray-200 hover:bg-gray-50" data-dismiss="" type="button">Cancel</button>
 <button class="px-4 py-2 rounded-xl bg-sky-600 text-white hover:bg-sky-700" type="submit">Submit claim</button>
 </div>
-</input></form>
+</form>
 </div>
 </div>
 <script>
@@ -2265,8 +2266,8 @@ document.addEventListener('click', function(e){
 <button aria-label="Close search" class="h-9 w-9 grid place-items-center rounded-lg border border-gray-200" data-close="search">
 <i class="fa-solid fa-chevron-left"></i>
 </button>
-<input class="flex-1 h-10 rounded-lg border border-gray-200 px-3 focus:outline-none" id="mobileSearchInput" placeholder="Search clubs, businesses, projects…" type="search">
-</input></div>
+<input class="flex-1 h-10 rounded-lg border border-gray-200 px-3 focus:outline-none" id="mobileSearchInput" placeholder="Search clubs, businesses, projects…" type="search"/>
+</div>
 <!-- Presearch content mirroring desktop dropdown -->
 <div class="flex-1 overflow-y-auto" id="mobileSearchPre">
 <div class="border-b border-gray-200">
@@ -2303,7 +2304,6 @@ document.addEventListener('click', function(e){
 </div>
 </div>
 <!-- Explore drop-up sheet -->
-
 <!-- News Page (full screen) -->
 <div class="fixed z-[70] hidden inset-x-0 top-0" id="newsOverlay" style="bottom: calc(var(--mbnav-h) + var(--safe-bottom));">
 <div class="absolute inset-0 bg-gray-900/60" data-close="news"></div>
@@ -2474,6 +2474,70 @@ document.addEventListener('click', function(e){
     //   t.classList.toggle("bg-white", !active);
     //   t.classList.toggle("text-gray-800", !active);
     // });
+  });
+})();
+</script><script>
+(function(){
+  function getParam(name){
+    try { return new URLSearchParams(location.search).get(name) || ""; }
+    catch(e){ return ""; }
+  }
+  var view = getParam("view");
+  var isExplore = ["orgs","businesses","projects"].indexOf(view) !== -1;
+
+  // Mark page context
+  if (isExplore) document.body.classList.add("is-explore");
+
+  // Bottom nav active state
+  var nav = document.getElementById("mobileBottomNav");
+  if (nav){
+    var tabs = nav.querySelectorAll("button[data-tab]");
+    function setActive(which){
+      tabs.forEach(function(btn){
+        var on = btn.dataset.tab === which;
+        btn.setAttribute("aria-current", on ? "page" : "false");
+        btn.classList.toggle("text-blue-600", on);
+        btn.classList.toggle("font-semibold", on);
+        btn.classList.toggle("opacity-100", on);
+        btn.classList.toggle("opacity-70", !on);
+      });
+    }
+    if (isExplore) setActive("explore");
+  }
+
+  // Hide Home top bar / app bar when on Explore
+  if (isExplore){
+    var selectors = [
+      "#homeTopBar",
+      ".home-topbar",
+      "[data-home-topbar]",
+      "[data-role='home-topbar']",
+      ".topbar.home",
+      ".appbar.home",
+      "#appTopBar"
+    ];
+    selectors.forEach(function(sel){
+      document.querySelectorAll(sel).forEach(function(el){
+        el.classList.add("hidden");
+      });
+    });
+  }
+
+  // Keep Explore selected when switching tabs (URL may update)
+  window.addEventListener("popstate", function(){
+    var v = getParam("view");
+    var explore = ["orgs","businesses","projects"].indexOf(v) !== -1;
+    if (explore && nav){
+      var tabs = nav.querySelectorAll("button[data-tab]");
+      tabs.forEach(function(btn){
+        var on = btn.dataset.tab === "explore";
+        btn.setAttribute("aria-current", on ? "page" : "false");
+        btn.classList.toggle("text-blue-600", on);
+        btn.classList.toggle("font-semibold", on);
+        btn.classList.toggle("opacity-100", on);
+        btn.classList.toggle("opacity-70", !on);
+      });
+    }
   });
 })();
 </script></body>
