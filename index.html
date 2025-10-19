@@ -372,6 +372,22 @@ html{ padding-bottom: calc(var(--mbnav-h) + var(--safe-bottom)); }
 </div>
 <!-- ====== MAIN ====== -->
 <main class="flex-1 min-h-screen min-w-0">
+<div class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b hidden" id="mobileExploreSegments">
+<div class="max-w-screen-sm mx-auto px-3 pt-3 pb-2">
+<div aria-label="Explore" class="grid grid-cols-3 gap-2 rounded-xl p-1 border bg-white" role="tablist">
+<a aria-selected="true" class="tab px-3 py-2 text-center rounded-lg text-sm font-medium transition" href="?sort=popular&amp;view=orgs" id="tab-orgs" role="tab">
+        Organizations
+      </a>
+<a aria-selected="false" class="tab px-3 py-2 text-center rounded-lg text-sm font-medium transition" href="?sort=popular&amp;view=businesses" id="tab-businesses" role="tab">
+        Businesses
+      </a>
+<a aria-selected="false" class="tab px-3 py-2 text-center rounded-lg text-sm font-medium transition" href="?sort=popular&amp;view=projects" id="tab-projects" role="tab">
+        Projects
+      </a>
+</div>
+</div>
+</div>
+
 <!-- Top bar -->
 <div class="sticky top-0 z-30 bg-white/80 topbar border-b border-gray-200">
 <div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 h-14 flex items-center gap-3">
@@ -2287,29 +2303,7 @@ document.addEventListener('click', function(e){
 </div>
 </div>
 <!-- Explore drop-up sheet -->
-<div class="fixed inset-x-0 bottom-0 z-[70] hidden" id="exploreSheet">
-<div class="absolute inset-0 bg-gray-900/60" data-close="explore"></div>
-<div class="relative mx-auto max-w-md bg-white rounded-t-2xl shadow-xl border border-gray-200">
-<div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
-<h3 class="text-base font-semibold">Explore</h3>
-<button aria-label="Close" class="h-9 w-9 grid place-items-center rounded-lg border border-gray-200" data-close="explore">
-<i class="fa-solid fa-xmark"></i>
-</button>
-</div>
-<div class="p-2">
-<button class="w-full h-12 rounded-xl flex items-center gap-3 px-3 hover:bg-gray-50" data-explore="orgs">
-<i class="fa-solid fa-users text-gray-700"></i><span>Organizations</span>
-</button>
-<button class="w-full h-12 rounded-xl flex items-center gap-3 px-3 hover:bg-gray-50" data-explore="biz">
-<i class="fa-solid fa-briefcase text-gray-700"></i><span>Businesses</span>
-</button>
-<button class="w-full h-12 rounded-xl flex items-center gap-3 px-3 hover:bg-gray-50" data-explore="proj">
-<i class="fa-solid fa-screwdriver-wrench text-gray-700"></i><span>Projects</span>
-</button>
-</div>
-<div class="h-4"></div>
-</div>
-</div>
+
 <!-- News Page (full screen) -->
 <div class="fixed z-[70] hidden inset-x-0 top-0" id="newsOverlay" style="bottom: calc(var(--mbnav-h) + var(--safe-bottom));">
 <div class="absolute inset-0 bg-gray-900/60" data-close="news"></div>
@@ -2358,17 +2352,15 @@ document.addEventListener('click', function(e){
     const tab = btn.dataset.tab;
     switch(tab){
       case 'home':
-        window.location.search='?view=home';
+        location.hash = routes.home;
         break;
       case 'search':
         open(searchOverlay);
         // no autofocus on open
         break;
-      case 'explore':
-        open(exploreSheet);
-        break;
+      case 'explore': window.location.search='?sort=popular&view=orgs'; break;
       case 'events':
-        window.location.search='?view=events';
+        location.hash = routes.events;
         break;
       case 'news':
         open(newsOverlay);
@@ -2426,41 +2418,63 @@ document.addEventListener('click', function(e){
 </script>
 <script>
 (function(){
-  var nav = document.getElementById('mobileBottomNav');
-  var exploreSheet = document.getElementById('exploreSheet') || document.querySelector('[data-role="explore-sheet"]');
-  var newsOverlay = document.getElementById('newsOverlay') || document.querySelector('[data-role="news-overlay"]');
+  // Show segmented bar on orgs/businesses/projects pages and mark active tab
+  function getParam(name){
+    try {
+      var params = new URLSearchParams(window.location.search);
+      return params.get(name) || "";
+    } catch(e){ return ""; }
+  }
+  var view = getParam("view");
+  var seg = document.getElementById("mobileExploreSegments");
+  if (!seg) return;
+  var views = ["orgs","businesses","projects"];
+  if (views.indexOf(view) !== -1) {
+    seg.classList.remove("hidden");
+    // active styles
+    function activate(id){
+      var tabs = seg.querySelectorAll('[role="tab"]');
+      tabs.forEach(function(t){
+        var active = (t.id === id);
+        t.setAttribute("aria-selected", active ? "true" : "false");
+        t.classList.toggle("bg-black", active);
+        t.classList.toggle("text-white", active);
+        t.classList.toggle("shadow", active);
+        t.classList.toggle("bg-white", !active);
+        t.classList.toggle("text-gray-800", !active);
+      });
+    }
+    if (view === "orgs") activate("tab-orgs");
+    if (view === "businesses") activate("tab-businesses");
+    if (view === "projects") activate("tab-projects");
+  } else {
+    // If user lands on ?view=home etc., keep the bar hidden
+    seg.classList.add("hidden");
+  }
 
-  function open(el){ if(!el) return; el.classList.remove('hidden'); document.documentElement.style.overflow='hidden'; }
-  function close(el){ if(!el) return; el.classList.add('hidden'); document.documentElement.style.overflow=''; }
-
-  document.addEventListener('click', function(e){
-    var t = e.target;
-    if (t && t.dataset && (t.dataset.close === 'explore')) close(exploreSheet);
-    if (t && t.dataset && (t.dataset.close === 'news')) close(newsOverlay);
+  // Optional: enable client-side tab switching (no full reload) if your app supports swapping content
+  // Fallback: the anchors already navigate to correct deep links.
+  seg.addEventListener("click", function(e){
+    var a = e.target.closest('a[role="tab"][href]');
+    if (!a) return;
+    // If you want SPA-style switching, uncomment below and implement your renderers:
+    // e.preventDefault();
+    // var url = new URL(a.href, window.location.origin);
+    // history.replaceState(null, "", url.search);
+    // // call your renderer based on new view param here...
+    // // then update active styles:
+    // var id = a.id;
+    // var tabs = seg.querySelectorAll('[role="tab"]');
+    // tabs.forEach(function(t){
+    //   var active = (t.id === id);
+    //   t.setAttribute("aria-selected", active ? "true" : "false");
+    //   t.classList.toggle("bg-black", active);
+    //   t.classList.toggle("text-white", active);
+    //   t.classList.toggle("shadow", active);
+    //   t.classList.toggle("bg-white", !active);
+    //   t.classList.toggle("text-gray-800", !active);
+    // });
   });
-
-  // If explore items are anchors, clicking them will navigate; we can optionally close immediately
-  if (exploreSheet){
-    exploreSheet.addEventListener('click', function(e){
-      var a = e.target.closest('a[role="menuitem"][href]');
-      if (a){ close(exploreSheet); }
-    });
-  }
-
-  if (nav){
-    nav.addEventListener('click', function(e){
-      var btn = e.target.closest('button[data-tab]');
-      if (!btn) return;
-      var tab = btn.dataset.tab;
-      switch(tab){
-        case 'home': window.location.search='?view=home'; break;
-        case 'search': window.location.href='./search.html'; break;
-        case 'explore': open(exploreSheet); break;
-        case 'events': window.location.search='?view=events'; break;
-        case 'news': open(newsOverlay); break;
-      }
-    });
-  }
 })();
 </script></body>
 </html>
