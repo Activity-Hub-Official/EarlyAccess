@@ -176,85 +176,10 @@ input, textarea, select { font-size: 16px; }
 .sidebar-grad{ background: linear-gradient(180deg,#f8fafc 0%, #f0f4f9 100%); }
 
 </style>
-<style>
-  /* Scoped to the share modal only */
-  #shareModal .share-row { display:flex; gap:14px; overflow-x:auto; padding: 6px 2px 8px; margin-top: 4px; }
-  #shareModal .share-row::-webkit-scrollbar { height: 6px; }
-  #shareModal .share-row::-webkit-scrollbar-thumb { background: rgba(17,24,39,.15); border-radius: 9999px; }
-  #shareModal .share-chip { display:flex; flex-direction:column; align-items:center; gap:8px; text-decoration:none; }
-  
-  #shareModal .share-chip:hover .share-chip__circle { transform: translateY(-1px); box-shadow: 0 2px 6px rgba(0,0,0,.12), 0 10px 30px rgba(0,0,0,.10); }
-  
-  #shareModal .share-chip__label { font-size: 12px; color:#111827; }
-  #shareModal .share-section-title { font-size: .875rem; color: #6B7280; margin: 6px 0 6px; }
-</style>
-<style>
-  #shareModal .share-chip__circle {
-    height:64px; width:64px; border-radius:9999px;
-    background: transparent; /* no white fill */
-    display:flex; align-items:center; justify-content:center;
-    box-shadow: none; /* no border-like ring */
-    transition: transform .08s ease;
-  }
-  #shareModal .share-chip:hover .share-chip__circle { transform: translateY(-1px) scale(1.02); }
-  #shareModal .share-chip__icon { height:48px; width:48px; border-radius:9999px; display:block; }
-  /* Hide any leftover section titles in modal */
-  #shareModal .share-section-title { display:none; }
-</style>
-<style>
-  /* Hover should apply to the whole chip (icon + label), with NO white ring */
-  #shareModal .share-row { gap:16px; }
-  #shareModal .share-chip {
-    display:flex; flex-direction:column; align-items:center; gap:10px;
-    padding:8px 10px; border-radius:12px; text-decoration:none;
-    transition: background .15s ease, transform .08s ease;
-  }
-  #shareModal .share-chip:focus-visible { outline: 2px solid rgba(59,130,246,.6); outline-offset: 2px; }
-  #shareModal .share-chip:hover { background: rgba(17,24,39,.06); transform: translateY(-1px); }
-  #shareModal .share-chip__circle {
-    height:72px; width:72px; border-radius:9999px;
-    background: transparent; box-shadow: none;
-    display:flex; align-items:center; justify-content:center;
-    transition: transform .08s ease;
-  }
-  #shareModal .share-chip:hover .share-chip__circle { transform: scale(1.02); }
-  #shareModal .share-chip__icon { height:56px; width:56px; border-radius:9999px; display:block; }
-  #shareModal .share-chip__label { font-size: 13px; color:#111827; }
-</style>
-<style>
-  /* 4-up layout with no horizontal scroll */
-  #shareModal .share-row {
-    display:flex; flex-wrap:wrap; justify-content:space-between; gap:12px;
-    overflow-x: visible; padding: 6px 0 8px;
-  }
-  #shareModal .share-chip {
-    flex: 1 1 calc(25% - 12px);
-    display:flex; flex-direction:column; align-items:center; gap:8px;
-    padding:8px 6px; border-radius:12px; text-decoration:none;
-    transition: background .15s ease, transform .08s ease;
-    min-width: 90px; /* keeps labels from wrapping awkwardly */
-  }
-  #shareModal .share-chip:hover { background: rgba(17,24,39,.06); transform: translateY(-1px); }
-  #shareModal .share-chip:focus-visible { outline: 2px solid rgba(59,130,246,.55); outline-offset: 2px; }
 
-  /* Icon circle: no background, no shadows, no borders even on hover */
-  #shareModal .share-chip__circle {
-    height:64px; width:64px; border-radius:9999px;
-    background: transparent !important;
-    box-shadow: none !important;
-    border: none !important;
-    display:flex; align-items:center; justify-content:center;
-    transition: transform .08s ease;
-  }
-  #shareModal .share-chip:hover .share-chip__circle { transform: scale(1.015); }
 
-  /* Icon image */
-  #shareModal .share-chip__icon {
-    height:48px; width:48px; border-radius:9999px; display:block;
-  }
 
-  #shareModal .share-chip__label { font-size: 13px; color:#111827; }
-</style>
+
 
 <style id="ah-logo-fix">
 /* Ensure the sidebar badge image fills the container perfectly and stays sharp */
@@ -273,16 +198,52 @@ input, textarea, select { font-size: 16px; }
 .sidebar .ah-brand-badge{ width: 40px; height: 40px; }
 </style>
 
+
+<style>
+  /* Share modal — single source of truth */
+  #shareModal .share-row {
+    display:flex; flex-wrap:wrap; justify-content:space-between; gap:12px;
+    overflow-x:visible; padding:6px 0 8px;
+  }
+  #shareModal .share-chip {
+    flex:1 1 calc(25% - 12px);
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+    padding:8px 6px; border-radius:12px; text-decoration:none;
+    transition: background .15s ease, transform .08s ease;
+    min-width:90px;
+  }
+  #shareModal .share-chip:hover { background:rgba(17,24,39,.06); transform:translateY(-1px); }
+  #shareModal .share-chip:focus-visible { outline:2px solid rgba(59,130,246,.55); outline-offset:2px; }
+  #shareModal .share-chip__circle {
+    height:64px; width:64px; border-radius:9999px;
+    background:transparent; box-shadow:none; border:none;
+    display:flex; align-items:center; justify-content:center;
+    transition:transform .08s ease;
+  }
+  #shareModal .share-chip:hover .share-chip__circle { transform:scale(1.015); }
+  #shareModal .share-chip__icon { height:48px; width:48px; border-radius:9999px; display:block; }
+  #shareModal .share-chip__label { font-size:13px; color:#111827; }
+</style>
+
+
+<style>
+  .break-anywhere { word-break: break-word; overflow-wrap: anywhere; }
+  .no-scrollbar::-webkit-scrollbar{ display:none; }
+  .no-scrollbar{ -ms-overflow-style:none; scrollbar-width:none; }
+  .shadow-card { box-shadow: 0 1px 2px rgba(0,0,0,.05), 0 12px 24px -12px rgba(0,0,0,.15); }
+</style>
+
+<style id="global-overflow-x">html,body{overflow-x:hidden}</style>
 </head>
 <body class="min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
   <div class="flex w-full">
     <!-- ====== SIDEBAR ====== -->
     <aside class="hidden lg:flex lg:w-64 xl:w-72 lg:shrink-0 lg:sticky lg:top-0 lg:self-start lg:h-[100dvh] lg:overflow-y-auto border-r border-gray-200 sidebar-grad flex-col">
       <div class="flex items-center gap-3 p-4">
-        <div class="w-9 h-9 grid place-items-center rounded-xl ah-grad text-white font-bold ah-brand-badge"><img src="https://i.imgur.com/7dO0mhL.png" alt="Activity Hub" class="w-6 h-6 object-contain pointer-events-none" loading="lazy"/ class="w-full h-full object-cover pointer-events-none" loading="lazy" srcset="https://i.imgur.com/7dO0mhL.png 1x, https://i.imgur.com/7dO0mhL.png 2x" sizes="40px"></div>
+        <div class="w-9 h-9 grid place-items-center rounded-xl ah-grad text-white font-bold ah-brand-badge"><img src="https://i.imgur.com/7dO0mhL.png" alt="Activity Hub" class="w-6 h-6 object-contain pointer-events-none" loading="lazy" loading="lazy" srcset="https://i.imgur.com/7dO0mhL.png 1x, https://i.imgur.com/7dO0mhL.png 2x" sizes="40px"></div>
         <span class="font-semibold text-gray-800">Activity Hub</span>
       </div>
-      <nav class="px-2 py-3 space-y-1 text-sm">
+      <nav class="px-2 py-3 space-y-1 text-sm sticky top-[64px] z-30 -mx-4 px-4 bg-white">
         <a href="?view=home" data-route="home" class="flex items-center gap-3 px-3 py-2 rounded-lg nav-active"><i class="fa-solid fa-house text-[18px]"></i> Home</a>
         <div class="h-px bg-gray-100 my-2"></div>
         <a href="?view=orgs" data-route="orgs" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-users text-[18px]"></i> Organizations</a>
@@ -306,7 +267,7 @@ input, textarea, select { font-size: 16px; }
       <aside id="drawer-panel" class="absolute left-0 top-0 h-full w-72 max-w-[85vw] bg-white border-r border-gray-200 shadow-xl -translate-x-full transition-transform duration-300">
         <div class="flex items-center justify-between p-4">
           <div class="flex items-center gap-3">
-            <div class="w-9 h-9 grid place-items-center rounded-xl ah-grad text-white font-bold"><img src="https://i.imgur.com/7dO0mhL.png" alt="Activity Hub" class="w-6 h-6 object-contain pointer-events-none" loading="lazy"/ class="w-full h-full object-cover pointer-events-none" loading="lazy"></div>
+            <div class="w-9 h-9 grid place-items-center rounded-xl ah-grad text-white font-bold"><img src="https://i.imgur.com/7dO0mhL.png" alt="Activity Hub" class="w-6 h-6 object-contain pointer-events-none" loading="lazy" loading="lazy"></div>
             <span class="font-semibold text-gray-800">Activity Hub</span>
           </div>
           <button id="close-drawer" class="p-2 rounded-md hover:bg-gray-100" aria-label="Close sidebar"><i class="fa-solid fa-xmark text-[18px]"></i></button>
@@ -337,7 +298,7 @@ input, textarea, select { font-size: 16px; }
         <div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 h-14 flex items-center gap-3">
           <div class="flex items-center gap-3">
             <button id="open-sidebar-btn" class="p-2 rounded-md hover:bg-gray-100 lg:hidden" aria-label="Open sidebar"><i class="fa-solid fa-bars text-[20px]"></i></button>
-            <div class="w-8 h-8 grid place-items-center rounded-lg ah-grad text-white font-bold lg:hidden"><img src="https://i.imgur.com/7dO0mhL.png" alt="Activity Hub" class="w-6 h-6 object-contain pointer-events-none" loading="lazy"/ class="w-full h-full object-cover pointer-events-none" loading="lazy"></div>
+            <div class="w-8 h-8 grid place-items-center rounded-lg ah-grad text-white font-bold lg:hidden"><img src="https://i.imgur.com/7dO0mhL.png" alt="Activity Hub" class="w-6 h-6 object-contain pointer-events-none" loading="lazy" loading="lazy"></div>
             <div id="nav-current-view" class="hidden lg:flex items-center gap-2 text-lg font-semibold text-ah-900"><i id="nav-current-icon" class="fa-solid fa-house text-[18px] text-ah-600"></i> <span id="nav-current-label">Home</span></div>
           </div>
 
@@ -719,7 +680,7 @@ input, textarea, select { font-size: 16px; }
           <input id="shareUrl" class="flex-1 h-11 rounded-lg border border-gray-200 px-3" readonly>
           <button id="copyShare" class="h-11 px-4 rounded-lg bg-ah-600 text-white hover:bg-ah-700">Copy</button>
         </div>
-        <div id="copied" class="mt-3 text-emerald-600 text-sm hidden">Copied!</div>
+        <div id="copied" role="status" aria-live="polite" class="mt-3 text-emerald-600 text-sm hidden">Copied!</div>
       </div>
     </div>
   </div>
