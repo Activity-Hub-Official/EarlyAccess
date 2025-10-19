@@ -1,18 +1,16 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-  <title>Activity Hub – Explore (v25)</title>
-
-  <!-- App & site icons -->
-  <link rel="apple-touch-icon" sizes="180x180" href="https://i.imgur.com/7dO0mhL.png">
-  <link rel="icon" type="image/png" href="https://i.imgur.com/SeNBgAx.png">
-  <link rel="shortcut icon" href="https://i.imgur.com/SeNBgAx.png">
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" name="viewport"/>
+<title>Activity Hub – Explore (v25)</title>
+<!-- App & site icons -->
+<link href="https://i.imgur.com/7dO0mhL.png" rel="apple-touch-icon" sizes="180x180"/>
+<link href="https://i.imgur.com/SeNBgAx.png" rel="icon" type="image/png"/>
+<link href="https://i.imgur.com/SeNBgAx.png" rel="shortcut icon"/>
+<link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer" rel="stylesheet">
 <script>
 // --- DuckDuckGo favicon helpers (GLOBAL). Must load before renderDetail ---
 (function(){
@@ -115,8 +113,6 @@
   }
 })();
 </script>
-
-
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 // --- Prevent pinch/tap zoom (fallback for browsers that ignore viewport flags) ---
@@ -135,7 +131,7 @@ document.addEventListener('touchend', function(e){
   __lastTouchEnd = now;
 }, { passive: false });
 </script>
-  <script>
+<script>
     tailwind.config = {
       theme: {
         extend: {
@@ -148,7 +144,7 @@ document.addEventListener('touchend', function(e){
       }
     }
   </script>
-  <style>
+<style>
     .ah-grad{background-image:linear-gradient(135deg,#2563eb 0%,#14b8a6 100%)}
     .ah-chip[data-selected="true"]{background:#111827;color:#fff;border-color:#111827}
     .no-scrollbar::-webkit-scrollbar{display:none}.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
@@ -285,7 +281,6 @@ input, textarea, select { font-size: 16px; }
 
   #shareModal .share-chip__label { font-size: 13px; color:#111827; }
 </style>
-
 <style id="ah-logo-fix">
 /* Ensure the sidebar badge image fills the container perfectly and stays sharp */
 .ah-grad{ overflow: hidden; padding: 0 !important; }
@@ -302,15 +297,11 @@ input, textarea, select { font-size: 16px; }
 /* Optionally allow a slightly larger badge in the sidebar */
 .sidebar .ah-brand-badge{ width: 40px; height: 40px; }
 </style>
-
-
 <style id="mobile-bottom-nav-styles">
 :root{ --safe-bottom: env(safe-area-inset-bottom); }
 .mb-safe{ padding-bottom: max(0.5rem, var(--safe-bottom)); }
 #mobileBottomNav{ -webkit-backdrop-filter: saturate(180%) blur(12px); backdrop-filter: saturate(180%) blur(12px); }
 </style>
-
-
 <style id="mobile-bottom-nav-styles-v2">
 :root{
   --safe-bottom: env(safe-area-inset-bottom);
@@ -324,460 +315,410 @@ input, textarea, select { font-size: 16px; }
 /* Ensure the page content stays above the bar */
 html{ padding-bottom: calc(var(--mbnav-h) + var(--safe-bottom)); }
 </style>
-
-</head>
+</link></head>
 <body class="min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
-  <div class="flex w-full">
-    <!-- ====== SIDEBAR ====== -->
-    <aside class="hidden lg:flex lg:w-64 xl:w-72 lg:shrink-0 lg:sticky lg:top-0 lg:self-start lg:h-[100dvh] lg:overflow-y-auto border-r border-gray-200 sidebar-grad flex-col">
-      <div class="flex items-center gap-3 p-4">
-        <div class="w-9 h-9 grid place-items-center rounded-xl ah-grad text-white font-bold ah-brand-badge"><img src="https://i.imgur.com/7dO0mhL.png" alt="Activity Hub" class="w-6 h-6 object-contain pointer-events-none" loading="lazy"/ class="w-full h-full object-cover pointer-events-none" loading="lazy" srcset="https://i.imgur.com/7dO0mhL.png 1x, https://i.imgur.com/7dO0mhL.png 2x" sizes="40px"></div>
-        <span class="font-semibold text-gray-800">Activity Hub</span>
-      </div>
-      <nav class="px-2 py-3 space-y-1 text-sm">
-        <a href="?view=home" data-route="home" class="flex items-center gap-3 px-3 py-2 rounded-lg nav-active"><i class="fa-solid fa-house text-[18px]"></i> Home</a>
-        <div class="h-px bg-gray-100 my-2"></div>
-        <a href="?view=orgs" data-route="orgs" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-users text-[18px]"></i> Organizations</a>
-        <a href="?view=businesses" data-route="businesses" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-briefcase text-[18px]"></i> Businesses</a>
-        <a href="?view=projects" data-route="projects" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-diagram-project text-[18px]"></i> Projects</a>
-        <a href="?view=events" data-route="events" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 items-center gap-2"><i class="fa-solid fa-calendar-days text-[18px]"></i> Events<span class="ml-2 inline-flex items-center gap-1 h-5 px-2 text-[11px] font-semibold rounded-full bg-gradient-to-r from-emerald-100 to-emerald-200 text-emerald-900 border border-emerald-200 ring-1 ring-emerald-300/40 shadow-[inset_0_1px_0_rgba(255,255,255,.7)] transition hover:from-emerald-200 hover:to-emerald-300 hover:ring-emerald-400/60">✨ Closed beta</span></a>
-        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" aria-current="page"><i class="fa-solid fa-graduation-cap text-[18px]"></i> Schools</a>
-      </nav>
-      <div class="mt-auto p-4">
-        <div class="rounded-xl border border-gray-200 p-4 shadow-card">
-          <div class="text-sm text-gray-700 font-medium">1 profile view</div>
-          <div class="text-xs text-gray-500">in the past 90 days</div>
-        </div>
-        <button id="getAppBtn" class="w-full mt-3 flex items-center gap-2 rounded-xl border border-gray-200/70 bg-white px-4 py-3 text-[15px] font-medium text-gray-800 hover:bg-gray-50 active:scale-[.99]"><i class="fa-solid fa-qrcode text-[18px]"></i><span>Get the app</span></button>
-      </div>
-    </aside>
-
-    <!-- Mobile sidebar drawer -->
-    <div id="sidebar-drawer" class="lg:hidden fixed inset-0 z-40 hidden" aria-hidden="true">
-      <button id="drawer-overlay" class="absolute inset-0 bg-black/40 opacity-0 transition-opacity"></button>
-      <aside id="drawer-panel" class="absolute left-0 top-0 h-full w-72 max-w-[85vw] bg-white border-r border-gray-200 shadow-xl -translate-x-full transition-transform duration-300">
-        <div class="flex items-center justify-between p-4">
-          <div class="flex items-center gap-3">
-            <div class="w-9 h-9 grid place-items-center rounded-xl ah-grad text-white font-bold"><img src="https://i.imgur.com/7dO0mhL.png" alt="Activity Hub" class="w-6 h-6 object-contain pointer-events-none" loading="lazy"/ class="w-full h-full object-cover pointer-events-none" loading="lazy"></div>
-            <span class="font-semibold text-gray-800">Activity Hub</span>
-          </div>
-          <button id="close-drawer" class="p-2 rounded-md hover:bg-gray-100" aria-label="Close sidebar"><i class="fa-solid fa-xmark text-[18px]"></i></button>
-        </div>
-        <nav class="px-2 pb-3 space-y-1 text-sm">
-          <a href="?view=home" data-route="explore" class="flex items-center gap-3 px-3 py-2 rounded-lg nav-active"><i class="fa-solid fa-compass text-[18px]"></i> Home</a>
-          <div class="h-px bg-gray-100 my-2"></div>
-          <a href="?view=orgs" data-route="orgs" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-users text-[18px]"></i> Organizations</a>
-          <a href="?view=businesses" data-route="businesses" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-briefcase text-[18px]"></i> Businesses</a>
-          <a href="?view=projects" data-route="projects" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-diagram-project text-[18px]"></i> Projects</a>
-          <a href="?view=events" data-route="events" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-calendar-days text-[18px]"></i> Events</a>
-          <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" aria-current="page"><i class="fa-solid fa-graduation-cap text-[18px]"></i> Schools</a>
-        </nav>
-        <div class="mt-auto p-4 border-t border-gray-100">
-          <div class="rounded-xl border border-gray-200 p-4 shadow-card mb-3">
-            <div class="text-sm text-gray-700 font-medium">1 profile view</div>
-            <div class="text-xs text-gray-500">in the past 90 days</div>
-          </div>
-          <button class="w-full rounded-lg border border-gray-200 py-2 text-sm hover:bg-gray-50"><i class="fa-brands fa-google-play mr-2"></i> Get the app</button>
-        </div>
-      </aside>
-    </div>
-
-    <!-- ====== MAIN ====== -->
-    <main class="flex-1 min-h-screen min-w-0">
-      <!-- Top bar -->
-      <div class="sticky top-0 z-30 bg-white/80 topbar border-b border-gray-200">
-        <div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 h-14 flex items-center gap-3">
-          <div class="flex items-center gap-3">
-            <button id="open-sidebar-btn" class="p-2 rounded-md hover:bg-gray-100 lg:hidden" aria-label="Open sidebar"><i class="fa-solid fa-bars text-[20px]"></i></button>
-            <div class="w-8 h-8 grid place-items-center rounded-lg ah-grad text-white font-bold lg:hidden"><img src="https://i.imgur.com/7dO0mhL.png" alt="Activity Hub" class="w-6 h-6 object-contain pointer-events-none" loading="lazy"/ class="w-full h-full object-cover pointer-events-none" loading="lazy"></div>
-            <div id="nav-current-view" class="hidden lg:flex items-center gap-2 text-lg font-semibold text-ah-900"><i id="nav-current-icon" class="fa-solid fa-house text-[18px] text-ah-600"></i> <span id="nav-current-label">Home</span></div>
-          </div>
-
-          <!-- SEARCH + MENU (desktop) -->
-          <div class="flex-1 mx-2 hidden md:flex justify-center min-w-0">
-            <div class="relative w-full max-w-lg" id="searchbox" role="combobox" aria-haspopup="listbox" aria-owns="search-menu" aria-expanded="false">
-              <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[14px]"></i>
-
-              <!-- SCOPE PILL (in-input) -->
-              <span id="scope-pill" class="hidden absolute left-8 top-1/2 -translate-y-1/2"></span>
-
-              <input id="global-search" type="search" aria-autocomplete="list" aria-controls="search-menu"
-                     class="w-full rounded-full bg-gray-50 border border-gray-200 pl-10 pr-24 py-2.5 text-sm placeholder-gray-400 shadow-sm focus:border-ah-600 focus:ring-2 focus:ring-ah-500/20 outline-none transition search-soft"
-                     placeholder="Search clubs, businesses, projects…" />
-              <button id="clear-search" class="hidden absolute right-9 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" aria-label="Clear"><i class="fa-solid fa-xmark"></i></button>
-              <span class="pointer-events-none flex items-center justify-center absolute right-3 top-1/2 -translate-y-1/2 select-none rounded-md border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] tracking-wider text-gray-500 shadow-sm">/</span>
-
-              <!-- Dropdown menu -->
-              <div id="search-menu" class="search-menu hidden">
-                <div class="rounded-xl border border-gray-200 bg-white shadow-2xl overflow-hidden">
-                  <div class="flex items-center gap-1 p-2 border-b border-gray-100">
-                    <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="all">All</button>
-                    <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50" data-scope="orgs"><i class="fa-solid fa-users mr-1.5"></i> Orgs</button>
-                    <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50" data-scope="businesses"><i class="fa-solid fa-briefcase mr-1.5"></i> Businesses</button>
-                    <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50" data-scope="projects"><i class="fa-solid fa-diagram-project mr-1.5"></i> Projects</button>
-                    <div class="ml-auto text-[11px] text-gray-500 pr-2">↑/↓ to navigate • Enter to open</div>
-                  </div>
-                  <div id="search-results" role="listbox" class="max-h-[60vh] overflow-auto py-2"></div>
-                  <div id="search-footer" class="flex items-center justify-between px-3 py-2 border-t border-gray-100 text-xs text-gray-500">
-                    <div>Press <span class="search-badge">Esc</span> to close • <span class="search-badge">Enter</span> to open</div>
-                    <button id="search-clear-recents" class="text-gray-500 hover:text-gray-700 hidden">Clear recent</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Right controls -->
-          <div class="ml-auto flex items-center gap-2">
-            <button id="mobile-search-btn" class="p-2 rounded-md hover:bg-gray-100 md:hidden" aria-label="Search"><i class="fa-solid fa-magnifying-glass text-[18px]"></i></button>
-            <button class="relative p-2 rounded-md hover:bg-gray-100" aria-label="Notifications"><i class="fa-regular fa-bell text-[20px]"></i><span class="absolute -top-0.5 -right-0.5 text-[10px] bg-red-500 text-white rounded-full w-4 h-4 grid place-items-center">3</span></button>
-            <div class="w-8 h-8 rounded-full bg-gray-200 grid place-items-center text-xs font-semibold">SK</div>
-          </div>
-        </div>
-
-        <!-- Mobile inline search + full menu -->
-        <div id="mobile-search" class="md:hidden hidden border-t border-gray-200 bg-white">
-          <div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-2">
-            <div id="m-searchbox" class="relative" role="combobox" aria-haspopup="listbox" aria-owns="m-search-menu" aria-expanded="false">
-              <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[14px]"></i>
-              <!-- mobile scope pill -->
-              <span id="m-scope-pill" class="hidden absolute left-8 top-1/2 -translate-y-1/2"></span>
-
-              <input id="mobile-global-search" type="search"
-                     class="w-full rounded-full bg-gray-50 border border-gray-200 pl-10 pr-10 py-2.5 text-sm placeholder-gray-400 shadow-sm focus:border-ah-600 focus:ring-2 focus:ring-ah-500/20 outline-none transition search-soft"
-                     placeholder="Search clubs, businesses, projects…" />
-
-              <!-- Mobile dropdown (same structure) -->
-              <div id="m-search-menu" class="search-menu hidden">
-                <div class="rounded-xl border border-gray-200 bg-white shadow-2xl overflow-hidden">
-                  <div class="flex items-center gap-1 p-2 border-b border-gray-100">
-                    <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="all">All</button>
-                    <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50" data-scope="orgs"><i class="fa-solid fa-users mr-1.5"></i> Orgs</button>
-                    <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50" data-scope="businesses"><i class="fa-solid fa-briefcase mr-1.5"></i> Businesses</button>
-                    <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50" data-scope="projects"><i class="fa-solid fa-diagram-project mr-1.5"></i> Projects</button>
-                    <div class="ml-auto text-[11px] text-gray-500 pr-2">Tap a result • Enter to open</div>
-                  </div>
-                  <div id="m-search-results" role="listbox" class="max-h-[70vh] overflow-auto py-2"></div>
-                  <div id="m-search-footer" class="flex items-center justify-between px-3 py-2 border-t border-gray-100 text-xs text-gray-500">
-                    <div>Tap outside to close</div>
-                    <button id="m-search-clear-recents" class="text-gray-500 hover:text-gray-700 hidden">Clear recent</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ====== DIRECTORY (Explore / Category / Events) ====== -->
-      <div id="view-directory" class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-
-        <!-- Events-only banner -->
-        <div id="events-banner" class="hidden rounded-xl border border-amber-200 bg-amber-50 text-amber-900 p-4">
-          <div class="flex items-start gap-3">
-            <div class="mt-0.5">
-              <i class="fa-solid fa-triangle-exclamation text-[18px]"></i>
-            </div>
-            <p class="text-sm leading-6">
-              <strong>Heads Up</strong> — These events are automatically generated from public scheduling data and may not always reflect a club’s most current plans.
+<div class="flex w-full">
+<!-- ====== SIDEBAR ====== -->
+<aside class="hidden lg:flex lg:w-64 xl:w-72 lg:shrink-0 lg:sticky lg:top-0 lg:self-start lg:h-[100dvh] lg:overflow-y-auto border-r border-gray-200 sidebar-grad flex-col">
+<div class="flex items-center gap-3 p-4">
+<div class="w-9 h-9 grid place-items-center rounded-xl ah-grad text-white font-bold ah-brand-badge"><img alt="Activity Hub" class="w-full h-full object-cover pointer-events-none" loading="lazy" sizes="40px" src="https://i.imgur.com/7dO0mhL.png" srcset="https://i.imgur.com/7dO0mhL.png 1x, https://i.imgur.com/7dO0mhL.png 2x"/></div>
+<span class="font-semibold text-gray-800">Activity Hub</span>
+</div>
+<nav class="px-2 py-3 space-y-1 text-sm">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg nav-active" data-route="home" href="?view=home"><i class="fa-solid fa-house text-[18px]"></i> Home</a>
+<div class="h-px bg-gray-100 my-2"></div>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" data-route="orgs" href="?view=orgs"><i class="fa-solid fa-users text-[18px]"></i> Organizations</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" data-route="businesses" href="?view=businesses"><i class="fa-solid fa-briefcase text-[18px]"></i> Businesses</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" data-route="projects" href="?view=projects"><i class="fa-solid fa-diagram-project text-[18px]"></i> Projects</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 items-center gap-2" data-route="events" href="?view=events"><i class="fa-solid fa-calendar-days text-[18px]"></i> Events<span class="ml-2 inline-flex items-center gap-1 h-5 px-2 text-[11px] font-semibold rounded-full bg-gradient-to-r from-emerald-100 to-emerald-200 text-emerald-900 border border-emerald-200 ring-1 ring-emerald-300/40 shadow-[inset_0_1px_0_rgba(255,255,255,.7)] transition hover:from-emerald-200 hover:to-emerald-300 hover:ring-emerald-400/60">✨ Closed beta</span></a>
+<a aria-current="page" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" href="#"><i class="fa-solid fa-graduation-cap text-[18px]"></i> Schools</a>
+</nav>
+<div class="mt-auto p-4">
+<div class="rounded-xl border border-gray-200 p-4 shadow-card">
+<div class="text-sm text-gray-700 font-medium">1 profile view</div>
+<div class="text-xs text-gray-500">in the past 90 days</div>
+</div>
+<button class="w-full mt-3 flex items-center gap-2 rounded-xl border border-gray-200/70 bg-white px-4 py-3 text-[15px] font-medium text-gray-800 hover:bg-gray-50 active:scale-[.99]" id="getAppBtn"><i class="fa-solid fa-qrcode text-[18px]"></i><span>Get the app</span></button>
+</div>
+</aside>
+<!-- Mobile sidebar drawer -->
+<div aria-hidden="true" class="lg:hidden fixed inset-0 z-40 hidden" id="sidebar-drawer">
+<button class="absolute inset-0 bg-black/40 opacity-0 transition-opacity" id="drawer-overlay"></button>
+<aside class="absolute left-0 top-0 h-full w-72 max-w-[85vw] bg-white border-r border-gray-200 shadow-xl -translate-x-full transition-transform duration-300" id="drawer-panel">
+<div class="flex items-center justify-between p-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 grid place-items-center rounded-xl ah-grad text-white font-bold"><img alt="Activity Hub" class="w-full h-full object-cover pointer-events-none" loading="lazy" src="https://i.imgur.com/7dO0mhL.png"/></div>
+<span class="font-semibold text-gray-800">Activity Hub</span>
+</div>
+<button aria-label="Close sidebar" class="p-2 rounded-md hover:bg-gray-100" id="close-drawer"><i class="fa-solid fa-xmark text-[18px]"></i></button>
+</div>
+<nav class="px-2 pb-3 space-y-1 text-sm">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg nav-active" data-route="explore" href="?view=home"><i class="fa-solid fa-compass text-[18px]"></i> Home</a>
+<div class="h-px bg-gray-100 my-2"></div>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" data-route="orgs" href="?view=orgs"><i class="fa-solid fa-users text-[18px]"></i> Organizations</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" data-route="businesses" href="?view=businesses"><i class="fa-solid fa-briefcase text-[18px]"></i> Businesses</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" data-route="projects" href="?view=projects"><i class="fa-solid fa-diagram-project text-[18px]"></i> Projects</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" data-route="events" href="?view=events"><i class="fa-solid fa-calendar-days text-[18px]"></i> Events</a>
+<a aria-current="page" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" href="#"><i class="fa-solid fa-graduation-cap text-[18px]"></i> Schools</a>
+</nav>
+<div class="mt-auto p-4 border-t border-gray-100">
+<div class="rounded-xl border border-gray-200 p-4 shadow-card mb-3">
+<div class="text-sm text-gray-700 font-medium">1 profile view</div>
+<div class="text-xs text-gray-500">in the past 90 days</div>
+</div>
+<button class="w-full rounded-lg border border-gray-200 py-2 text-sm hover:bg-gray-50"><i class="fa-brands fa-google-play mr-2"></i> Get the app</button>
+</div>
+</aside>
+</div>
+<!-- ====== MAIN ====== -->
+<main class="flex-1 min-h-screen min-w-0">
+<!-- Top bar -->
+<div class="sticky top-0 z-30 bg-white/80 topbar border-b border-gray-200">
+<div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 h-14 flex items-center gap-3">
+<div class="flex items-center gap-3">
+<button aria-label="Open sidebar" class="p-2 rounded-md hover:bg-gray-100 lg:hidden" id="open-sidebar-btn"><i class="fa-solid fa-bars text-[20px]"></i></button>
+<div class="w-8 h-8 grid place-items-center rounded-lg ah-grad text-white font-bold lg:hidden"><img alt="Activity Hub" class="w-full h-full object-cover pointer-events-none" loading="lazy" src="https://i.imgur.com/7dO0mhL.png"/></div>
+<div class="hidden lg:flex items-center gap-2 text-lg font-semibold text-ah-900" id="nav-current-view"><i class="fa-solid fa-house text-[18px] text-ah-600" id="nav-current-icon"></i> <span id="nav-current-label">Home</span></div>
+</div>
+<!-- SEARCH + MENU (desktop) -->
+<div class="flex-1 mx-2 hidden md:flex justify-center min-w-0">
+<div aria-expanded="false" aria-haspopup="listbox" aria-owns="search-menu" class="relative w-full max-w-lg" id="searchbox" role="combobox">
+<i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[14px]"></i>
+<!-- SCOPE PILL (in-input) -->
+<span class="hidden absolute left-8 top-1/2 -translate-y-1/2" id="scope-pill"></span>
+<input aria-autocomplete="list" aria-controls="search-menu" class="w-full rounded-full bg-gray-50 border border-gray-200 pl-10 pr-24 py-2.5 text-sm placeholder-gray-400 shadow-sm focus:border-ah-600 focus:ring-2 focus:ring-ah-500/20 outline-none transition search-soft" id="global-search" placeholder="Search clubs, businesses, projects…" type="search"/>
+<button aria-label="Clear" class="hidden absolute right-9 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" id="clear-search"><i class="fa-solid fa-xmark"></i></button>
+<span class="pointer-events-none flex items-center justify-center absolute right-3 top-1/2 -translate-y-1/2 select-none rounded-md border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] tracking-wider text-gray-500 shadow-sm">/</span>
+<!-- Dropdown menu -->
+<div class="search-menu hidden" id="search-menu">
+<div class="rounded-xl border border-gray-200 bg-white shadow-2xl overflow-hidden">
+<div class="flex items-center gap-1 p-2 border-b border-gray-100">
+<button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="all">All</button>
+<button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50" data-scope="orgs"><i class="fa-solid fa-users mr-1.5"></i> Orgs</button>
+<button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50" data-scope="businesses"><i class="fa-solid fa-briefcase mr-1.5"></i> Businesses</button>
+<button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50" data-scope="projects"><i class="fa-solid fa-diagram-project mr-1.5"></i> Projects</button>
+<div class="ml-auto text-[11px] text-gray-500 pr-2">↑/↓ to navigate • Enter to open</div>
+</div>
+<div class="max-h-[60vh] overflow-auto py-2" id="search-results" role="listbox"></div>
+<div class="flex items-center justify-between px-3 py-2 border-t border-gray-100 text-xs text-gray-500" id="search-footer">
+<div>Press <span class="search-badge">Esc</span> to close • <span class="search-badge">Enter</span> to open</div>
+<button class="text-gray-500 hover:text-gray-700 hidden" id="search-clear-recents">Clear recent</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right controls -->
+<div class="ml-auto flex items-center gap-2">
+<button aria-label="Search" class="p-2 rounded-md hover:bg-gray-100 md:hidden" id="mobile-search-btn"><i class="fa-solid fa-magnifying-glass text-[18px]"></i></button>
+<button aria-label="Notifications" class="relative p-2 rounded-md hover:bg-gray-100"><i class="fa-regular fa-bell text-[20px]"></i><span class="absolute -top-0.5 -right-0.5 text-[10px] bg-red-500 text-white rounded-full w-4 h-4 grid place-items-center">3</span></button>
+<div class="w-8 h-8 rounded-full bg-gray-200 grid place-items-center text-xs font-semibold">SK</div>
+</div>
+</div>
+<!-- Mobile inline search + full menu -->
+<div class="md:hidden hidden border-t border-gray-200 bg-white" id="mobile-search">
+<div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-2">
+<div aria-expanded="false" aria-haspopup="listbox" aria-owns="m-search-menu" class="relative" id="m-searchbox" role="combobox">
+<i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[14px]"></i>
+<!-- mobile scope pill -->
+<span class="hidden absolute left-8 top-1/2 -translate-y-1/2" id="m-scope-pill"></span>
+<input class="w-full rounded-full bg-gray-50 border border-gray-200 pl-10 pr-10 py-2.5 text-sm placeholder-gray-400 shadow-sm focus:border-ah-600 focus:ring-2 focus:ring-ah-500/20 outline-none transition search-soft" id="mobile-global-search" placeholder="Search clubs, businesses, projects…" type="search"/>
+<!-- Mobile dropdown (same structure) -->
+<div class="search-menu hidden" id="m-search-menu">
+<div class="rounded-xl border border-gray-200 bg-white shadow-2xl overflow-hidden">
+<div class="flex items-center gap-1 p-2 border-b border-gray-100">
+<button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="all">All</button>
+<button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50" data-scope="orgs"><i class="fa-solid fa-users mr-1.5"></i> Orgs</button>
+<button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50" data-scope="businesses"><i class="fa-solid fa-briefcase mr-1.5"></i> Businesses</button>
+<button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50" data-scope="projects"><i class="fa-solid fa-diagram-project mr-1.5"></i> Projects</button>
+<div class="ml-auto text-[11px] text-gray-500 pr-2">Tap a result • Enter to open</div>
+</div>
+<div class="max-h-[70vh] overflow-auto py-2" id="m-search-results" role="listbox"></div>
+<div class="flex items-center justify-between px-3 py-2 border-t border-gray-100 text-xs text-gray-500" id="m-search-footer">
+<div>Tap outside to close</div>
+<button class="text-gray-500 hover:text-gray-700 hidden" id="m-search-clear-recents">Clear recent</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- ====== DIRECTORY (Explore / Category / Events) ====== -->
+<div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6" id="view-directory">
+<!-- Events-only banner -->
+<div class="hidden rounded-xl border border-amber-200 bg-amber-50 text-amber-900 p-4" id="events-banner">
+<div class="flex items-start gap-3">
+<div class="mt-0.5">
+<i class="fa-solid fa-triangle-exclamation text-[18px]"></i>
+</div>
+<p class="text-sm leading-6">
+<strong>Heads Up</strong> — These events are automatically generated from public scheduling data and may not always reflect a club’s most current plans.
               Clubs will soon be able to manage their own pages directly on Activity Hub, which will make listings more accurate over time.
               In the meantime, we recommend checking the organization’s social media or contacting them directly if an email is provided.
             </p>
-          </div>
-        </div>
-
-        <!-- Only on Explore -->
-        <div id="explore-bars" class="space-y-6">
-          <div class="soft-card p-4 flex items-start gap-3">
-            <div class="w-9 h-9 rounded-md ah-grad text-white grid place-items-center text-xs font-bold">SJU</div>
-            <div class="flex-1 min-w-0">
-              <div class="font-semibold">St. John's University — Queens</div>
-              <div class="text-sm text-gray-500">Access campus resources and verified orgs</div>
-            </div>
-          </div>
-          <div class="soft-card p-4 flex items-center gap-3">
-            <div class="w-9 h-9 grid place-items-center rounded-full bg-white border border-ah-100">
-              <i class="fa-solid fa-circle-check text-ah-700 text-[18px]"></i>
-            </div>
-            <div class="flex-1 text-sm text-ah-900">Claim your club’s page and get a verified badge.</div>
-            <button class="px-3 py-1.5 rounded-md bg-white border border-ah-200 text-sm font-medium hover:bg-ah-100">Claim now</button>
-          </div>
-        </div>
-
-        <!-- Browse -->
-        <section>
-          <div class="flex items-center justify-between mb-3"><h2 class="text-lg font-semibold">Browse</h2></div>
-          <div id="browse-chips" class="flex gap-2 items-center -mx-4 px-4 md:mx-0 md:px-0 overflow-x-auto md:overflow-x-visible no-scrollbar pb-1 flex-nowrap md:flex-wrap max-w-full">
-            <button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0" data-selected="true">All</button>
-            <button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Academic</button>
-            <button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Professional Development</button>
-            <button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Service / Volunteering</button>
-            <button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Sports &amp; Athletics</button>
-            <button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Religious / Spiritual</button>
-            <button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Cultural / Identity-Based</button>
-            <button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Arts &amp; Media</button>
-            <button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Political / Activism</button>
-          </div>
-        </section>
-
-        <!-- Sections -->
-        <section id="section-orgs">
-          <div class="flex items-center justify-between mb-3">
-            <div class="mt-2 flex items-center justify-between w-full pr-2"><h2 id="title-orgs" class="text-lg font-semibold">Top organizations</h2><a href="?sort=popular&view=orgs" data-route="orgs" class="text-sm font-medium text-blue-600 hover:underline see-all-link seeall-if-home">See all</a></div>
-            <div id="sort-orgs-wrap" class="relative hidden">
-              <button id="sort-orgs-btn" class="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-gray-200 bg-white hover:bg-gray-50">
-                <i class="fa-solid fa-arrow-up-wide-short"></i><span id="sort-orgs-label">Popular</span>
-              </button>
-              <div id="sort-orgs-menu" class="menu hidden bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden">
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="relevance">Relevance</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="az">A → Z</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="za">Z → A</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="popular">Popular</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="verified">Verified first</button>
-              </div>
-            </div>
-          </div>
-          <div id="orgs-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
-          <div id="orgs-empty" class="hidden text-sm text-gray-500">No organizations match the current filter.</div>
-        </section>
-
-        <section id="section-biz">
-          <div class="flex items-center justify-between mb-3 mt-2">
-            <div class="mt-2 flex items-center justify-between w-full pr-2"><h2 id="title-biz" class="text-lg font-semibold">Top businesses</h2><a href="?sort=popular&view=businesses" data-route="businesses" class="text-sm font-medium text-blue-600 hover:underline see-all-link seeall-if-home">See all</a></div>
-            <div id="sort-biz-wrap" class="relative hidden">
-              <button id="sort-biz-btn" class="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-gray-200 bg-white hover:bg-gray-50">
-                <i class="fa-solid fa-arrow-up-wide-short"></i><span id="sort-biz-label">Popular</span>
-              </button>
-              <div id="sort-biz-menu" class="menu hidden bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden">
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="relevance">Relevance</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="az">A → Z</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="za">Z → A</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="popular">Popular</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="verified">Verified first</button>
-              </div>
-            </div>
-          </div>
-          <div id="biz-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
-          <div id="biz-empty" class="hidden text-sm text-gray-500">No businesses found in the data.</div>
-        </section>
-
-        <section id="section-projects">
-          <div class="flex items-center justify-between mb-3 mt-2">
-            <div class="mt-2 flex items-center justify-between w-full pr-2"><h2 id="title-projects" class="text-lg font-semibold">Top projects</h2><a href="?sort=popular&view=projects" data-route="projects" class="text-sm font-medium text-blue-600 hover:underline see-all-link seeall-if-home">See all</a></div>
-            <div id="sort-projects-wrap" class="relative hidden">
-              <button id="sort-projects-btn" class="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-gray-200 bg-white hover:bg-gray-50">
-                <i class="fa-solid fa-arrow-up-wide-short"></i><span id="sort-projects-label">Popular</span>
-              </button>
-              <div id="sort-projects-menu" class="menu hidden bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden">
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="relevance">Relevance</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="az">A → Z</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="za">Z → A</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="popular">Popular</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="verified">Verified first</button>
-              </div>
-            </div>
-          </div>
-          <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
-          <div id="projects-empty" class="hidden text-sm text-gray-500">No projects found in the data.</div>
-        </section>
-
-        <!-- EVENTS (visible only in Events view) -->
-        <section id="section-events" class="hidden">
-          <div class="flex items-center justify-between mb-3">
-            <h2 id="title-events" class="text-lg font-semibold">Events</h2>
-          </div>
-          <div id="events-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
-          <div id="events-empty" class="hidden text-sm text-gray-500">No events to show.</div>
-        </section>
-      </div>
-
-      <!-- ====== SEARCH RESULTS VIEW ====== -->
-      <div id="view-search" class="hidden">
-        <div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-          <div class="mt-2 flex items-center justify-between w-full pr-2">
-            <div>
-              <h1 id="srch-title" class="text-xl font-semibold"></h1>
-              <div class="mt-2 flex gap-2">
-                <button class="srch-scope px-3 py-1.5 text-sm rounded-full border border-gray-200 bg-white" data-scope="all">All</button>
-                <button class="srch-scope px-3 py-1.5 text-sm rounded-full border border-gray-200 bg-white" data-scope="orgs"><i class="fa-solid fa-users mr-1.5"></i>Orgs</button>
-                <button class="srch-scope px-3 py-1.5 text-sm rounded-full border border-gray-200 bg-white" data-scope="businesses"><i class="fa-solid fa-briefcase mr-1.5"></i>Businesses</button>
-                <button class="srch-scope px-3 py-1.5 text-sm rounded-full border border-gray-200 bg-white" data-scope="projects"><i class="fa-solid fa-diagram-project mr-1.5"></i>Projects</button>
-              </div>
-            </div>
-
-            <div class="relative">
-              <button id="srch-sort-btn" class="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-gray-200 bg-white hover:bg-gray-50">
-                <i class="fa-solid fa-arrow-up-wide-short"></i><span id="srch-sort-label">Relevance</span>
-              </button>
-              <div id="srch-sort-menu" class="menu hidden bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden">
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="relevance">Relevance</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="az">A → Z</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="za">Z → A</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="popular">Popular</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="verified">Verified first</button>
-              </div>
-            </div>
-          </div>
-
-          <section id="rs-orgs">
-            <h2 class="text-lg font-semibold mb-3" id="rs-orgs-title">Organizations</h2>
-            <div id="rs-orgs-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
-            <div id="rs-orgs-empty" class="hidden text-sm text-gray-500">No organizations match.</div>
-          </section>
-
-          <section id="rs-biz">
-            <h2 class="text-lg font-semibold mb-3" id="rs-biz-title">Businesses</h2>
-            <div id="rs-biz-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
-            <div id="rs-biz-empty" class="hidden text-sm text-gray-500">No businesses match.</div>
-          </section>
-
-          <section id="rs-projects">
-            <h2 class="text-lg font-semibold mb-3" id="rs-projects-title">Projects</h2>
-            <div id="rs-projects-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
-            <div id="rs-projects-empty" class="hidden text-sm text-gray-500">No projects match.</div>
-          </section>
-        </div>
-      </div>
-
-      <!-- ====== FULLPAGE DETAIL VIEW ====== -->
-      <div id="view-detail" class="hidden">
-        <div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-6">
-          <nav class="mb-4 text-sm">
-            <a href="./" id="back" class="inline-flex items-center gap-1 text-ah-700 hover:underline">
-              <i class="fa-solid fa-arrow-left"></i> All listings
-            </a>
-          </nav>
-
-          <article class="rounded-xl border border-gray-200 bg-white shadow-card">
-            <div class="p-6 md:p-8">
-              <div class="flex items-start gap-5">
-                <img id="d_logo" class="w-20 h-20 rounded-xl object-contain bg-white p-1 ring-1 ring-gray-200 hidden" alt="">
-                <div id="d_fallback" class="w-20 h-20 rounded-xl grid place-items-center text-white text-lg font-semibold ring-1 ring-gray-200"></div>
-
-                <div class="min-w-0 flex-1">
-                  <div class="flex items-start justify-between gap-3">
-                    <div class="min-w-0">
-                      <h1 id="d_name" class="text-2xl font-semibold tracking-tight"></h1>
-<p id="d_meta" class="mt-1 text-[13px] text-gray-500"></p>
-
-                      <div class="mt-2 flex flex-wrap gap-2">
-                        <span id="d_theme"   class="hidden inline-flex items-center text-[11px] px-2.5 py-1 rounded-full bg-gray-100 border border-gray-200"></span>
-                        <span id="d_industry"class="hidden inline-flex items-center text-[11px] px-2.5 py-1 rounded-full bg-gray-100 border border-gray-200"></span>
-                        </span>
-                        
-                      </div>
-                    </div>
-                    <div class="flex items-center gap-2">
-
-                      <button id="claimBtn" class="shrink-0 inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 text-sm hover:bg-gray-50" aria-label="Claim this listing" data-type="listing" data-id="">
-
-                        <i class="fa-regular fa-circle-check"></i><span>Claim this <span id="claimTypeLabel">listing</span></span>
-
-                      </button>
-
-                      <button id="shareBtn" class="shrink-0 inline-flex items-center gap-2 h-9 px-3 rounded-lg border border-gray-200 text-sm hover:bg-gray-50">
-                      <i class="fa-solid fa-share-nodes"></i><span class="inline">Share</span>
-                    </button>
-
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              
-              <div class="mt-6 pt-4 border-t border-gray-200">
-                <!-- Tabs -->
-                <nav class="flex items-center gap-2 mb-4" role="tablist" aria-label="Listing sections">
-                  <button class="tab-btn inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold border border-gray-200 bg-gray-50 text-gray-800"
-                          role="tab" aria-selected="true" data-tab="overview">
-                    <i class="fa-solid fa-circle-info text-gray-500"></i> Overview
-                  </button>
-                  <button class="tab-btn inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold border border-transparent text-gray-600 hover:bg-gray-50"
-                          role="tab" aria-selected="false" data-tab="events">
-                    <i class="fa-solid fa-calendar-days text-gray-500"></i> Events
-                  </button>
-                  <button class="tab-btn inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold border border-transparent text-gray-600 hover:bg-gray-50"
-                          role="tab" aria-selected="false" data-tab="contact">
-                    <i class="fa-solid fa-envelope text-gray-500"></i> Contact Info
-                  </button>
-                </nav>
-
-                <!-- Panels -->
-                
-<div id="panel-overview">
-  <div class="space-y-6">
-    <section class="py-6">
-      <h2 class="text-lg font-semibold mb-2">About</h2>
-      <p id="d_desc" class="text-[15px] leading-7 text-gray-700"></p>
-    </section>
-    <section class="py-6">
-      <h2 class="text-lg font-semibold mb-2">Links</h2>
-      <div id="d_links" class="flex flex-wrap gap-2"></div>
-    </section>
-  </div>
 </div>
+</div>
+<!-- Only on Explore -->
+<div class="space-y-6" id="explore-bars">
+<div class="soft-card p-4 flex items-start gap-3">
+<div class="w-9 h-9 rounded-md ah-grad text-white grid place-items-center text-xs font-bold">SJU</div>
+<div class="flex-1 min-w-0">
+<div class="font-semibold">St. John's University — Queens</div>
+<div class="text-sm text-gray-500">Access campus resources and verified orgs</div>
+</div>
+</div>
+<div class="soft-card p-4 flex items-center gap-3">
+<div class="w-9 h-9 grid place-items-center rounded-full bg-white border border-ah-100">
+<i class="fa-solid fa-circle-check text-ah-700 text-[18px]"></i>
+</div>
+<div class="flex-1 text-sm text-ah-900">Claim your club’s page and get a verified badge.</div>
+<button class="px-3 py-1.5 rounded-md bg-white border border-ah-200 text-sm font-medium hover:bg-ah-100">Claim now</button>
+</div>
+</div>
+<!-- Browse -->
+<section>
+<div class="flex items-center justify-between mb-3"><h2 class="text-lg font-semibold">Browse</h2></div>
+<div class="flex gap-2 items-center -mx-4 px-4 md:mx-0 md:px-0 overflow-x-auto md:overflow-x-visible no-scrollbar pb-1 flex-nowrap md:flex-wrap max-w-full" id="browse-chips">
+<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0" data-selected="true">All</button>
+<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Academic</button>
+<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Professional Development</button>
+<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Service / Volunteering</button>
+<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Sports &amp; Athletics</button>
+<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Religious / Spiritual</button>
+<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Cultural / Identity-Based</button>
+<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Arts &amp; Media</button>
+<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Political / Activism</button>
+</div>
+</section>
+<!-- Sections -->
+<section id="section-orgs">
+<div class="flex items-center justify-between mb-3">
+<div class="mt-2 flex items-center justify-between w-full pr-2"><h2 class="text-lg font-semibold" id="title-orgs">Top organizations</h2><a class="text-sm font-medium text-blue-600 hover:underline see-all-link seeall-if-home" data-route="orgs" href="?sort=popular&amp;view=orgs">See all</a></div>
+<div class="relative hidden" id="sort-orgs-wrap">
+<button class="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-gray-200 bg-white hover:bg-gray-50" id="sort-orgs-btn">
+<i class="fa-solid fa-arrow-up-wide-short"></i><span id="sort-orgs-label">Popular</span>
+</button>
+<div class="menu hidden bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden" id="sort-orgs-menu">
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="relevance">Relevance</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="az">A → Z</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="za">Z → A</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="popular">Popular</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="verified">Verified first</button>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="orgs-grid"></div>
+<div class="hidden text-sm text-gray-500" id="orgs-empty">No organizations match the current filter.</div>
+</section>
+<section id="section-biz">
+<div class="flex items-center justify-between mb-3 mt-2">
+<div class="mt-2 flex items-center justify-between w-full pr-2"><h2 class="text-lg font-semibold" id="title-biz">Top businesses</h2><a class="text-sm font-medium text-blue-600 hover:underline see-all-link seeall-if-home" data-route="businesses" href="?sort=popular&amp;view=businesses">See all</a></div>
+<div class="relative hidden" id="sort-biz-wrap">
+<button class="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-gray-200 bg-white hover:bg-gray-50" id="sort-biz-btn">
+<i class="fa-solid fa-arrow-up-wide-short"></i><span id="sort-biz-label">Popular</span>
+</button>
+<div class="menu hidden bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden" id="sort-biz-menu">
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="relevance">Relevance</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="az">A → Z</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="za">Z → A</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="popular">Popular</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="verified">Verified first</button>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="biz-grid"></div>
+<div class="hidden text-sm text-gray-500" id="biz-empty">No businesses found in the data.</div>
+</section>
+<section id="section-projects">
+<div class="flex items-center justify-between mb-3 mt-2">
+<div class="mt-2 flex items-center justify-between w-full pr-2"><h2 class="text-lg font-semibold" id="title-projects">Top projects</h2><a class="text-sm font-medium text-blue-600 hover:underline see-all-link seeall-if-home" data-route="projects" href="?sort=popular&amp;view=projects">See all</a></div>
+<div class="relative hidden" id="sort-projects-wrap">
+<button class="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-gray-200 bg-white hover:bg-gray-50" id="sort-projects-btn">
+<i class="fa-solid fa-arrow-up-wide-short"></i><span id="sort-projects-label">Popular</span>
+</button>
+<div class="menu hidden bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden" id="sort-projects-menu">
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="relevance">Relevance</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="az">A → Z</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="za">Z → A</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="popular">Popular</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="verified">Verified first</button>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="projects-grid"></div>
+<div class="hidden text-sm text-gray-500" id="projects-empty">No projects found in the data.</div>
+</section>
+<!-- EVENTS (visible only in Events view) -->
+<section class="hidden" id="section-events">
+<div class="flex items-center justify-between mb-3">
+<h2 class="text-lg font-semibold" id="title-events">Events</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="events-grid"></div>
+<div class="hidden text-sm text-gray-500" id="events-empty">No events to show.</div>
+</section>
+</div>
+<!-- ====== SEARCH RESULTS VIEW ====== -->
+<div class="hidden" id="view-search">
+<div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+<div class="mt-2 flex items-center justify-between w-full pr-2">
+<div>
+<h1 class="text-xl font-semibold" id="srch-title"></h1>
+<div class="mt-2 flex gap-2">
+<button class="srch-scope px-3 py-1.5 text-sm rounded-full border border-gray-200 bg-white" data-scope="all">All</button>
+<button class="srch-scope px-3 py-1.5 text-sm rounded-full border border-gray-200 bg-white" data-scope="orgs"><i class="fa-solid fa-users mr-1.5"></i>Orgs</button>
+<button class="srch-scope px-3 py-1.5 text-sm rounded-full border border-gray-200 bg-white" data-scope="businesses"><i class="fa-solid fa-briefcase mr-1.5"></i>Businesses</button>
+<button class="srch-scope px-3 py-1.5 text-sm rounded-full border border-gray-200 bg-white" data-scope="projects"><i class="fa-solid fa-diagram-project mr-1.5"></i>Projects</button>
+</div>
+</div>
+<div class="relative">
+<button class="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-gray-200 bg-white hover:bg-gray-50" id="srch-sort-btn">
+<i class="fa-solid fa-arrow-up-wide-short"></i><span id="srch-sort-label">Relevance</span>
+</button>
+<div class="menu hidden bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden" id="srch-sort-menu">
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="relevance">Relevance</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="az">A → Z</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="za">Z → A</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="popular">Popular</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="verified">Verified first</button>
+</div>
+</div>
+</div>
+<section id="rs-orgs">
+<h2 class="text-lg font-semibold mb-3" id="rs-orgs-title">Organizations</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="rs-orgs-grid"></div>
+<div class="hidden text-sm text-gray-500" id="rs-orgs-empty">No organizations match.</div>
+</section>
+<section id="rs-biz">
+<h2 class="text-lg font-semibold mb-3" id="rs-biz-title">Businesses</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="rs-biz-grid"></div>
+<div class="hidden text-sm text-gray-500" id="rs-biz-empty">No businesses match.</div>
+</section>
+<section id="rs-projects">
+<h2 class="text-lg font-semibold mb-3" id="rs-projects-title">Projects</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="rs-projects-grid"></div>
+<div class="hidden text-sm text-gray-500" id="rs-projects-empty">No projects match.</div>
+</section>
+</div>
+</div>
+<!-- ====== FULLPAGE DETAIL VIEW ====== -->
+<div class="hidden" id="view-detail">
+<div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-6">
+<nav class="mb-4 text-sm">
+<a class="inline-flex items-center gap-1 text-ah-700 hover:underline" href="./" id="back">
+<i class="fa-solid fa-arrow-left"></i> All listings
+            </a>
+</nav>
+<article class="rounded-xl border border-gray-200 bg-white shadow-card">
+<div class="p-6 md:p-8">
+<div class="flex items-start gap-5">
+<img alt="" class="w-20 h-20 rounded-xl object-contain bg-white p-1 ring-1 ring-gray-200 hidden" id="d_logo"/>
+<div class="w-20 h-20 rounded-xl grid place-items-center text-white text-lg font-semibold ring-1 ring-gray-200" id="d_fallback"></div>
+<div class="min-w-0 flex-1">
+<div class="flex items-start justify-between gap-3">
+<div class="min-w-0">
+<h1 class="text-2xl font-semibold tracking-tight" id="d_name"></h1>
+<p class="mt-1 text-[13px] text-gray-500" id="d_meta"></p>
+<div class="mt-2 flex flex-wrap gap-2">
+<span class="hidden inline-flex items-center text-[11px] px-2.5 py-1 rounded-full bg-gray-100 border border-gray-200" id="d_theme"></span>
+<span class="hidden inline-flex items-center text-[11px] px-2.5 py-1 rounded-full bg-gray-100 border border-gray-200" id="d_industry"></span>
 
-<div id="panel-events" class="hidden">
-                  <div class="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-center text-gray-600">
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button aria-label="Claim this listing" class="shrink-0 inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 text-sm hover:bg-gray-50" data-id="" data-type="listing" id="claimBtn">
+<i class="fa-regular fa-circle-check"></i><span>Claim this <span id="claimTypeLabel">listing</span></span>
+</button>
+<button class="shrink-0 inline-flex items-center gap-2 h-9 px-3 rounded-lg border border-gray-200 text-sm hover:bg-gray-50" id="shareBtn">
+<i class="fa-solid fa-share-nodes"></i><span class="inline">Share</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-6 pt-4 border-t border-gray-200">
+<!-- Tabs -->
+<nav aria-label="Listing sections" class="flex items-center gap-2 mb-4" role="tablist">
+<button aria-selected="true" class="tab-btn inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold border border-gray-200 bg-gray-50 text-gray-800" data-tab="overview" role="tab">
+<i class="fa-solid fa-circle-info text-gray-500"></i> Overview
+                  </button>
+<button aria-selected="false" class="tab-btn inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold border border-transparent text-gray-600 hover:bg-gray-50" data-tab="events" role="tab">
+<i class="fa-solid fa-calendar-days text-gray-500"></i> Events
+                  </button>
+<button aria-selected="false" class="tab-btn inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold border border-transparent text-gray-600 hover:bg-gray-50" data-tab="contact" role="tab">
+<i class="fa-solid fa-envelope text-gray-500"></i> Contact Info
+                  </button>
+</nav>
+<!-- Panels -->
+<div id="panel-overview">
+<div class="space-y-6">
+<section class="py-6">
+<h2 class="text-lg font-semibold mb-2">About</h2>
+<p class="text-[15px] leading-7 text-gray-700" id="d_desc"></p>
+</section>
+<section class="py-6">
+<h2 class="text-lg font-semibold mb-2">Links</h2>
+<div class="flex flex-wrap gap-2" id="d_links"></div>
+</section>
+</div>
+</div>
+<div class="hidden" id="panel-events">
+<div class="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-center text-gray-600">
                     Nothing here yet — check back soon.
                   </div>
-                </div>
-
-                <div id="panel-contact" class="hidden">
-                  <div class="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-center text-gray-600">
+</div>
+<div class="hidden" id="panel-contact">
+<div class="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-center text-gray-600">
                     Contact info coming soon.
                   </div>
-                </div>
-              </div>
-
-            </div>
-          </article>
-        </div>
-      </div>
-    </main>
-  </div>
-
-  <!-- Share modal -->
-  <div id="shareModal" class="fixed inset-0 z-50 hidden">
-    <div class="absolute inset-0 bg-gray-900/60" data-close="share"></div>
-    <div class="relative grid place-items-center min-h-dvh p-4">
-      <div class="w-full max-w-md rounded-xl border border-gray-200 bg-white p-6 shadow-card">
-        <div class="mt-2 flex items-center justify-between w-full pr-2">
-          <h3 class="text-lg font-semibold">Share</h3>
-          <button class="h-9 w-9 grid place-items-center rounded-lg border border-gray-200 hover:bg-gray-50" data-close="share" aria-label="Close">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div><div id="shareRowWrap" class="mt-1">
-<div class="share-row">
-    <a id="shareWhatsApp" class="share-chip" href="#" aria-label="Share via WhatsApp" rel="noopener" target="_blank" aria-current="page">
-      <span class="share-chip__circle"><img alt="" src="https://i.imgur.com/qOttODu.png" class="share-chip__icon" /></span>
-      <span class="share-chip__label">WhatsApp</span>
-    </a>
-    <a id="shareX" class="share-chip" href="#" aria-label="Share on X (Twitter)" rel="noopener" target="_blank" aria-current="page">
-      <span class="share-chip__circle"><img alt="" src="https://i.imgur.com/PLQsGra.png" class="share-chip__icon" /></span>
-      <span class="share-chip__label">X</span>
-    </a>
-    <a id="shareEmail" class="share-chip" href="#" aria-label="Share via Email" rel="noopener" target="_blank" aria-current="page">
-      <span class="share-chip__circle"><img alt="" src="https://i.imgur.com/cBOGtrb.png" class="share-chip__icon" /></span>
-      <span class="share-chip__label">Email</span>
-    </a>
-    <a id="shareLinkedIn" class="share-chip" href="#" aria-label="Share via LinkedIn" rel="noopener" target="_blank" aria-current="page">
-      <span class="share-chip__circle"><img alt="" src="https://i.imgur.com/PEw6T9z.png" class="share-chip__icon" /></span>
-      <span class="share-chip__label">LinkedIn</span>
-    </a>
-  </div>
 </div>
-        <div class="mt-4 flex items-center gap-2">
-          <input id="shareUrl" class="flex-1 h-11 rounded-lg border border-gray-200 px-3" readonly>
-          <button id="copyShare" class="h-11 px-4 rounded-lg bg-ah-600 text-white hover:bg-ah-700">Copy</button>
-        </div>
-        <div id="copied" class="mt-3 text-emerald-600 text-sm hidden">Copied!</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ====== JS ====== -->
-  <script>
+</div>
+</div>
+</article>
+</div>
+</div>
+</main>
+</div>
+<!-- Share modal -->
+<div class="fixed inset-0 z-50 hidden" id="shareModal">
+<div class="absolute inset-0 bg-gray-900/60" data-close="share"></div>
+<div class="relative grid place-items-center min-h-dvh p-4">
+<div class="w-full max-w-md rounded-xl border border-gray-200 bg-white p-6 shadow-card">
+<div class="mt-2 flex items-center justify-between w-full pr-2">
+<h3 class="text-lg font-semibold">Share</h3>
+<button aria-label="Close" class="h-9 w-9 grid place-items-center rounded-lg border border-gray-200 hover:bg-gray-50" data-close="share">
+<i class="fa-solid fa-xmark"></i>
+</button>
+</div><div class="mt-1" id="shareRowWrap">
+<div class="share-row">
+<a aria-current="page" aria-label="Share via WhatsApp" class="share-chip" href="#" id="shareWhatsApp" rel="noopener" target="_blank">
+<span class="share-chip__circle"><img alt="" class="share-chip__icon" src="https://i.imgur.com/qOttODu.png"/></span>
+<span class="share-chip__label">WhatsApp</span>
+</a>
+<a aria-current="page" aria-label="Share on X (Twitter)" class="share-chip" href="#" id="shareX" rel="noopener" target="_blank">
+<span class="share-chip__circle"><img alt="" class="share-chip__icon" src="https://i.imgur.com/PLQsGra.png"/></span>
+<span class="share-chip__label">X</span>
+</a>
+<a aria-current="page" aria-label="Share via Email" class="share-chip" href="#" id="shareEmail" rel="noopener" target="_blank">
+<span class="share-chip__circle"><img alt="" class="share-chip__icon" src="https://i.imgur.com/cBOGtrb.png"/></span>
+<span class="share-chip__label">Email</span>
+</a>
+<a aria-current="page" aria-label="Share via LinkedIn" class="share-chip" href="#" id="shareLinkedIn" rel="noopener" target="_blank">
+<span class="share-chip__circle"><img alt="" class="share-chip__icon" src="https://i.imgur.com/PEw6T9z.png"/></span>
+<span class="share-chip__label">LinkedIn</span>
+</a>
+</div>
+</div>
+<div class="mt-4 flex items-center gap-2">
+<input class="flex-1 h-11 rounded-lg border border-gray-200 px-3" id="shareUrl" readonly=""/>
+<button class="h-11 px-4 rounded-lg bg-ah-600 text-white hover:bg-ah-700" id="copyShare">Copy</button>
+</div>
+<div class="mt-3 text-emerald-600 text-sm hidden" id="copied">Copied!</div>
+</div>
+</div>
+</div>
+<!-- ====== JS ====== -->
+<script>
     const API_URL = "https://sheet2api.com/v1/ubMLioGAT8Gm/updated-listings";
     
     // ---- Logo fit mode toggle ----
@@ -1793,41 +1734,39 @@ if(q){
     window.addEventListener('popstate', routeFromURL);
     loadData();
   </script>
-
 <!-- Claim Modal -->
-<div id="claim-modal" class="fixed inset-0 z-50 hidden">
-  <div class="absolute inset-0 bg-black/30" data-dismiss></div>
-  <div class="mx-auto mt-20 w-[92vw] max-w-lg rounded-2xl bg-white shadow-card border border-gray-200">
-    <div class="flex items-center justify-between px-5 py-3 border-b border-gray-100">
-      <h2 class="text-lg font-semibold">
+<div class="fixed inset-0 z-50 hidden" id="claim-modal">
+<div class="absolute inset-0 bg-black/30" data-dismiss=""></div>
+<div class="mx-auto mt-20 w-[92vw] max-w-lg rounded-2xl bg-white shadow-card border border-gray-200">
+<div class="flex items-center justify-between px-5 py-3 border-b border-gray-100">
+<h2 class="text-lg font-semibold">
         Claim this <span id="claim-type-label">listing</span>
-      </h2>
-      <button class="p-2 rounded-lg hover:bg-gray-50" aria-label="Close" data-dismiss>
-        <i class="fa-regular fa-xmark"></i>
-      </button>
-    </div>
-    <form id="claim-form" class="p-5 space-y-4">
-      <input type="hidden" name="listing_id" id="claim-listing-id" />
-      <div>
-        <label class="block text-sm font-medium mb-1" for="claim-name">Your name</label>
-        <input id="claim-name" name="name" type="text" required class="w-full rounded-xl border border-gray-300 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500">
-      </div>
-      <div>
-        <label class="block text-sm font-medium mb-1" for="claim-email">Work/School email</label>
-        <input id="claim-email" name="email" type="email" required class="w-full rounded-xl border border-gray-300 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500">
-      </div>
-      <div>
-        <label class="block text-sm font-medium mb-1" for="claim-proof">Proof link (official site, email domain, etc.)</label>
-        <input id="claim-proof" name="proof" type="url" placeholder="https://example.edu/club-page" class="w-full rounded-xl border border-gray-300 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500">
-      </div>
-      <div class="flex items-center justify-end gap-2 pt-2">
-        <button type="button" class="px-4 py-2 rounded-xl border border-gray-200 hover:bg-gray-50" data-dismiss>Cancel</button>
-        <button type="submit" class="px-4 py-2 rounded-xl bg-sky-600 text-white hover:bg-sky-700">Submit claim</button>
-      </div>
-    </form>
-  </div>
+</h2>
+<button aria-label="Close" class="p-2 rounded-lg hover:bg-gray-50" data-dismiss="">
+<i class="fa-regular fa-xmark"></i>
+</button>
 </div>
-
+<form class="p-5 space-y-4" id="claim-form">
+<input id="claim-listing-id" name="listing_id" type="hidden">
+<div>
+<label class="block text-sm font-medium mb-1" for="claim-name">Your name</label>
+<input class="w-full rounded-xl border border-gray-300 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500" id="claim-name" name="name" required="" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium mb-1" for="claim-email">Work/School email</label>
+<input class="w-full rounded-xl border border-gray-300 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500" id="claim-email" name="email" required="" type="email"/>
+</div>
+<div>
+<label class="block text-sm font-medium mb-1" for="claim-proof">Proof link (official site, email domain, etc.)</label>
+<input class="w-full rounded-xl border border-gray-300 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500" id="claim-proof" name="proof" placeholder="https://example.edu/club-page" type="url"/>
+</div>
+<div class="flex items-center justify-end gap-2 pt-2">
+<button class="px-4 py-2 rounded-xl border border-gray-200 hover:bg-gray-50" data-dismiss="" type="button">Cancel</button>
+<button class="px-4 py-2 rounded-xl bg-sky-600 text-white hover:bg-sky-700" type="submit">Submit claim</button>
+</div>
+</input></form>
+</div>
+</div>
 <script>
 function getListingTypeLabel(item){
   const t = ((item && (item.type||item.category||item.kind)) || '').toLowerCase();
@@ -1879,7 +1818,6 @@ function wireClaimButton(current){
   btn.onclick = ()=> openClaimModal({ type: btn.dataset.type || 'listing', id: btn.dataset.id || '' });
 }
 </script>
-
 <script>
 (function wireShareRowLinks(){
   const $ = s => document.querySelector(s);
@@ -1948,7 +1886,6 @@ function wireClaimButton(current){
   }
 })();
 </script>
-
 <script>
 document.addEventListener('click', (e) => {
   const t = e.target.closest('[data-facet][data-value][data-type]');
@@ -1956,7 +1893,6 @@ document.addEventListener('click', (e) => {
   navigateToFacet(t.dataset.facet, t.dataset.value, t.dataset.type, t.dataset.exclude);
 });
 </script>
-
 <script>
 (function(){
   const root = document.getElementById('view-detail');
@@ -2014,8 +1950,6 @@ document.addEventListener('click', (e) => {
   }
 })();
 </script>
-
-
 <script>
     // Post-render hook: if a listing object `window.currentListing` exists, rebuild links.
     (function(){
@@ -2076,9 +2010,6 @@ document.addEventListener('click', function(e){
   }
 });
 </script>
-
-
-
 <script>
 // Tiny emoji mapper "library" — attach to window so we can reuse
 (function(){
@@ -2142,9 +2073,6 @@ document.addEventListener('click', function(e){
   }
 })();
 </script>
-
-
-
 <script>
 (function(){
   function labelForView(v){
@@ -2198,32 +2126,27 @@ document.addEventListener('click', function(e){
   }
 })();
 </script>
-
-
-
 <!-- Get the app (QR) modal -->
-<div id="qrModal" class="fixed inset-0 z-[70] hidden">
-  <div id="qrOverlay" class="absolute inset-0 bg-black/40 backdrop-blur-[1px] opacity-0 transition-opacity duration-200"></div>
-  <div id="qrPanel" class="absolute left-1/2 top-1/2 w-[min(92vw,480px)] -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white shadow-2xl ring-1 ring-black/5 p-6 sm:p-7 transition-transform duration-200 scale-95">
-    <div class="flex items-start justify-between">
-      <h3 class="text-lg font-semibold text-gray-900">Scan to try the beta</h3>
-      <button type="button" id="qrClose" class="inline-flex h-9 w-9 items-center justify-center rounded-full hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
-        <i class="fa-solid fa-xmark text-[18px]"></i>
-      </button>
-    </div>
-    <p class="mt-1.5 text-[14px] text-gray-600">Point your phone’s camera at the QR code to open the Activity Hub beta app link.</p>
-    <div class="mt-5 grid place-items-center">
-      <img id="qrImg" class="h-[240px] w-[240px] rounded-xl ring-1 ring-gray-200" src="" alt="QR code for Activity Hub beta link" loading="lazy" decoding="async">
-    </div>
-    <div class="mt-5 flex items-center gap-2">
-      <input id="qrUrl" class="flex-1 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-[14px] text-gray-800" readonly>
-      <button id="qrCopy" class="rounded-lg bg-gray-900 px-3.5 py-2 text-[14px] font-medium text-white hover:bg-gray-800 active:translate-y-[1px]">Copy link</button>
-    </div>
-    <p id="qrCopied" class="mt-2 hidden text-sm text-green-600">Link copied ✓</p>
-  </div>
+<div class="fixed inset-0 z-[70] hidden" id="qrModal">
+<div class="absolute inset-0 bg-black/40 backdrop-blur-[1px] opacity-0 transition-opacity duration-200" id="qrOverlay"></div>
+<div class="absolute left-1/2 top-1/2 w-[min(92vw,480px)] -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white shadow-2xl ring-1 ring-black/5 p-6 sm:p-7 transition-transform duration-200 scale-95" id="qrPanel">
+<div class="flex items-start justify-between">
+<h3 class="text-lg font-semibold text-gray-900">Scan to try the beta</h3>
+<button class="inline-flex h-9 w-9 items-center justify-center rounded-full hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500" id="qrClose" type="button">
+<i class="fa-solid fa-xmark text-[18px]"></i>
+</button>
 </div>
-
-
+<p class="mt-1.5 text-[14px] text-gray-600">Point your phone’s camera at the QR code to open the Activity Hub beta app link.</p>
+<div class="mt-5 grid place-items-center">
+<img alt="QR code for Activity Hub beta link" class="h-[240px] w-[240px] rounded-xl ring-1 ring-gray-200" decoding="async" id="qrImg" loading="lazy" src=""/>
+</div>
+<div class="mt-5 flex items-center gap-2">
+<input class="flex-1 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-[14px] text-gray-800" id="qrUrl" readonly=""/>
+<button class="rounded-lg bg-gray-900 px-3.5 py-2 text-[14px] font-medium text-white hover:bg-gray-800 active:translate-y-[1px]" id="qrCopy">Copy link</button>
+</div>
+<p class="mt-2 hidden text-sm text-green-600" id="qrCopied">Link copied ✓</p>
+</div>
+</div>
 <script>
   const BETA_APP_URL = "https://example.com/activity-hub-beta";
   (function () {
@@ -2298,126 +2221,116 @@ document.addEventListener('click', function(e){
   }
 })();
 </script>
-
-
-
 <!-- Mobile Bottom Navigation (md:hidden) -->
-<nav id="mobileBottomNav" class="md:hidden fixed bottom-0 inset-x-0 z-[60] border-t border-gray-200 bg-white/95" style="padding-bottom: calc(var(--safe-bottom) + 6px);">
-  <ul class="grid grid-cols-5 h-[68px] items-center px-2">
-    <li><button data-tab="home" class="mx-auto flex flex-col items-center gap-1 text-gray-600 aria-[current=page]:text-ah-700" aria-current="page" aria-label="Home">
-      <i class="fa-solid fa-house text-[20px]"></i><span class="text-[11px]">Home</span>
-    </button></li>
-    <li><button data-tab="search" class="mx-auto flex flex-col items-center gap-1 text-gray-600" aria-label="Search">
-      <i class="fa-solid fa-magnifying-glass text-[20px]"></i><span class="text-[11px]">Search</span>
-    </button></li>
-    <li><button data-tab="explore" class="mx-auto flex flex-col items-center gap-1 text-gray-600" aria-label="Explore">
-      <i class="fa-solid fa-compass text-[20px]"></i><span class="text-[11px]">Explore</span>
-    </button></li>
-    <li><button data-tab="events" class="mx-auto flex flex-col items-center gap-1 text-gray-600" aria-label="Events">
-      <i class="fa-solid fa-calendar-days text-[20px]"></i><span class="text-[11px]">Events</span>
-    </button></li>
-    <li><button data-tab="news" class="mx-auto flex flex-col items-center gap-1 text-gray-600" aria-label="News">
-      <i class="fa-solid fa-newspaper text-[20px]"></i><span class="text-[11px]">News</span>
-    </button></li>
-  </ul>
+<nav class="md:hidden fixed bottom-0 inset-x-0 z-[60] border-t border-gray-200 bg-white/95" id="mobileBottomNav" style="padding-bottom: calc(var(--safe-bottom) + 6px);">
+<ul class="grid grid-cols-5 h-[68px] items-center px-2">
+<li><button aria-current="page" aria-label="Home" class="mx-auto flex flex-col items-center gap-1 text-gray-600 aria-[current=page]:text-ah-700" data-tab="home">
+<i class="fa-solid fa-house text-[20px]"></i><span class="text-[11px]">Home</span>
+</button></li>
+<li><button aria-label="Search" class="mx-auto flex flex-col items-center gap-1 text-gray-600" data-tab="search">
+<i class="fa-solid fa-magnifying-glass text-[20px]"></i><span class="text-[11px]">Search</span>
+</button></li>
+<li><button aria-label="Explore" class="mx-auto flex flex-col items-center gap-1 text-gray-600" data-tab="explore">
+<i class="fa-solid fa-compass text-[20px]"></i><span class="text-[11px]">Explore</span>
+</button></li>
+<li><button aria-label="Events" class="mx-auto flex flex-col items-center gap-1 text-gray-600" data-tab="events">
+<i class="fa-solid fa-calendar-days text-[20px]"></i><span class="text-[11px]">Events</span>
+</button></li>
+<li><button aria-label="News" class="mx-auto flex flex-col items-center gap-1 text-gray-600" data-tab="news">
+<i class="fa-solid fa-newspaper text-[20px]"></i><span class="text-[11px]">News</span>
+</button></li>
+</ul>
 </nav>
-
-
 <!-- Full-screen Search overlay -->
-<div id="mobileSearchOverlay" class="fixed z-[70] hidden inset-x-0 top-0" style="bottom: calc(var(--mbnav-h) + var(--safe-bottom));">
-  <div class="absolute inset-0 bg-gray-900/60" data-close="search"></div>
-  <div class="relative h-full w-full bg-white flex flex-col">
-    <div class="h-14 px-3 flex items-center gap-2 border-b border-gray-200">
-      <button class="h-9 w-9 grid place-items-center rounded-lg border border-gray-200" data-close="search" aria-label="Close search">
-        <i class="fa-solid fa-chevron-left"></i>
-      </button>
-      <input id="mobileSearchInput" type="search" placeholder="Search clubs, businesses, projects…" class="flex-1 h-10 rounded-lg border border-gray-200 px-3 focus:outline-none" />
-    </div>
-    <!-- Presearch content mirroring desktop dropdown -->
-    <div id="mobileSearchPre" class="flex-1 overflow-y-auto">
-      <div class="border-b border-gray-200">
-        <div class="flex items-center gap-3 px-3 h-12">
-          <button class="px-3 h-10 rounded-lg bg-gray-900 text-white text-sm">All</button>
-          <button class="px-3 h-10 rounded-lg text-gray-700 hover:bg-gray-50 text-sm">Orgs</button>
-          <button class="px-3 h-10 rounded-lg text-gray-700 hover:bg-gray-50 text-sm">Businesses</button>
-          <button class="px-3 h-10 rounded-lg text-gray-700 hover:bg-gray-50 text-sm">Projects</button>
-          <div class="ml-auto hidden sm:block text-xs text-gray-500">↑/↓ to navigate • Enter to open</div>
-        </div>
-      </div>
-      <div class="p-3 text-sm text-gray-600">Start typing to search organizations, businesses, and projects.</div>
-      <div class="px-3 pb-3">
-        <div class="text-[11px] font-semibold text-gray-500 tracking-wide mb-2">POPULAR ORGANIZATIONS</div>
-        <ul class="space-y-2" id="mobileSearchPopular">
-          <li class="flex items-start gap-3">
-            <div class="h-10 w-10 rounded-md overflow-hidden ring-1 ring-gray-200 bg-gray-100"></div>
-            <div class="flex-1">
-              <div class="text-sm font-medium">Haitian Society <span class="align-middle text-ah-600"><i class="fa-solid fa-circle-check"></i></span> <span class="ml-1 text-xs text-gray-600">Org</span></div>
-              <div class="text-xs text-gray-600 line-clamp-1">The mission of Haitian Society at St. John's University…</div>
-            </div>
-          </li>
-          <li class="flex items-start gap-3">
-            <div class="h-10 w-10 rounded-md overflow-hidden ring-1 ring-gray-200 bg-gray-100"></div>
-            <div class="flex-1">
-              <div class="text-sm font-medium">Arab Student Organization <span class="ml-1 text-xs text-gray-600">Org</span></div>
-              <div class="text-xs text-gray-600 line-clamp-1">The Arab Student Organization aims to…</div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div id="mobileSearchResults" class="hidden flex-1 overflow-y-auto p-3"></div>
-  </div>
+<div class="fixed z-[70] hidden inset-x-0 top-0" id="mobileSearchOverlay" style="bottom: calc(var(--mbnav-h) + var(--safe-bottom));">
+<div class="absolute inset-0 bg-gray-900/60" data-close="search"></div>
+<div class="relative h-full w-full bg-white flex flex-col">
+<div class="h-14 px-3 flex items-center gap-2 border-b border-gray-200">
+<button aria-label="Close search" class="h-9 w-9 grid place-items-center rounded-lg border border-gray-200" data-close="search">
+<i class="fa-solid fa-chevron-left"></i>
+</button>
+<input class="flex-1 h-10 rounded-lg border border-gray-200 px-3 focus:outline-none" id="mobileSearchInput" placeholder="Search clubs, businesses, projects…" type="search">
+</input></div>
+<!-- Presearch content mirroring desktop dropdown -->
+<div class="flex-1 overflow-y-auto" id="mobileSearchPre">
+<div class="border-b border-gray-200">
+<div class="flex items-center gap-3 px-3 h-12">
+<button class="px-3 h-10 rounded-lg bg-gray-900 text-white text-sm">All</button>
+<button class="px-3 h-10 rounded-lg text-gray-700 hover:bg-gray-50 text-sm">Orgs</button>
+<button class="px-3 h-10 rounded-lg text-gray-700 hover:bg-gray-50 text-sm">Businesses</button>
+<button class="px-3 h-10 rounded-lg text-gray-700 hover:bg-gray-50 text-sm">Projects</button>
+<div class="ml-auto hidden sm:block text-xs text-gray-500">↑/↓ to navigate • Enter to open</div>
+</div>
+</div>
+<div class="p-3 text-sm text-gray-600">Start typing to search organizations, businesses, and projects.</div>
+<div class="px-3 pb-3">
+<div class="text-[11px] font-semibold text-gray-500 tracking-wide mb-2">POPULAR ORGANIZATIONS</div>
+<ul class="space-y-2" id="mobileSearchPopular">
+<li class="flex items-start gap-3">
+<div class="h-10 w-10 rounded-md overflow-hidden ring-1 ring-gray-200 bg-gray-100"></div>
+<div class="flex-1">
+<div class="text-sm font-medium">Haitian Society <span class="align-middle text-ah-600"><i class="fa-solid fa-circle-check"></i></span> <span class="ml-1 text-xs text-gray-600">Org</span></div>
+<div class="text-xs text-gray-600 line-clamp-1">The mission of Haitian Society at St. John's University…</div>
+</div>
+</li>
+<li class="flex items-start gap-3">
+<div class="h-10 w-10 rounded-md overflow-hidden ring-1 ring-gray-200 bg-gray-100"></div>
+<div class="flex-1">
+<div class="text-sm font-medium">Arab Student Organization <span class="ml-1 text-xs text-gray-600">Org</span></div>
+<div class="text-xs text-gray-600 line-clamp-1">The Arab Student Organization aims to…</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="hidden flex-1 overflow-y-auto p-3" id="mobileSearchResults"></div>
+</div>
 </div>
 <!-- Explore drop-up sheet -->
-
-<div id="exploreSheet" class="fixed inset-x-0 bottom-0 z-[70] hidden">
-  <div class="absolute inset-0 bg-gray-900/60" data-close="explore"></div>
-  <div class="relative mx-auto max-w-md bg-white rounded-t-2xl shadow-xl border border-gray-200">
-    <div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
-      <h3 class="text-base font-semibold">Explore</h3>
-      <button class="h-9 w-9 grid place-items-center rounded-lg border border-gray-200" data-close="explore" aria-label="Close">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-    </div>
-    <div class="p-2">
-      <button class="w-full h-12 rounded-xl flex items-center gap-3 px-3 hover:bg-gray-50" data-explore="orgs">
-        <i class="fa-solid fa-users text-gray-700"></i><span>Organizations</span>
-      </button>
-      <button class="w-full h-12 rounded-xl flex items-center gap-3 px-3 hover:bg-gray-50" data-explore="biz">
-        <i class="fa-solid fa-briefcase text-gray-700"></i><span>Businesses</span>
-      </button>
-      <button class="w-full h-12 rounded-xl flex items-center gap-3 px-3 hover:bg-gray-50" data-explore="proj">
-        <i class="fa-solid fa-screwdriver-wrench text-gray-700"></i><span>Projects</span>
-      </button>
-    </div>
-    <div class="h-4"></div>
-  </div>
+<div class="fixed inset-x-0 bottom-0 z-[70] hidden" id="exploreSheet">
+<div class="absolute inset-0 bg-gray-900/60" data-close="explore"></div>
+<div class="relative mx-auto max-w-md bg-white rounded-t-2xl shadow-xl border border-gray-200">
+<div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
+<h3 class="text-base font-semibold">Explore</h3>
+<button aria-label="Close" class="h-9 w-9 grid place-items-center rounded-lg border border-gray-200" data-close="explore">
+<i class="fa-solid fa-xmark"></i>
+</button>
 </div>
-
-
+<div class="p-2">
+<button class="w-full h-12 rounded-xl flex items-center gap-3 px-3 hover:bg-gray-50" data-explore="orgs">
+<i class="fa-solid fa-users text-gray-700"></i><span>Organizations</span>
+</button>
+<button class="w-full h-12 rounded-xl flex items-center gap-3 px-3 hover:bg-gray-50" data-explore="biz">
+<i class="fa-solid fa-briefcase text-gray-700"></i><span>Businesses</span>
+</button>
+<button class="w-full h-12 rounded-xl flex items-center gap-3 px-3 hover:bg-gray-50" data-explore="proj">
+<i class="fa-solid fa-screwdriver-wrench text-gray-700"></i><span>Projects</span>
+</button>
+</div>
+<div class="h-4"></div>
+</div>
+</div>
 <!-- News Page (full screen) -->
-<div id="newsOverlay" class="fixed z-[70] hidden inset-x-0 top-0" style="bottom: calc(var(--mbnav-h) + var(--safe-bottom));">
-  <div class="absolute inset-0 bg-gray-900/60" data-close="news"></div>
-  <div class="relative h-full w-full bg-white flex flex-col">
-    <div class="h-14 px-3 flex items-center gap-2 border-b border-gray-200">
-      <button class="h-9 w-9 grid place-items-center rounded-lg border border-gray-200" data-close="news" aria-label="Close news">
-        <i class="fa-solid fa-chevron-left"></i>
-      </button>
-      <div class="text-base font-semibold">News</div>
-    </div>
-    <div class="flex-1 grid place-items-center p-6 text-center">
-      <div>
-        <div class="mx-auto h-14 w-14 grid place-items-center rounded-full bg-gray-100 mb-3">
-          <i class="fa-solid fa-newspaper text-xl"></i>
-        </div>
-        <h3 class="text-lg font-semibold">Coming soon</h3>
-        <p class="text-sm text-gray-600 mt-1">We’re building a campus news feed. Check back later.</p>
-      </div>
-    </div>
-  </div>
+<div class="fixed z-[70] hidden inset-x-0 top-0" id="newsOverlay" style="bottom: calc(var(--mbnav-h) + var(--safe-bottom));">
+<div class="absolute inset-0 bg-gray-900/60" data-close="news"></div>
+<div class="relative h-full w-full bg-white flex flex-col">
+<div class="h-14 px-3 flex items-center gap-2 border-b border-gray-200">
+<button aria-label="Close news" class="h-9 w-9 grid place-items-center rounded-lg border border-gray-200" data-close="news">
+<i class="fa-solid fa-chevron-left"></i>
+</button>
+<div class="text-base font-semibold">News</div>
 </div>
-
-
+<div class="flex-1 grid place-items-center p-6 text-center">
+<div>
+<div class="mx-auto h-14 w-14 grid place-items-center rounded-full bg-gray-100 mb-3">
+<i class="fa-solid fa-newspaper text-xl"></i>
+</div>
+<h3 class="text-lg font-semibold">Coming soon</h3>
+<p class="text-sm text-gray-600 mt-1">We’re building a campus news feed. Check back later.</p>
+</div>
+</div>
+</div>
+</div>
 <script id="mobile-bottom-nav-script">
 (() => {
   // Add bottom padding so content isn't hidden behind the nav
@@ -2445,7 +2358,7 @@ document.addEventListener('click', function(e){
     const tab = btn.dataset.tab;
     switch(tab){
       case 'home':
-        location.hash = routes.home;
+        window.location.search='?view=home';
         break;
       case 'search':
         open(searchOverlay);
@@ -2455,7 +2368,7 @@ document.addEventListener('click', function(e){
         open(exploreSheet);
         break;
       case 'events':
-        location.hash = routes.events;
+        window.location.search='?view=events';
         break;
       case 'news':
         open(newsOverlay);
@@ -2511,7 +2424,43 @@ document.addEventListener('click', function(e){
   }
 })();
 </script>
+<script>
+(function(){
+  var nav = document.getElementById('mobileBottomNav');
+  var exploreSheet = document.getElementById('exploreSheet') || document.querySelector('[data-role="explore-sheet"]');
+  var newsOverlay = document.getElementById('newsOverlay') || document.querySelector('[data-role="news-overlay"]');
 
+  function open(el){ if(!el) return; el.classList.remove('hidden'); document.documentElement.style.overflow='hidden'; }
+  function close(el){ if(!el) return; el.classList.add('hidden'); document.documentElement.style.overflow=''; }
 
-</body>
+  document.addEventListener('click', function(e){
+    var t = e.target;
+    if (t && t.dataset && (t.dataset.close === 'explore')) close(exploreSheet);
+    if (t && t.dataset && (t.dataset.close === 'news')) close(newsOverlay);
+  });
+
+  // If explore items are anchors, clicking them will navigate; we can optionally close immediately
+  if (exploreSheet){
+    exploreSheet.addEventListener('click', function(e){
+      var a = e.target.closest('a[role="menuitem"][href]');
+      if (a){ close(exploreSheet); }
+    });
+  }
+
+  if (nav){
+    nav.addEventListener('click', function(e){
+      var btn = e.target.closest('button[data-tab]');
+      if (!btn) return;
+      var tab = btn.dataset.tab;
+      switch(tab){
+        case 'home': window.location.search='?view=home'; break;
+        case 'search': window.location.href='./search.html'; break;
+        case 'explore': open(exploreSheet); break;
+        case 'events': window.location.search='?view=events'; break;
+        case 'news': open(newsOverlay); break;
+      }
+    });
+  }
+})();
+</script></body>
 </html>
