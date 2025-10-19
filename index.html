@@ -324,8 +324,9 @@ input, textarea, select { font-size: 16px; }
     border-radius:0; margin:0; background:var(--surface, #fff);
   }
   .ah-search-scroller{
-    height:100%; overflow:auto; -webkit-overflow-scrolling:touch;
-    padding-bottom:env(safe-area-inset-bottom);
+    height: calc(100dvh - var(--search-top, 56px));
+    overflow: auto; -webkit-overflow-scrolling: touch;
+    padding: 0;
   }
   .ah-search-close{
     position:sticky; top:0; left:0; z-index:2;
@@ -339,6 +340,22 @@ input, textarea, select { font-size: 16px; }
 }
 [hidden]{ display:none !important; }
 /* === /AH === */
+</style><style>
+/* === AH OVERRIDE: truly edge-to-edge on mobile (no side padding) === */
+@media (max-width: 768px){
+  .ah-search-dropdown > .ah-search-scroller > *:first-child{
+    margin: 0 !important; width: 100vw !important; max-width: 100vw !important;
+    border-radius: 0 !important; box-shadow: none !important;
+    padding-left: 0 !important; padding-right: 0 !important;
+  }
+  .ah-search-dropdown :is(.soft-card,.card,.card-elev,.search-card,.dropdown-card,.rounded-2xl,.rounded-xl){
+    border-radius: 0 !important; margin-left: 0 !important; margin-right: 0 !important;
+    max-width: 100vw !important; width: 100vw !important; box-shadow: none !important;
+  }
+  .ah-search-dropdown :is(.container,.mx-auto){ margin-left: 0 !important; margin-right: 0 !important; max-width: none !important; }
+  .ah-search-dropdown :is(.px-2,.px-3,.px-4,.px-5,.px-6,.px-8){ padding-left: 0 !important; padding-right: 0 !important; }
+}
+/* === /AH OVERRIDE === */
 </style></head>
 <body class="min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
   <div class="flex w-full">
@@ -2170,8 +2187,7 @@ document.addEventListener('click', function(e){
     &larr; <span class="sr-only">Close</span>
   </button>
   <div class="ah-search-scroller">
-    <!-- Place your existing dropdown inner markup (tabs/input/results) here if you are rendering it server-side.
-         If you render dynamically, ensure you mount the content inside this element at open time. -->
+    <!-- mount existing dropdown inner markup dynamically here -->
   </div>
 </div>
 <div id="searchBackdrop" class="ah-search-backdrop" hidden></div>
@@ -2183,10 +2199,10 @@ document.addEventListener('click', function(e){
   const dd = document.getElementById('searchDropdown');
   const bd = document.getElementById('searchBackdrop');
   if (!dd || !bd) return;
-
   function computeTopOffset(){
     const tb = document.getElementById('topbar');
-    const top = tb ? (tb.getBoundingClientRect().bottom + window.scrollY) : 0;
+    const rect = tb ? tb.getBoundingClientRect() : null;
+    const top = rect ? Math.max(0, rect.bottom + window.scrollY) : 0;
     dd.style.setProperty('--search-top', top + 'px');
   }
   function lockScroll(lock){
@@ -2197,7 +2213,7 @@ document.addEventListener('click', function(e){
   window.openSearchDropdown = function(){
     computeTopOffset();
     dd.hidden = false; bd.hidden = false; lockScroll(true);
-    const inp = dd.querySelector('input[type="search"], input[type="text"]');
+    const inp = dd.querySelector('input[type=\"search\"], input[type=\"text\"]');
     if (inp) setTimeout(()=>{ try{ inp.focus({preventScroll:true}); }catch(_){ inp.focus(); } }, 0);
   };
   window.closeSearchDropdown = function(){
