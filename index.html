@@ -310,84 +310,7 @@ input, textarea, select { font-size: 16px; }
 .sidebar .ah-brand-badge{ width: 40px; height: 40px; }
 </style>
 
-<style>
-/* === AH: Mobile full-bleed search dropdown === */
-.ah-search-dropdown{
-  position:absolute; inset:auto auto auto 0; z-index:50;
-  width:100%; max-width:720px; border-radius:16px;
-  box-shadow:0 8px 24px rgba(0,0,0,.12); background:#fff;
-}
-@media (max-width: 768px){
-  .ah-search-dropdown{
-    position:fixed; left:0; right:0; bottom:0;
-    top:var(--search-top, 56px); max-width:none; width:100vw;
-    border-radius:0; margin:0; background:var(--surface, #fff);
-  }
-  .ah-search-scroller{
-    height: calc(100dvh - var(--search-top, 56px));
-    overflow: auto; -webkit-overflow-scrolling: touch;
-    padding: 0;
-  }
-  .ah-search-close{
-    position:sticky; top:0; left:0; z-index:2;
-    display:inline-flex; align-items:center; gap:.5rem;
-    padding:14px 16px; border:0; background:transparent; font-size:18px;
-  }
-}
-.ah-search-backdrop{
-  position:fixed; inset:0; z-index:40;
-  background:rgba(0,0,0,.25); backdrop-filter:saturate(120%) blur(2px);
-}
-[hidden]{ display:none !important; }
-/* === /AH === */
-</style><style>
-/* === AH OVERRIDE: truly edge-to-edge on mobile (no side padding) === */
-@media (max-width: 768px){
-  .ah-search-dropdown > .ah-search-scroller > *:first-child{
-    margin: 0 !important; width: 100vw !important; max-width: 100vw !important;
-    border-radius: 0 !important; box-shadow: none !important;
-    padding-left: 0 !important; padding-right: 0 !important;
-  }
-  .ah-search-dropdown :is(.soft-card,.card,.card-elev,.search-card,.dropdown-card,.rounded-2xl,.rounded-xl){
-    border-radius: 0 !important; margin-left: 0 !important; margin-right: 0 !important;
-    max-width: 100vw !important; width: 100vw !important; box-shadow: none !important;
-  }
-  .ah-search-dropdown :is(.container,.mx-auto){ margin-left: 0 !important; margin-right: 0 !important; max-width: none !important; }
-  .ah-search-dropdown :is(.px-2,.px-3,.px-4,.px-5,.px-6,.px-8){ padding-left: 0 !important; padding-right: 0 !important; }
-}
-/* === /AH OVERRIDE === */
-</style><style>
-/* === AH PAGE MODE (mobile): search opens as a full page === */
-@media (max-width: 768px){
-  .ah-search-dropdown{
-    position: fixed !important;
-    inset: 0 !important;            /* top:0; right:0; bottom:0; left:0 */
-    width: 100vw !important; max-width: none !important;
-    border-radius: 0 !important; box-shadow: none !important;
-    background: var(--surface, #fff) !important;
-    z-index: 100 !important;
-  }
-  .ah-search-scroller{
-    height: 100dvh !important;      /* full device viewport height */
-    overflow: auto !important; -webkit-overflow-scrolling: touch !important;
-    padding: 0 !important; margin: 0 !important;
-  }
-  /* Kill any inner card styling so it feels like a page */
-  .ah-search-dropdown :is(.soft-card,.card,.card-elev,.dropdown-card){
-    border-radius: 0 !important; box-shadow: none !important; background: transparent !important;
-    margin-left: 0 !important; margin-right: 0 !important;
-  }
-  .ah-search-dropdown :is(.container,.mx-auto){
-    max-width: none !important; margin-left: 0 !important; margin-right: 0 !important;
-  }
-  .ah-search-dropdown :is(.px-2,.px-3,.px-4,.px-5,.px-6,.px-8){
-    padding-left: 0 !important; padding-right: 0 !important;
-  }
-  /* Optional: make the tabs row sticky at the top in page mode */
-  .ah-search-dropdown .ah-search-sticky{ position: sticky; top: 0; background: var(--surface, #fff); z-index: 2; }
-}
-/* === /AH PAGE MODE === */
-</style></head>
+</head>
 <body class="min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
   <div class="flex w-full">
     <!-- ====== SIDEBAR ====== -->
@@ -1022,6 +945,23 @@ const logo = $('#d_logo'); const ph = $('#d_fallback');
         logo.src=o.logo; logo.alt=`${o.name} logo`; logo.classList.remove('hidden'); ph.classList.add('hidden');
         logo.onerror = showFallback;
       } else { showFallback(); }
+
+// Make logo clickable → opens lightbox
+try {
+  if (isHttp(o.logo)) {
+    logo.style.cursor = 'zoom-in';
+    logo.setAttribute('role','button');
+    logo.setAttribute('tabindex','0');
+    logo.setAttribute('aria-label','View larger logo');
+    const open = () => { if (window.openLogoLightbox) window.openLogoLightbox(o.logo, `${o.name} logo`); };
+    logo.onclick = open;
+    logo.onkeydown = (ev)=>{ if(ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); open(); } };
+  } else {
+    logo.removeAttribute('role'); logo.removeAttribute('tabindex'); logo.style.cursor='';
+    logo.onclick = null; logo.onkeydown = null;
+  }
+} catch(e) { console.warn('logo lightbox hook failed', e); }
+
 
       $('#d_name').innerHTML = o.name + (o.verified ? ' <i class="fa-solid fa-circle-check text-sky-600"></i>' : '');
       const t=$('#d_theme'), i=$('#d_industry');
@@ -2209,59 +2149,167 @@ document.addEventListener('click', function(e){
       try{ await navigator.clipboard.writeText(urlIn.value); copied.classList.remove('hidden'); }catch(e){}
     });
   })();
-</script>
 
-
-<!-- === AH: Mobile full-bleed SEARCH DROPDOWN (edge-to-edge) === -->
-<div id="searchDropdown" class="ah-search-dropdown" hidden aria-modal="true" role="dialog">
-  <button class="ah-search-close" type="button" aria-label="Close search">
-    &larr; <span class="sr-only">Close</span>
-  </button>
-  <div class="ah-search-scroller">
-    <!-- mount existing dropdown inner markup dynamically here -->
-  </div>
-</div>
-<div id="searchBackdrop" class="ah-search-backdrop" hidden></div>
-<!-- === /AH === -->
-
-
-<script>
+// === Logo Lightbox (fullscreen square with swipe-to-dismiss + download) ===
 (function(){
-  const dd = document.getElementById('searchDropdown');
-  const bd = document.getElementById('searchBackdrop');
-  if (!dd || !bd) return;
-  function computeTopOffset(){
-    const isMobile = window.matchMedia('(max-width: 768px)').matches;
-    if (isMobile){
-      dd.style.setProperty('--search-top', '0px');
-      return;
+  if (window.__logoLightboxInit) return; window.__logoLightboxInit = true;
+
+  const el = document.createElement('div');
+  el.innerHTML = `
+  <div id="logoLightbox" class="fixed inset-0 z-[70] hidden">
+    <div id="lbOverlay" class="absolute inset-0 bg-black/60 opacity-0 transition-opacity"></div>
+    <div id="lbStage" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[86vw] max-w-sm aspect-square rounded-2xl bg-white shadow-2xl overflow-hidden scale-95 transition-transform duration-200 will-change-transform touch-none">
+      <img id="lbImg" src="" alt="" class="w-full h-full object-contain bg-white select-none pointer-events-none" draggable="false"/>
+      <div class="absolute top-2 right-2 flex gap-2">
+        <button id="lbDownload" class="px-3 py-1.5 rounded-md bg-black/70 text-white text-sm backdrop-blur-sm">
+          <i class="fa-solid fa-download mr-1"></i> Save
+        </button>
+        <button id="lbClose" class="p-2 rounded-md bg-black/70 text-white" aria-label="Close">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    </div>
+  </div>`;
+  document.body.appendChild(el.firstElementChild);
+
+  const root = document.getElementById('logoLightbox');
+  const overlay = document.getElementById('lbOverlay');
+  const stage = document.getElementById('lbStage');
+  const img = document.getElementById('lbImg');
+  const btnClose = document.getElementById('lbClose');
+  const btnSave = document.getElementById('lbDownload');
+
+  let swipe = null;
+
+  function setOverlayAlpha(a){
+    overlay.style.opacity = String(a);
+  }
+  function setStageTransform(x,y,scale){
+    stage.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(${scale})`;
+  }
+
+  function openLogoLightbox(src, alt){
+    img.src = src || '';
+    img.alt = alt || 'Logo';
+    root.classList.remove('hidden');
+    // animate in
+    requestAnimationFrame(()=>{
+      setOverlayAlpha(1);
+      setStageTransform(0,0,1);
+    });
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKeydown);
+  }
+
+  function closeLightbox(direction){
+    // animate out following swipe direction if provided
+    let dx = 0, dy = 0;
+    if (direction && (direction.dx || direction.dy)) {
+      const mult = 3; // push further outward
+      dx = (direction.dx||0) * mult;
+      dy = (direction.dy||0) * mult;
     }
-    const tb = document.getElementById('topbar');
-    const rect = tb ? tb.getBoundingClientRect() : null;
-    const top = rect ? Math.max(0, rect.bottom + window.scrollY) : 0;
-    dd.style.setProperty('--search-top', top + 'px');
+    setOverlayAlpha(0);
+    setStageTransform(dx, dy, 0.95);
+    setTimeout(()=>{
+      root.classList.add('hidden');
+      setStageTransform(0,0,0.95);
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', onKeydown);
+    }, 180);
   }
-  function lockScroll(lock){
-    const html = document.documentElement, body = document.body;
-    if (lock) { html.style.overflow = 'hidden'; body.style.overflow = 'hidden'; }
-    else { html.style.overflow = ''; body.style.overflow = ''; }
+
+  function onKeydown(e){ if(e.key==='Escape') closeLightbox(); }
+
+  // outside click closes
+  overlay.addEventListener('click', ()=> closeLightbox());
+
+  btnClose.addEventListener('click', ()=> closeLightbox());
+
+  // --- swipe-to-dismiss on the stage ---
+  function onPointerDown(e){
+    e.preventDefault();
+    stage.setPointerCapture(e.pointerId);
+    swipe = {
+      sx: e.clientX, sy: e.clientY,
+      px: e.clientX, py: e.clientY,
+      t0: performance.now(),
+      moved: false
+    };
   }
-  window.openSearchDropdown = function(){
-    computeTopOffset();
-    dd.hidden = false; bd.hidden = false; lockScroll(true);
-    const inp = dd.querySelector('input[type=\"search\"], input[type=\"text\"]');
-    if (inp) setTimeout(()=>{ try{ inp.focus({preventScroll:true}); }catch(_){ inp.focus(); } }, 0);
-  };
-  window.closeSearchDropdown = function(){
-    dd.hidden = true; bd.hidden = true; lockScroll(false);
-  };
-  document.addEventListener('click', (e)=>{
-    if (e.target.closest('.js-open-search,[data-open-search]')) { e.preventDefault(); openSearchDropdown(); }
-    if (e.target.closest('.ah-search-close')) { e.preventDefault(); closeSearchDropdown(); }
-    if (e.target === bd) { closeSearchDropdown(); }
-  });
-  window.addEventListener('resize', ()=>{ if (!dd.hidden) computeTopOffset(); });
-  window.addEventListener('orientationchange', ()=>{ if (!dd.hidden) computeTopOffset(); });
+  function onPointerMove(e){
+    if(!swipe) return;
+    const dx = e.clientX - swipe.sx;
+    const dy = e.clientY - swipe.sy;
+    const dist = Math.hypot(dx, dy);
+    swipe.px = e.clientX; swipe.py = e.clientY;
+    swipe.moved = true;
+    // move the stage with finger, fade bg
+    const fade = Math.max(0.25, 1 - Math.min(1, dist / 220));
+    setOverlayAlpha(fade);
+    setStageTransform(dx, dy, 1 - Math.min(0.05, dist/1500));
+  }
+  function onPointerUp(e){
+    if(!swipe){ return; }
+    const dx = e.clientX - swipe.sx;
+    const dy = e.clientY - swipe.sy;
+    const dt = Math.max(1, performance.now() - swipe.t0);
+    const v = Math.hypot(dx,dy) / dt; // px/ms
+    const dist = Math.hypot(dx,dy);
+    const shouldDismiss = dist > 120 || v > 0.8;
+
+    if(shouldDismiss){
+      closeLightbox({dx, dy});
+    } else {
+      // snap back
+      setOverlayAlpha(1);
+      setStageTransform(0,0,1);
+    }
+    swipe = null;
+  }
+
+  stage.addEventListener('pointerdown', onPointerDown);
+  stage.addEventListener('pointermove', onPointerMove);
+  stage.addEventListener('pointerup', onPointerUp);
+  stage.addEventListener('pointercancel', onPointerUp);
+  stage.addEventListener('lostpointercapture', onPointerUp);
+
+  // --- Download helper ---
+  function extFromMime(t){
+    if(!t) return '.png';
+    if(t.includes('png')) return '.png';
+    if(t.includes('jpeg')||t.includes('jpg')) return '.jpg';
+    if(t.includes('webp')) return '.webp';
+    if(t.includes('svg')) return '.svg';
+    return '.png';
+  }
+  function slug(s){ return String(s||'logo').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,''); }
+
+  async function saveCurrent(){
+    const src = img.getAttribute('src') || '';
+    const alt = img.getAttribute('alt') || 'logo';
+    const filenameBase = slug(alt);
+    // Try fetching as blob for a clean download; fall back to opening in a new tab if blocked by CORS
+    try {
+      const res = await fetch(src, {mode:'cors'});
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = filenameBase + extFromMime(blob.type);
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(()=> URL.revokeObjectURL(url), 2000);
+    } catch (err) {
+      // Fallback: open in a new tab so mobile users can long-press "Save to Photos"
+      const a = document.createElement('a');
+      a.href = src; a.target = '_blank'; a.rel = 'noopener';
+      document.body.appendChild(a); a.click(); a.remove();
+    }
+  }
+
+  btnSave.addEventListener('click', saveCurrent);
+
+  // Expose open function
+  window.openLogoLightbox = openLogoLightbox;
 })();
 </script>
 
