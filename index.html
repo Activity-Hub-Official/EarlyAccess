@@ -198,6 +198,20 @@ input, textarea, select { font-size: 16px; }
   #d_links img { width: 18px; height: 18px; }
 }
 
+
+/* === Keep tab labels (e.g., "Contact Info") on one line === */
+.tab-btn{
+  display:inline-flex !important;
+  align-items:center !important;
+  gap:8px !important;
+  white-space:nowrap !important; /* prevent "Contact" + "Info" from stacking */
+}
+.tab-btn i{ flex-shrink:0; }
+/* Slightly tighten on very small screens so label fits without wrapping */
+@media (max-width: 380px){
+  .tab-btn{ padding-left:10px !important; padding-right:10px !important; }
+}
+
 </style>
 <style>
   /* Scoped to the share modal only */
