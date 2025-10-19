@@ -607,17 +607,6 @@ input, textarea, select { font-size: 16px; }
                     <div class="min-w-0">
                       <h1 id="d_name" class="text-2xl font-semibold tracking-tight"></h1>
 <p id="d_meta" class="mt-1 text-[13px] text-gray-500"></p>
-<div class="mt-3 grid grid-cols-2 gap-3 w-full max-w-xs md:hidden mx-auto text-sm text-gray-600">
-  <div class="rounded-lg border border-gray-200 bg-white px-3 py-2">
-    <div class="font-medium text-gray-800">School</div>
-    <div id="d_school" class="truncate"></div>
-  </div>
-  <div class="rounded-lg border border-gray-200 bg-white px-3 py-2">
-    <div class="font-medium text-gray-800">Members</div>
-    <div id="d_membercount" class="truncate"></div>
-  </div>
-</div>
-
 
                       <div class="mt-2 flex flex-wrap gap-2 justify-center md:justify-start">
                         <span id="d_theme"   class="hidden inline-flex items-center text-[11px] px-2.5 py-1 rounded-full bg-gray-100 border border-gray-200"></span>
@@ -625,7 +614,7 @@ input, textarea, select { font-size: 16px; }
                         
                       </div>
                     </div>
-                    <div class="flex items-center gap-2 md:self-auto self-stretch w-full max-w-xs md:w-auto mx-auto md:mt-0 mt-3">
+                    <div class="flex items-center justify-center gap-2">
 
                       <button id="claimBtn" class="shrink-0 inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 text-sm hover:bg-gray-50" aria-label="Claim this listing" data-type="listing" data-id="">
 
@@ -913,20 +902,6 @@ input, textarea, select { font-size: 16px; }
         meta.textContent = parts.join(' · ');
         meta.classList.toggle('hidden', parts.length === 0);
       }
-
-      // Mirror meta into mobile grid fields
-      const sEl = $('#d_school');
-      const mEl = $('#d_membercount');
-      if (sEl) sEl.textContent = o.school || '';
-      if (mEl) {
-        if (o.members != null && !isNaN(o.members)) {
-          const n = Number(o.members);
-          mEl.textContent = `${n.toLocaleString()} ${n === 1 ? 'Member' : 'Members'}`;
-        } else {
-          mEl.textContent = '';
-        }
-      }
-
 const logo = $('#d_logo'); const ph = $('#d_fallback');
       const showFallback = ()=>{ logo.classList.add('hidden'); ph.classList.remove('hidden'); const c=colorsFor(o.name); ph.style.background=c.bg; ph.style.color=c.fg; ph.textContent=initials(o.name); };
       if(isHttp(o.logo)){
@@ -1229,7 +1204,7 @@ $('#shareBtn').onclick = ()=>{
               <div class="${hasLogo?'hidden':''} w-9 h-9 rounded-lg grid place-items-center" style="background:${c.bg};color:${c.fg}">${initials(o.name)}</div>
             </div>
             <div class="min-w-0 flex-1">
-              <div class="flex items-center gap-2 md:self-auto self-stretch w-full max-w-xs md:w-auto mx-auto md:mt-0 mt-3">
+              <div class="flex items-center justify-center gap-2">
                 <div class="truncate text-[14px] font-medium">${o.name}${verified}</div>
                 <span class="search-badge"><i class="fa-solid ${icon} mr-1"></i>${badge}</span>
               </div>
