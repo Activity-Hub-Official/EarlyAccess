@@ -273,6 +273,120 @@ input, textarea, select { font-size: 16px; }
 .sidebar .ah-brand-badge{ width: 40px; height: 40px; }
 </style>
 
+
+<!-- BEGIN: share-bottom-sheet-styles -->
+<style>
+  /* Backdrop + sheet toggling */
+  #shareModal { display: none; }
+  #shareModal.show { display: block; }
+
+  /* Backdrop */
+  #shareModal .sbs-backdrop {
+    position: fixed; inset: 0; background: rgba(17,24,39,.6);
+  }
+
+  /* Bottom sheet */
+  #shareModal .sbs-sheet {
+    position: fixed; left: 0; right: 0; bottom: 0;
+    background: #fff;
+    border-top-left-radius: 16px; border-top-right-radius: 16px;
+    box-shadow: 0 -8px 24px rgba(0,0,0,.15);
+    border-top: 1px solid #e5e7eb;
+    max-height: 70dvh;
+    transform: translateY(100%);
+    transition: transform .2s ease;
+    will-change: transform;
+    overflow: hidden;
+  }
+  #shareModal.show .sbs-sheet { transform: translateY(0); }
+
+  #shareModal .sbs-grabber {
+    width: 40px; height: 4px; border-radius: 9999px; background: #e5e7eb;
+    margin: 8px auto 6px;
+  }
+
+  #shareModal .sbs-header {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 6px 12px 8px;
+  }
+  #shareModal .sbs-title { margin: 0; font-size: 1rem; font-weight: 600; color: #111827; }
+  #shareModal .sbs-close {
+    height: 36px; width: 36px; display: grid; place-items: center;
+    border-radius: 10px; border: 1px solid #e5e7eb; background: #fff;
+    cursor: pointer;
+  }
+
+  /* Share row - default desktop/tablet layout: single row, no scroll needed */
+  #shareModal .sbs-row {
+    display: flex; gap: 14px; padding: 8px 12px 12px; overflow: hidden;
+    justify-content: flex-start; align-items: stretch; flex-wrap: nowrap;
+  }
+
+  /* MOBILE ONLY: horizontal scroll */
+  @media (max-width: 768px) {
+    #shareModal .sbs-row {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+    }
+    #shareModal .sbs-row::-webkit-scrollbar { height: 6px; }
+    #shareModal .sbs-row::-webkit-scrollbar-thumb {
+      background: rgba(17,24,39,.15); border-radius: 9999px;
+    }
+  }
+
+  /* Chips */
+  #shareModal .sbs-chip {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    text-decoration: none; padding: 6px 8px; border-radius: 12px;
+    transition: background .15s ease, transform .08s ease;
+    min-width: 86px;
+    color: #111827;
+  }
+  #shareModal .sbs-chip:focus-visible {
+    outline: 2px solid rgba(59,130,246,.6); outline-offset: 2px;
+  }
+  #shareModal .sbs-chip:hover {
+    background: rgba(17,24,39,.06); transform: translateY(-1px);
+  }
+  #shareModal .sbs-chip__circle {
+    height: 64px; width: 64px; border-radius: 9999px;
+    display: grid; place-items: center; border: 1px solid #e5e7eb;
+    background: #fff;
+  }
+  #shareModal .sbs-chip__icon {
+    font-size: 28px; line-height: 1; display: inline-block;
+  }
+  #shareModal .sbs-chip__label { font-size: 12px; }
+
+  /* URL copy bar */
+  #shareModal .sbs-urlbar {
+    display: flex; gap: 8px; padding: 8px 12px 14px;
+  }
+  #shareModal .sbs-urlbar input {
+    height: 44px; border: 1px solid #e5e7eb; border-radius: 10px; padding: 0 10px; flex: 1;
+  }
+  #shareModal .sbs-urlbar button {
+    height: 44px; border-radius: 10px; background: #2563eb; color: #fff; padding: 0 14px; border: none;
+    cursor: pointer;
+  }
+  #shareModal .sbs-copied {
+    padding: 0 12px 12px; color: #059669; font-size: 0.9rem; display: none;
+  }
+  #shareModal .sbs-copied.show { display: block; }
+
+  /* Dark-mode support if page uses .dark on body/html */
+  .dark #shareModal .sbs-sheet { background: #111827; color: #e5e7eb; border-top-color: #374151; }
+  .dark #shareModal .sbs-title { color: #e5e7eb; }
+  .dark #shareModal .sbs-close { background:#111827; border-color:#374151; color:#e5e7eb; }
+  .dark #shareModal .sbs-chip { color:#e5e7eb; }
+  .dark #shareModal .sbs-chip__circle { background:#0b1220; border-color:#374151; }
+  .dark #shareModal .sbs-chip:hover { background: rgba(255,255,255,.06); }
+  .dark #shareModal .sbs-urlbar input { background:#0b1220; color:#e5e7eb; border-color:#374151; }
+  .dark #shareModal .sbs-urlbar button { background:#2563eb; color:#fff; }
+</style>
+<!-- END: share-bottom-sheet-styles -->
+
 </head>
 <body class="min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
   <div class="flex w-full">
@@ -2096,6 +2210,114 @@ document.addEventListener('click', function(e){
     });
   })();
 </script>
+
+
+<!-- BEGIN: share-bottom-sheet -->
+<div id="shareModal" aria-hidden="true">
+  <div class="sbs-backdrop" data-close="share" aria-hidden="true"></div>
+  <div class="sbs-sheet" role="dialog" aria-modal="true" aria-label="Share">
+    <div class="sbs-grabber"></div>
+    <div class="sbs-header">
+      <h3 class="sbs-title">Share</h3>
+      <button class="sbs-close" type="button" data-close="share" aria-label="Close share"><span aria-hidden="true">✕</span></button>
+    </div>
+
+    <div class="sbs-row" role="list">
+      <a id="sbsWhatsApp" class="sbs-chip" href="#" target="_blank" rel="noopener" role="listitem" aria-label="Share via WhatsApp">
+        <span class="sbs-chip__circle"><span class="sbs-chip__icon">🟢</span></span>
+        <span class="sbs-chip__label">WhatsApp</span>
+      </a>
+      <a id="sbsX" class="sbs-chip" href="#" target="_blank" rel="noopener" role="listitem" aria-label="Share on X">
+        <span class="sbs-chip__circle"><span class="sbs-chip__icon">𝕏</span></span>
+        <span class="sbs-chip__label">X</span>
+      </a>
+      <a id="sbsEmail" class="sbs-chip" href="#" role="listitem" aria-label="Share via Email">
+        <span class="sbs-chip__circle"><span class="sbs-chip__icon">✉️</span></span>
+        <span class="sbs-chip__label">Email</span>
+      </a>
+      <a id="sbsLinkedIn" class="sbs-chip" href="#" target="_blank" rel="noopener" role="listitem" aria-label="Share via LinkedIn">
+        <span class="sbs-chip__circle"><span class="sbs-chip__icon">in</span></span>
+        <span class="sbs-chip__label">LinkedIn</span>
+      </a>
+    </div>
+
+    <div class="sbs-urlbar">
+      <input id="sbsUrl" readonly aria-label="Share URL"/>
+      <button id="sbsCopy" type="button">Copy</button>
+    </div>
+    <div id="sbsCopied" class="sbs-copied">Copied!</div>
+  </div>
+</div>
+<!-- END: share-bottom-sheet -->
+
+
+<!-- BEGIN: share-bottom-sheet-js -->
+<script>
+(function(){
+  // Avoid double-installation
+  if (window.__sbsInstalled) return;
+  window.__sbsInstalled = true;
+
+  const modal = document.getElementById('shareModal');
+  if (!modal) return;
+
+  const shareBtn = document.getElementById('shareBtn') || document.querySelector('[data-share-trigger]');
+  const copyBtn = document.getElementById('sbsCopy');
+  const urlInput = document.getElementById('sbsUrl');
+  const copied = document.getElementById('sbsCopied');
+
+  // Open/Close
+  function openShare() {
+    const url = location.href;
+    const title = document.title || 'Check this out';
+    urlInput.value = url;
+    // Build share links
+    const text = encodeURIComponent(title);
+    const enc = encodeURIComponent(url);
+    const q = text + '%20' + enc;
+    const map = {
+      sbsWhatsApp: 'https://wa.me/?text=' + q,
+      sbsX: 'https://twitter.com/intent/tweet?text=' + text + '&url=' + enc,
+      sbsEmail: 'mailto:?subject=' + text + '&body=' + enc,
+      sbsLinkedIn: 'https://www.linkedin.com/sharing/share-offsite/?url=' + enc
+    };
+    Object.entries(map).forEach(([id, href])=>{
+      const a = document.getElementById(id);
+      if (a) a.setAttribute('href', href);
+    });
+
+    modal.classList.add('show');
+    // Prevent body scroll when open
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+  }
+  function closeShare() {
+    modal.classList.remove('show');
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+  }
+
+  if (shareBtn) shareBtn.addEventListener('click', openShare);
+  modal.addEventListener('click', (e)=>{
+    if (e.target && e.target.getAttribute('data-close') === 'share') closeShare();
+  });
+  document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeShare(); });
+
+  // Copy
+  if (copyBtn) copyBtn.addEventListener('click', async ()=>{
+    try {
+      await navigator.clipboard.writeText(urlInput.value);
+      copied.classList.add('show');
+      setTimeout(()=>copied.classList.remove('show'), 1200);
+    } catch (err) { console.warn('Clipboard failed', err); }
+  });
+
+  // Expose optional global for manual triggers
+  window.openShareSheet = openShare;
+  window.closeShareSheet = closeShare;
+})();
+</script>
+<!-- END: share-bottom-sheet-js -->
 
 </body>
 </html>
