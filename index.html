@@ -273,6 +273,13 @@ input, textarea, select { font-size: 16px; }
 .sidebar .ah-brand-badge{ width: 40px; height: 40px; }
 </style>
 
+
+<style id="mobile-bottom-nav-styles">
+:root{ --safe-bottom: env(safe-area-inset-bottom); }
+.mb-safe{ padding-bottom: max(0.5rem, var(--safe-bottom)); }
+#mobileBottomNav{ -webkit-backdrop-filter: saturate(180%) blur(12px); backdrop-filter: saturate(180%) blur(12px); }
+</style>
+
 </head>
 <body class="min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
   <div class="flex w-full">
@@ -2096,6 +2103,149 @@ document.addEventListener('click', function(e){
       try{ await navigator.clipboard.writeText(urlIn.value); copied.classList.remove('hidden'); }catch(e){}
     });
   })();
+</script>
+
+
+<!-- Mobile Bottom Navigation (md:hidden) -->
+<nav id="mobileBottomNav" class="md:hidden fixed bottom-0 inset-x-0 z-[60] border-t border-gray-200 bg-white/95">
+  <ul class="grid grid-cols-5 h-16 items-center px-2 mb-safe">
+    <li><button data-tab="home" class="mx-auto flex flex-col items-center gap-1 text-gray-600 aria-[current=page]:text-ah-700" aria-current="page" aria-label="Home">
+      <i class="fa-solid fa-house text-[20px]"></i><span class="text-[11px]">Home</span>
+    </button></li>
+    <li><button data-tab="search" class="mx-auto flex flex-col items-center gap-1 text-gray-600" aria-label="Search">
+      <i class="fa-solid fa-magnifying-glass text-[20px]"></i><span class="text-[11px]">Search</span>
+    </button></li>
+    <li><button data-tab="explore" class="mx-auto flex flex-col items-center gap-1 text-gray-600" aria-label="Explore">
+      <i class="fa-solid fa-compass text-[20px]"></i><span class="text-[11px]">Explore</span>
+    </button></li>
+    <li><button data-tab="events" class="mx-auto flex flex-col items-center gap-1 text-gray-600" aria-label="Events">
+      <i class="fa-solid fa-calendar-days text-[20px]"></i><span class="text-[11px]">Events</span>
+    </button></li>
+    <li><button data-tab="news" class="mx-auto flex flex-col items-center gap-1 text-gray-600" aria-label="News">
+      <i class="fa-solid fa-newspaper text-[20px]"></i><span class="text-[11px]">News</span>
+    </button></li>
+  </ul>
+</nav>
+
+<!-- Full-screen Search overlay -->
+<div id="mobileSearchOverlay" class="fixed inset-0 z-[70] hidden">
+  <div class="absolute inset-0 bg-gray-900/60" data-close="search"></div>
+  <div class="relative h-full w-full bg-white flex flex-col">
+    <div class="h-14 px-3 flex items-center gap-2 border-b border-gray-200">
+      <button class="h-9 w-9 grid place-items-center rounded-lg border border-gray-200" data-close="search" aria-label="Close search">
+        <i class="fa-solid fa-chevron-left"></i>
+      </button>
+      <input id="mobileSearchInput" type="search" placeholder="Search clubs, businesses, projects…" class="flex-1 h-10 rounded-lg border border-gray-200 px-3 focus:outline-none" />
+    </div>
+    <div id="mobileSearchResults" class="flex-1 overflow-y-auto p-3">
+      <div class="text-sm text-gray-500">Start typing to search…</div>
+    </div>
+  </div>
+</div>
+
+<!-- Explore drop-up sheet -->
+<div id="exploreSheet" class="fixed inset-x-0 bottom-0 z-[70] hidden">
+  <div class="absolute inset-0 bg-gray-900/60" data-close="explore"></div>
+  <div class="relative mx-auto max-w-md bg-white rounded-t-2xl shadow-xl border border-gray-200">
+    <div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
+      <h3 class="text-base font-semibold">Explore</h3>
+      <button class="h-9 w-9 grid place-items-center rounded-lg border border-gray-200" data-close="explore" aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="p-2">
+      <button class="w-full h-12 rounded-xl flex items-center gap-3 px-3 hover:bg-gray-50" data-explore="orgs">
+        <i class="fa-solid fa-users text-gray-700"></i><span>Organizations</span>
+      </button>
+      <button class="w-full h-12 rounded-xl flex items-center gap-3 px-3 hover:bg-gray-50" data-explore="biz">
+        <i class="fa-solid fa-briefcase text-gray-700"></i><span>Businesses</span>
+      </button>
+      <button class="w-full h-12 rounded-xl flex items-center gap-3 px-3 hover:bg-gray-50" data-explore="proj">
+        <i class="fa-solid fa-screwdriver-wrench text-gray-700"></i><span>Projects</span>
+      </button>
+    </div>
+    <div class="h-4"></div>
+  </div>
+</div>
+
+<!-- News overlay (Coming soon) -->
+<div id="newsOverlay" class="fixed inset-0 z-[70] hidden">
+  <div class="absolute inset-0 bg-gray-900/60" data-close="news"></div>
+  <div class="relative grid place-items-center min-h-dvh p-4">
+    <div class="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl text-center">
+      <div class="mx-auto h-12 w-12 grid place-items-center rounded-full bg-gray-100 mb-3">
+        <i class="fa-solid fa-newspaper"></i>
+      </div>
+      <h3 class="text-lg font-semibold">News</h3>
+      <p class="text-sm text-gray-600 mt-1">Coming soon.</p>
+      <button class="mt-4 h-10 px-4 rounded-lg border border-gray-300 hover:bg-gray-50" data-close="news">OK</button>
+    </div>
+  </div>
+</div>
+
+<script id="mobile-bottom-nav-script">
+(() => {
+  // Add bottom padding so content isn't hidden behind the nav
+  document.documentElement.classList.add('pb-20', 'md:pb-0');
+
+  const routes = {
+    home: '#home',           // TODO: replace if you have proper pages
+    events: '#events',
+    orgs: '#orgs',
+    biz: '#businesses',
+    proj: '#projects'
+  };
+
+  const nav = document.getElementById('mobileBottomNav');
+  const searchOverlay = document.getElementById('mobileSearchOverlay');
+  const exploreSheet = document.getElementById('exploreSheet');
+  const newsOverlay = document.getElementById('newsOverlay');
+
+  function open(el){ el.classList.remove('hidden'); document.documentElement.style.overflow='hidden'; }
+  function close(el){ el.classList.add('hidden'); document.documentElement.style.overflow=''; }
+
+  nav.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-tab]');
+    if (!btn) return;
+    const tab = btn.dataset.tab;
+    switch(tab){
+      case 'home':
+        location.hash = routes.home;
+        break;
+      case 'search':
+        open(searchOverlay);
+        document.getElementById('mobileSearchInput').focus();
+        break;
+      case 'explore':
+        open(exploreSheet);
+        break;
+      case 'events':
+        location.hash = routes.events;
+        break;
+      case 'news':
+        open(newsOverlay);
+        break;
+    }
+  });
+
+  // Close handlers
+  document.querySelectorAll('[data-close="search"]').forEach(el => el.addEventListener('click', () => close(searchOverlay)));
+  document.querySelectorAll('[data-close="explore"]').forEach(el => el.addEventListener('click', () => close(exploreSheet)));
+  document.querySelectorAll('[data-close="news"]').forEach(el => el.addEventListener('click', () => close(newsOverlay)));
+
+  // Explore selections
+  exploreSheet.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-explore]');
+    if (!btn) return;
+    const which = btn.dataset.explore;
+    close(exploreSheet);
+    location.hash = routes[which] || '#';
+  });
+
+  // Optional: hide old hamburger on mobile if present
+  const hamburger = document.querySelector('[data-drawer-trigger]') || document.querySelector('#hamburger');
+  if (hamburger) hamburger.classList.add('hidden', 'md:flex');
+})();
 </script>
 
 </body>
