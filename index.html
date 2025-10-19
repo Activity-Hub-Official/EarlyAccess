@@ -289,7 +289,7 @@ input, textarea, select { font-size: 16px; }
         <a href="?view=businesses" data-route="businesses" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-briefcase text-[18px]"></i> Businesses</a>
         <a href="?view=projects" data-route="projects" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-diagram-project text-[18px]"></i> Projects</a>
         <a href="?view=events" data-route="events" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 items-center gap-2"><i class="fa-solid fa-calendar-days text-[18px]"></i> Events<span class="ml-2 inline-flex items-center gap-1 h-5 px-2 text-[11px] font-semibold rounded-full bg-gradient-to-r from-emerald-100 to-emerald-200 text-emerald-900 border border-emerald-200 ring-1 ring-emerald-300/40 shadow-[inset_0_1px_0_rgba(255,255,255,.7)] transition hover:from-emerald-200 hover:to-emerald-300 hover:ring-emerald-400/60">✨ Closed beta</span></a>
-        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-graduation-cap text-[18px]"></i> Schools</a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" aria-current="page"><i class="fa-solid fa-graduation-cap text-[18px]"></i> Schools</a>
       </nav>
       <div class="mt-auto p-4">
         <div class="rounded-xl border border-gray-200 p-4 shadow-card">
@@ -318,7 +318,7 @@ input, textarea, select { font-size: 16px; }
           <a href="?view=businesses" data-route="businesses" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-briefcase text-[18px]"></i> Businesses</a>
           <a href="?view=projects" data-route="projects" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-diagram-project text-[18px]"></i> Projects</a>
           <a href="?view=events" data-route="events" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-calendar-days text-[18px]"></i> Events</a>
-          <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-graduation-cap text-[18px]"></i> Schools</a>
+          <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" aria-current="page"><i class="fa-solid fa-graduation-cap text-[18px]"></i> Schools</a>
         </nav>
         <div class="mt-auto p-4 border-t border-gray-100">
           <div class="rounded-xl border border-gray-200 p-4 shadow-card mb-3">
@@ -353,7 +353,7 @@ input, textarea, select { font-size: 16px; }
                      class="w-full rounded-full bg-gray-50 border border-gray-200 pl-10 pr-24 py-2.5 text-sm placeholder-gray-400 shadow-sm focus:border-ah-600 focus:ring-2 focus:ring-ah-500/20 outline-none transition search-soft"
                      placeholder="Search clubs, businesses, projects…" />
               <button id="clear-search" class="hidden absolute right-9 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" aria-label="Clear"><i class="fa-solid fa-xmark"></i></button>
-              <span class="pointer-events-none hidden sm:flex items-center justify-center absolute right-3 top-1/2 -translate-y-1/2 select-none rounded-md border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] tracking-wider text-gray-500 shadow-sm">/</span>
+              <span class="pointer-events-none flex items-center justify-center absolute right-3 top-1/2 -translate-y-1/2 select-none rounded-md border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] tracking-wider text-gray-500 shadow-sm">/</span>
 
               <!-- Dropdown menu -->
               <div id="search-menu" class="search-menu hidden">
@@ -624,7 +624,7 @@ input, textarea, select { font-size: 16px; }
                       </button>
 
                       <button id="shareBtn" class="shrink-0 inline-flex items-center gap-2 h-9 px-3 rounded-lg border border-gray-200 text-sm hover:bg-gray-50">
-                      <i class="fa-solid fa-share-nodes"></i><span class="hidden sm:inline">Share</span>
+                      <i class="fa-solid fa-share-nodes"></i><span class="inline">Share</span>
                     </button>
 
                     </div>
@@ -697,19 +697,19 @@ input, textarea, select { font-size: 16px; }
           </button>
         </div><div id="shareRowWrap" class="mt-1">
 <div class="share-row">
-    <a id="shareWhatsApp" class="share-chip" href="#" aria-label="Share via WhatsApp" rel="noopener" target="_blank">
+    <a id="shareWhatsApp" class="share-chip" href="#" aria-label="Share via WhatsApp" rel="noopener" target="_blank" aria-current="page">
       <span class="share-chip__circle"><img alt="" src="https://i.imgur.com/qOttODu.png" class="share-chip__icon" /></span>
       <span class="share-chip__label">WhatsApp</span>
     </a>
-    <a id="shareX" class="share-chip" href="#" aria-label="Share on X (Twitter)" rel="noopener" target="_blank">
+    <a id="shareX" class="share-chip" href="#" aria-label="Share on X (Twitter)" rel="noopener" target="_blank" aria-current="page">
       <span class="share-chip__circle"><img alt="" src="https://i.imgur.com/PLQsGra.png" class="share-chip__icon" /></span>
       <span class="share-chip__label">X</span>
     </a>
-    <a id="shareEmail" class="share-chip" href="#" aria-label="Share via Email" rel="noopener" target="_blank">
+    <a id="shareEmail" class="share-chip" href="#" aria-label="Share via Email" rel="noopener" target="_blank" aria-current="page">
       <span class="share-chip__circle"><img alt="" src="https://i.imgur.com/cBOGtrb.png" class="share-chip__icon" /></span>
       <span class="share-chip__label">Email</span>
     </a>
-    <a id="shareLinkedIn" class="share-chip" href="#" aria-label="Share via LinkedIn" rel="noopener" target="_blank">
+    <a id="shareLinkedIn" class="share-chip" href="#" aria-label="Share via LinkedIn" rel="noopener" target="_blank" aria-current="page">
       <span class="share-chip__circle"><img alt="" src="https://i.imgur.com/PEw6T9z.png" class="share-chip__icon" /></span>
       <span class="share-chip__label">LinkedIn</span>
     </a>
