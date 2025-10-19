@@ -356,6 +356,37 @@ input, textarea, select { font-size: 16px; }
   .ah-search-dropdown :is(.px-2,.px-3,.px-4,.px-5,.px-6,.px-8){ padding-left: 0 !important; padding-right: 0 !important; }
 }
 /* === /AH OVERRIDE === */
+</style><style>
+/* === AH PAGE MODE (mobile): search opens as a full page === */
+@media (max-width: 768px){
+  .ah-search-dropdown{
+    position: fixed !important;
+    inset: 0 !important;            /* top:0; right:0; bottom:0; left:0 */
+    width: 100vw !important; max-width: none !important;
+    border-radius: 0 !important; box-shadow: none !important;
+    background: var(--surface, #fff) !important;
+    z-index: 100 !important;
+  }
+  .ah-search-scroller{
+    height: 100dvh !important;      /* full device viewport height */
+    overflow: auto !important; -webkit-overflow-scrolling: touch !important;
+    padding: 0 !important; margin: 0 !important;
+  }
+  /* Kill any inner card styling so it feels like a page */
+  .ah-search-dropdown :is(.soft-card,.card,.card-elev,.dropdown-card){
+    border-radius: 0 !important; box-shadow: none !important; background: transparent !important;
+    margin-left: 0 !important; margin-right: 0 !important;
+  }
+  .ah-search-dropdown :is(.container,.mx-auto){
+    max-width: none !important; margin-left: 0 !important; margin-right: 0 !important;
+  }
+  .ah-search-dropdown :is(.px-2,.px-3,.px-4,.px-5,.px-6,.px-8){
+    padding-left: 0 !important; padding-right: 0 !important;
+  }
+  /* Optional: make the tabs row sticky at the top in page mode */
+  .ah-search-dropdown .ah-search-sticky{ position: sticky; top: 0; background: var(--surface, #fff); z-index: 2; }
+}
+/* === /AH PAGE MODE === */
 </style></head>
 <body class="min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
   <div class="flex w-full">
@@ -2200,6 +2231,11 @@ document.addEventListener('click', function(e){
   const bd = document.getElementById('searchBackdrop');
   if (!dd || !bd) return;
   function computeTopOffset(){
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    if (isMobile){
+      dd.style.setProperty('--search-top', '0px');
+      return;
+    }
     const tb = document.getElementById('topbar');
     const rect = tb ? tb.getBoundingClientRect() : null;
     const top = rect ? Math.max(0, rect.bottom + window.scrollY) : 0;
