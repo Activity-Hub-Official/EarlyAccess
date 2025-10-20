@@ -327,6 +327,25 @@ input, textarea, select { font-size: 16px; }
 .sidebar .ah-brand-badge{ width: 40px; height: 40px; }
 </style>
 
+
+<style>
+  /* --- injected: rounded selector for active bottom bar item */
+  #bottom-bar .bb-item {
+    position: relative;
+    border-radius: 9999px; /* pill shape */
+    padding: 8px 10px;
+  }
+  #bottom-bar .bb-item[aria-current="page"] {
+    background: rgba(15,23,42,.08); /* subtle filled pill */
+    box-shadow: 0 1px 2px rgba(0,0,0,.05) inset;
+  }
+  /* Improve icon/text contrast when active */
+  #bottom-bar .bb-item[aria-current="page"] i,
+  #bottom-bar .bb-item[aria-current="page"] span {
+    opacity: 1;
+  }
+</style>
+
 </head>
 <body class="has-bottom-bar" class="min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
   <div class="flex w-full">
@@ -337,7 +356,7 @@ input, textarea, select { font-size: 16px; }
         <span class="font-semibold text-gray-800">Activity Hub</span>
       </div>
       <nav class="px-2 py-3 space-y-1 text-sm">
-        <a href="?view=home" data-route="home" class="flex items-center gap-3 px-3 py-2 rounded-lg nav-active"><i class="fa-solid fa-house text-[18px]"></i> Home</a>
+        <a href="?view=home" data-route="home" class="flex items-center gap-3 px-3 py-2 rounded-lg nav-active" aria-current="page"><i class="fa-solid fa-house text-[18px]"></i> Home</a>
         <div class="h-px bg-gray-100 my-2"></div>
         <a href="?view=orgs" data-route="orgs" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-users text-[18px]"></i> Organizations</a>
         <a href="?view=businesses" data-route="businesses" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-briefcase text-[18px]"></i> Businesses</a>
@@ -2405,23 +2424,23 @@ document.addEventListener('click', function(e){
 <!-- Mobile Bottom Bar -->
 <nav id="bottom-bar" class="fixed inset-x-0 bottom-0 z-[45] md:hidden bg-white/95 backdrop-blur border-t border-gray-200 py-2">
   <div class="h-16 flex items-center justify-around pt-[env(safe-area-inset-top)] pb-[calc(env(safe-area-inset-bottom))]">
-    <a href="?view=home"          data-route="home"         class="bb-item flex flex-col items-center justify-center gap-1 text-xs text-gray-600 aria-[current=page]:text-black">
+    <a href="?view=home"          data-route="home"         class="bb-item flex flex-col items-center justify-center gap-1 text-xs text-gray-600 aria-[current=page]:text-black min-h-[44px] px-4 py-2" aria-current="page">
       <i class="fa-solid fa-house text-[18px]"></i>
       <span>Home</span>
     </a>
-    <a href="?view=orgs"          data-route="orgs"         class="bb-item flex flex-col items-center justify-center gap-1 text-xs text-gray-600">
+    <a href="?view=orgs"          data-route="orgs"         class="bb-item flex flex-col items-center justify-center gap-1 text-xs text-gray-600 min-h-[44px] px-4 py-2">
       <i class="fa-solid fa-users text-[18px]"></i>
       <span>Organizations</span>
     </a>
-    <a href="?view=businesses"    data-route="businesses"   class="bb-item flex flex-col items-center justify-center gap-1 text-xs text-gray-600">
+    <a href="?view=businesses"    data-route="businesses"   class="bb-item flex flex-col items-center justify-center gap-1 text-xs text-gray-600 min-h-[44px] px-4 py-2">
       <i class="fa-solid fa-briefcase text-[18px]"></i>
       <span>Businesses</span>
     </a>
-    <a href="?view=projects"      data-route="projects"     class="bb-item flex flex-col items-center justify-center gap-1 text-xs text-gray-600">
+    <a href="?view=projects"      data-route="projects"     class="bb-item flex flex-col items-center justify-center gap-1 text-xs text-gray-600 min-h-[44px] px-4 py-2">
       <i class="fa-solid fa-diagram-project text-[18px]"></i>
       <span>Projects</span>
     </a>
-    <a href="?view=events"        data-route="events"       class="bb-item flex flex-col items-center justify-center gap-1 text-xs text-gray-600">
+    <a href="?view=events"        data-route="events"       class="bb-item flex flex-col items-center justify-center gap-1 text-xs text-gray-600 min-h-[44px] px-4 py-2">
       <i class="fa-solid fa-calendar-days text-[18px]"></i>
       <span>Events</span>
     </a>
@@ -2492,6 +2511,18 @@ function setActiveBottomBar(view) {
     }
   }, { passive:false });
 })();
+</script>
+
+
+<script>
+// --- injected: ensure bottom bar highlights current view on load
+document.addEventListener('DOMContentLoaded', function(){
+  try{
+    const url = new URL(location.href);
+    const view = url.searchParams.get('view') || 'home';
+    if (typeof setActiveBottomBar === 'function') setActiveBottomBar(view);
+  }catch(e){ /* noop */ }
+});
 </script>
 
 </body>
