@@ -2458,8 +2458,8 @@ function setActiveBottomBar(view) {
     e.preventDefault();
     e.stopPropagation();
     try {
-      if (typeof navigateTo === 'function') {
-        navigateTo(view); // use the unified router used by the sidebar
+      if (typeof navigateToView === 'function') {
+        navigateToView(view, true); // use the unified router used by the sidebar
       } else {
         // fallback: manual route (pushState + render)
         history.pushState({view}, '', `?view=${encodeURIComponent(view)}`);
