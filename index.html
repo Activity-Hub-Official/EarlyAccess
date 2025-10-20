@@ -2444,5 +2444,55 @@ function setActiveBottomBar(view) {
 }
 </script>
 
+
+<script>
+// --- injected: bottom bar SPA navigation (prevent full reload/flicker)
+(function(){
+  const bar = document.getElementById('bottom-bar');
+  if (!bar) return;
+  bar.addEventListener('click', function(e){
+    const a = e.target.closest('[data-route]');
+    if (!a) return;
+    const view = a.getAttribute('data-route');
+    // prevent full page navigation
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      if (typeof navigateTo === 'function') {
+        navigateTo(view); // use the unified router used by the sidebar
+      } else {
+        // fallback: manual route (pushState + render)
+        history.pushState({view}, '', `?view=${encodeURIComponent(view)}`);
+        if (typeof updateNavCurrent==='function') updateNavCurrent(view);
+        if (typeof setActiveSidebar==='function') setActiveSidebar(view);
+        if (typeof setActiveBottomBar==='function') setActiveBottomBar(view);
+        // Ensure instant scroll (no smooth behavior to avoid perceived lag)
+        window.scrollTo(0,0);
+        // Render target view
+        if (typeof showDirectory==='function' && typeof applyFiltersAndRender==='function') {
+          if (view==='home' || view==='orgs' || view==='businesses' || view==='projects' || view==='events') {
+            window.VIEW_MODE = (view==='home') ? 'home' : view;
+            showDirectory();
+            // Slight defer to allow DOM hide/show first
+            requestAnimationFrame(() => applyFiltersAndRender());
+            return;
+          }
+        }
+        // If search or other views exist, select them appropriately
+        const rootMap = { search: 'view-search', detail: 'view-detail', directory:'view-directory' };
+        const viewId = rootMap[view] || 'view-directory';
+        const roots = ['view-directory','view-search','view-detail'];
+        roots.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.classList.toggle('hidden', id !== viewId);
+        });
+      }
+    } catch(err){
+      console.error('Bottom bar navigation error:', err);
+    }
+  }, { passive:false });
+})();
+</script>
+
 </body>
 </html>
