@@ -22,6 +22,15 @@
     return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;')
       .replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
   };
+  // Emoji/diacritics-insensitive normalizer for facet labels (global)
+  window.foldFacet = window.foldFacet || function(s){
+    s = String(s||'').toLowerCase();
+    try { s = s.replace(/\p{Extended_Pictographic}|\p{Emoji_Component}|\p{Emoji_Presentation}|\uFE0F/ug, ''); }
+    catch(e) { s = s.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g,''); }
+    s = s.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+    return s;
+  };
+
 
   window.normPlatform = window.normPlatform || function(platform, raw){
     if (!raw) return '';
@@ -213,12 +222,13 @@ input, textarea, select { font-size: 16px; }
 }
 
 
-  /* Bottom bar */
-  #bottom-bar .h-18 { height: 72px; }
+  /* Bottom bar styles */
   #bottom-bar .bb-item { min-width: 0; padding: 6px 4px; }
-  #bottom-bar .bb-item.nav-active { color:#111827; font-weight:600; }
+  #bottom-bar .bb-item.nav-active { color:#111827; }
   #bottom-bar .bb-item.nav-active i { transform: translateY(-1px); }
-  #bottom-bar { -webkit-tap-highlight-color: transparent; }
+  @supports(padding: max(0px)) {
+    #bottom-bar .h-16 { padding-bottom: max(0px, env(safe-area-inset-bottom)); }
+  }
 </style>
 <style>
   /* Scoped to the share modal only */
@@ -318,7 +328,7 @@ input, textarea, select { font-size: 16px; }
 </style>
 
 </head>
-<body class="min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
+<body class="has-bottom-bar" class="min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
   <div class="flex w-full">
     <!-- ====== SIDEBAR ====== -->
     <aside class="hidden lg:flex lg:w-64 xl:w-72 lg:shrink-0 lg:sticky lg:top-0 lg:self-start lg:h-[100dvh] lg:overflow-y-auto border-r border-gray-200 sidebar-grad flex-col">
@@ -953,6 +963,23 @@ const logo = $('#d_logo'); const ph = $('#d_fallback');
         logo.onerror = showFallback;
       } else { showFallback(); }
 
+// Make logo clickable → opens lightbox
+try {
+  if (isHttp(o.logo)) {
+    logo.style.cursor = 'zoom-in';
+    logo.setAttribute('role','button');
+    logo.setAttribute('tabindex','0');
+    logo.setAttribute('aria-label','View larger logo');
+    const open = () => { if (window.openLogoLightbox) window.openLogoLightbox(o.logo, `${o.name} logo`); };
+    logo.onclick = open;
+    logo.onkeydown = (ev)=>{ if(ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); open(); } };
+  } else {
+    logo.removeAttribute('role'); logo.removeAttribute('tabindex'); logo.style.cursor='';
+    logo.onclick = null; logo.onkeydown = null;
+  }
+} catch(e) { console.warn('logo lightbox hook failed', e); }
+
+
       $('#d_name').innerHTML = o.name + (o.verified ? ' <i class="fa-solid fa-circle-check text-sky-600"></i>' : '');
       const t=$('#d_theme'), i=$('#d_industry');
       t.textContent=o.theme; t.classList.toggle('hidden', !o.theme);
@@ -1077,7 +1104,7 @@ $('#shareBtn').onclick = ()=>{
       `).join('');
     }
 
-    const filteredByTheme = (arr)=> selectedThemes.size ? arr.filter(x=> selectedThemes.has(x.theme)) : arr;
+    const filteredByTheme = (arr)=> selectedThemes.size ? arr.filter(x=> { const keys=[x.theme].concat(x.themes||[]).map(window.foldFacet); for (const k of keys){ if (selectedThemes.has(k)) return true; } return false; }) : arr;
 
     function setSectionTitles(){
       $('#title-orgs').textContent  = (VIEW_MODE==='orgs')       ? 'All organizations' : 'Top organizations';
@@ -1564,6 +1591,16 @@ $('#shareBtn').onclick = ()=>{
         u.searchParams.delete('search');
         u.searchParams.set('facet', facet);
         u.searchParams.set('value', value);
+        // store normalized key to avoid emoji issues
+        const facetKey = (s => {
+          if (!s) return '';
+          s = String(s).toLowerCase();
+          try { s = s.replace(/\p{Extended_Pictographic}|\p{Emoji_Component}|\p{Emoji_Presentation}|\uFE0F/ug, ''); } catch(e) { s = s.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g,''); }
+          s = s.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+          return s;
+        })(value);
+        if (facetKey) u.searchParams.set('valkey', facetKey);
+
         u.searchParams.set('type', type);
         u.searchParams.set('scope', scope);
         if (excludeSlug) u.searchParams.set('exclude', excludeSlug);
@@ -1590,14 +1627,22 @@ function renderSearchResults(q, scope='all'){
         const url = new URL(location.href);
         const facet = url.searchParams.get('facet');
         const value = url.searchParams.get('value');
+        const valkeyParam = url.searchParams.get('valkey');
         const exclude = url.searchParams.get('exclude');
         const fold = s => String(s||'').trim().toLowerCase();
+        const foldFacet = s => {
+          s = String(s||'').toLowerCase();
+          try { s = s.replace(/\p{Extended_Pictographic}|\p{Emoji_Component}|\p{Emoji_Presentation}|\uFE0F/ug, ''); } catch(e) { s = s.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g,''); }
+          s = s.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+          return s;
+        };
         if (facet && value){
           const val = fold(value);
+          const valKey = valkeyParam ? String(valkeyParam) : foldFacet(value);
           pool = pool.filter(x=>{
             if (exclude && (x.slug===exclude || x.id===exclude)) return false;
-            if (facet==='theme') return [x.theme].concat(x.themes||[]).some(v=>fold(v)===val);
-            if (facet==='industry') return [x.industry].concat(x.industries||[]).some(v=>fold(v)===val);
+            if (facet==='theme') return [x.theme].concat(x.themes||[]).some(v=> foldFacet(v)===valKey );
+            if (facet==='industry') return [x.industry].concat(x.industries||[]).some(v=> foldFacet(v)===valKey );
             return true;
           });
           // Improve title when no text query
@@ -1680,23 +1725,45 @@ function renderSearchResults(q, scope='all'){
 
     // ---------- Browse chips ----------
     $$('#browse-chips .ah-chip').forEach(chip=>{
-      chip.addEventListener('click', ()=>{
-        const label = chip.textContent.trim();
-        const isAll = label.toLowerCase()==='all';
-        if(isAll){
-          $$('#browse-chips .ah-chip').forEach(c=>c.setAttribute('data-selected', c===chip?'true':'false'));
-          selectedThemes.clear();
-        }else{
-          const newState = chip.getAttribute('data-selected')!=='true';
-          chip.setAttribute('data-selected', newState?'true':'false');
-          const allChip = $$('#browse-chips .ah-chip').find(c=>c.textContent.trim().toLowerCase()==='all');
-          if (allChip) allChip.setAttribute('data-selected','false');
-          if(newState) selectedThemes.add(label); else selectedThemes.delete(label);
-          if(selectedThemes.size===0 && allChip) allChip.setAttribute('data-selected','true');
-        }
-        applyFiltersAndRender();
-      });
-    });
+  // Identify the special "All" chip once per handler
+  const chips = $$('#browse-chips .ah-chip');
+  const isAllChip = (el)=> el && el.textContent.trim().toLowerCase()==='all';
+  const allChip = chips.find(isAllChip);
+
+  // Ensure "All" is marked when nothing selected (idempotent at startup too)
+  if (selectedThemes.size === 0 && allChip) {
+    chips.forEach(c=> c.setAttribute('data-selected', isAllChip(c) ? 'true' : 'false'));
+  }
+
+  chip.addEventListener('click', ()=>{
+    const raw = chip.textContent.trim();
+    const key = window.foldFacet(raw);
+    const all = isAllChip(chip);
+
+    if (all) {
+      // Selecting "All" is always idempotent: clears other selections and marks itself selected
+      selectedThemes.clear();
+      chips.forEach(c=> c.setAttribute('data-selected', isAllChip(c) ? 'true' : 'false'));
+      applyFiltersAndRender();
+      return;
+    }
+
+    // Selecting any other chip -> deselect "All" automatically
+    if (allChip) allChip.setAttribute('data-selected','false');
+
+    const willSelect = chip.getAttribute('data-selected') !== 'true';
+    chip.setAttribute('data-selected', willSelect ? 'true' : 'false');
+
+    if (willSelect) selectedThemes.add(key); else selectedThemes.delete(key);
+
+    // If none selected after toggling, fall back to "All"
+    if (selectedThemes.size === 0 && allChip) {
+      allChip.setAttribute('data-selected','true');
+    }
+
+    applyFiltersAndRender();
+  });
+});
 
     // ---------- Drawer controls ----------
     const openBtn=$('#open-sidebar-btn'), drawer=$('#sidebar-drawer'), overlay=$('#drawer-overlay'), panel=$('#drawer-panel'), closeBtn=$('#close-drawer');
@@ -2140,63 +2207,232 @@ document.addEventListener('click', function(e){
     });
   })();
 
-// --- Bottom bar SPA routing (fast) ---
+// === Logo Lightbox (fullscreen square with swipe-to-dismiss + download) ===
 (function(){
-  const links = document.querySelectorAll('#bottom-bar [data-route]');
-  function switchView(view){
-    const target = ['home','orgs','businesses','projects','events'].includes(view) ? view : 'home';
-    if (typeof VIEW_MODE !== 'undefined' && VIEW_MODE === target){
-      setActiveSidebar(target);
-      document.getElementById('view-search')?.classList.add('hidden');
-      document.getElementById('view-detail')?.classList.add('hidden');
-      return;
-    }
-    VIEW_MODE = target;
-    document.getElementById('view-search')?.classList.add('hidden');
-    document.getElementById('view-detail')?.classList.add('hidden');
-    setActiveSidebar(target);
-    requestAnimationFrame(()=>{ if (typeof showDirectory==='function') showDirectory(); if (typeof applyFiltersAndRender==='function') applyFiltersAndRender(); });
-    window.scrollTo(0,0);
-  }
-  links.forEach(a=> a.addEventListener('click', (e)=>{
-    e.preventDefault();
-    const view = a.getAttribute('data-route');
-    const u = new URL(location.href);
-    u.searchParams.set('view', view);
-    u.searchParams.delete('org');
-    history.pushState({view}, '', u);
-    if (typeof updateNavCurrent==='function') updateNavCurrent(view);
-    switchView(view);
-  }, {passive:false}));
-  window.addEventListener('popstate', ()=>{
-    const view = new URL(location.href).searchParams.get('view') || 'home';
-    if (typeof updateNavCurrent==='function') updateNavCurrent(view);
-    switchView(view);
-  });
-})();</script>
+  if (window.__logoLightboxInit) return; window.__logoLightboxInit = true;
 
-
-  <!-- Mobile Bottom Bar -->
-  <nav id="bottom-bar" class="fixed inset-x-0 bottom-0 z-[45] md:hidden bg-white/95 backdrop-blur border-t border-gray-200">
-    <div class="h-18 flex items-center justify-around pt-[env(safe-area-inset-top)] pb-[calc(env(safe-area-inset-bottom))]">
-      <a href="?view=home"          data-route="home"         class="bb-item flex flex-col items-center justify-center gap-1 text-xs text-gray-600">
-        <i class="fa-solid fa-house text-[18px]"></i><span>Home</span>
-      </a>
-      <a href="?view=orgs"          data-route="orgs"         class="bb-item flex flex-col items-center justify-center gap-1 text-xs text-gray-600">
-        <i class="fa-solid fa-users text-[18px]"></i><span>Organizations</span>
-      </a>
-      <a href="?view=businesses"    data-route="businesses"   class="bb-item flex flex-col items-center justify-center gap-1 text-xs text-gray-600">
-        <i class="fa-solid fa-briefcase text-[18px]"></i><span>Businesses</span>
-      </a>
-      <a href="?view=projects"      data-route="projects"     class="bb-item flex flex-col items-center justify-center gap-1 text-xs text-gray-600">
-        <i class="fa-solid fa-diagram-project text-[18px]"></i><span>Projects</span>
-      </a>
-      <a href="?view=events"        data-route="events"       class="bb-item flex flex-col items-center justify-center gap-1 text-xs text-gray-600">
-        <i class="fa-solid fa-calendar-days text-[18px]"></i><span>Events</span>
-      </a>
+  const el = document.createElement('div');
+  el.innerHTML = `
+  <div id="logoLightbox" class="fixed inset-0 z-[70] hidden">
+    <div id="lbOverlay" class="absolute inset-0 bg-black/60 opacity-0 transition-opacity"></div>
+    <div id="lbStage" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[86vw] max-w-sm aspect-square rounded-2xl bg-white shadow-2xl overflow-hidden scale-95 transition-transform duration-200 will-change-transform touch-none">
+      <img id="lbImg" src="" alt="" class="w-full h-full object-contain bg-white select-none pointer-events-none" draggable="false"/>
+      <div class="absolute top-2 right-2 flex gap-2">
+        <button id="lbDownload" class="px-3 py-1.5 rounded-md bg-black/70 text-white text-sm backdrop-blur-sm">
+          <i class="fa-solid fa-download mr-1"></i> Save
+        </button>
+        <button id="lbClose" class="p-2 rounded-md bg-black/70 text-white" aria-label="Close">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
     </div>
-  </nav>
-  <div id="bottom-bar-spacer" class="h-18 md:hidden"></div>
+  </div>`;
+  document.body.appendChild(el.firstElementChild);
+
+  const root = document.getElementById('logoLightbox');
+  const overlay = document.getElementById('lbOverlay');
+  const stage = document.getElementById('lbStage');
+  const img = document.getElementById('lbImg');
+  const btnClose = document.getElementById('lbClose');
+  const btnSave = document.getElementById('lbDownload');
+
+  let swipe = null;
+
+  function setOverlayAlpha(a){
+    overlay.style.opacity = String(a);
+  }
+  function setStageTransform(x,y,scale){
+    stage.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(${scale})`;
+  }
+
+  function openLogoLightbox(src, alt){
+    img.src = src || '';
+    img.alt = alt || 'Logo';
+    root.classList.remove('hidden');
+    // animate in
+    requestAnimationFrame(()=>{
+      setOverlayAlpha(1);
+      setStageTransform(0,0,1);
+    });
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKeydown);
+  }
+
+  function closeLightbox(direction){
+    // animate out following swipe direction if provided
+    let dx = 0, dy = 0;
+    if (direction && (direction.dx || direction.dy)) {
+      const mult = 3; // push further outward
+      dx = (direction.dx||0) * mult;
+      dy = (direction.dy||0) * mult;
+    }
+    setOverlayAlpha(0);
+    setStageTransform(dx, dy, 0.95);
+    setTimeout(()=>{
+      root.classList.add('hidden');
+      setStageTransform(0,0,0.95);
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', onKeydown);
+    }, 180);
+  }
+
+  function onKeydown(e){ if(e.key==='Escape') closeLightbox(); }
+
+  // outside click closes
+  overlay.addEventListener('click', ()=> closeLightbox());
+
+  btnClose.addEventListener('click', ()=> closeLightbox());
+
+  // --- swipe-to-dismiss on the stage ---
+  function onPointerDown(e){
+    e.preventDefault();
+    stage.setPointerCapture(e.pointerId);
+    swipe = {
+      sx: e.clientX, sy: e.clientY,
+      px: e.clientX, py: e.clientY,
+      t0: performance.now(),
+      moved: false
+    };
+  }
+  function onPointerMove(e){
+    if(!swipe) return;
+    const dx = e.clientX - swipe.sx;
+    const dy = e.clientY - swipe.sy;
+    const dist = Math.hypot(dx, dy);
+    swipe.px = e.clientX; swipe.py = e.clientY;
+    swipe.moved = true;
+    // move the stage with finger, fade bg
+    const fade = Math.max(0.25, 1 - Math.min(1, dist / 220));
+    setOverlayAlpha(fade);
+    setStageTransform(dx, dy, 1 - Math.min(0.05, dist/1500));
+  }
+  function onPointerUp(e){
+    if(!swipe){ return; }
+    const dx = e.clientX - swipe.sx;
+    const dy = e.clientY - swipe.sy;
+    const dt = Math.max(1, performance.now() - swipe.t0);
+    const v = Math.hypot(dx,dy) / dt; // px/ms
+    const dist = Math.hypot(dx,dy);
+    const shouldDismiss = dist > 120 || v > 0.8;
+
+    if(shouldDismiss){
+      closeLightbox({dx, dy});
+    } else {
+      // snap back
+      setOverlayAlpha(1);
+      setStageTransform(0,0,1);
+    }
+    swipe = null;
+  }
+
+  stage.addEventListener('pointerdown', onPointerDown);
+  stage.addEventListener('pointermove', onPointerMove);
+  stage.addEventListener('pointerup', onPointerUp);
+  stage.addEventListener('pointercancel', onPointerUp);
+  stage.addEventListener('lostpointercapture', onPointerUp);
+
+  // --- Download helper ---
+  function extFromMime(t){
+    if(!t) return '.png';
+    if(t.includes('png')) return '.png';
+    if(t.includes('jpeg')||t.includes('jpg')) return '.jpg';
+    if(t.includes('webp')) return '.webp';
+    if(t.includes('svg')) return '.svg';
+    return '.png';
+  }
+  function slug(s){ return String(s||'logo').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,''); }
+
+  async function saveCurrent(){
+    const src = img.getAttribute('src') || '';
+    const alt = img.getAttribute('alt') || 'logo';
+    const filenameBase = slug(alt);
+    // Try fetching as blob for a clean download; fall back to opening in a new tab if blocked by CORS
+    try {
+      const res = await fetch(src, {mode:'cors'});
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = filenameBase + extFromMime(blob.type);
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(()=> URL.revokeObjectURL(url), 2000);
+    } catch (err) {
+      // Fallback: open in a new tab so mobile users can long-press "Save to Photos"
+      const a = document.createElement('a');
+      a.href = src; a.target = '_blank'; a.rel = 'noopener';
+      document.body.appendChild(a); a.click(); a.remove();
+    }
+  }
+
+  btnSave.addEventListener('click', saveCurrent);
+
+  // Expose open function
+  window.openLogoLightbox = openLogoLightbox;
+})();
+
+// --- Bottom bar SPA routing: mirror sidebar behavior ---
+(function(){
+  const navLinks = document.querySelectorAll('#bottom-bar [data-route]');
+  navLinks.forEach(a=>{
+    a.addEventListener('click', (e)=>{
+      e.preventDefault();
+      const view = a.getAttribute('data-route');
+      const url = new URL(location.href);
+      url.searchParams.set('view', view);
+      url.searchParams.delete('org');
+      history.pushState({view}, '', url);
+      if (typeof updateNavCurrent==='function') updateNavCurrent(view);
+      setActiveSidebar(view);
+      if (view==='orgs' || view==='businesses' || view==='projects' || view==='events' || view==='home' || view==='schools'){
+        // existing functions handle view switching
+        if (view==='home') { VIEW_MODE='home'; showDirectory(); applyFiltersAndRender(); }
+        else if (view==='orgs'){ VIEW_MODE='orgs'; showDirectory(); applyFiltersAndRender(); }
+        else if (view==='businesses'){ VIEW_MODE='businesses'; showDirectory(); applyFiltersAndRender(); }
+        else if (view==='projects'){ VIEW_MODE='projects'; showDirectory(); applyFiltersAndRender(); }
+        else if (view==='events'){ VIEW_MODE='events'; showDirectory(); applyFiltersAndRender(); }
+        else if (view==='schools'){ VIEW_MODE='schools'; showDirectory(); applyFiltersAndRender(); }
+        // show search view only when explicitly navigated by search
+        document.getElementById('view-search')?.classList.add('hidden');
+        document.getElementById('view-detail')?.classList.add('hidden');
+      }
+      // Scroll to top for new view
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  });
+})();
+</script>
+
+
+<!-- Mobile Bottom Bar -->
+<nav id="bottom-bar" class="fixed inset-x-0 bottom-0 z-[45] md:hidden bg-white/95 backdrop-blur border-t border-gray-200">
+  <div class="h-16 flex items-center justify-around pt-[env(safe-area-inset-top)] pb-[calc(env(safe-area-inset-bottom))]">
+    <a href="?view=home"          data-route="home"         class="bb-item flex flex-col items-center justify-center gap-1 text-xs text-gray-600 aria-[current=page]:text-black">
+      <i class="fa-solid fa-house text-[18px]"></i>
+      <span>Home</span>
+    </a>
+    <a href="?view=orgs"          data-route="orgs"         class="bb-item flex flex-col items-center justify-center gap-1 text-xs text-gray-600">
+      <i class="fa-solid fa-users text-[18px]"></i>
+      <span>Organizations</span>
+    </a>
+    <a href="?view=businesses"    data-route="businesses"   class="bb-item flex flex-col items-center justify-center gap-1 text-xs text-gray-600">
+      <i class="fa-solid fa-briefcase text-[18px]"></i>
+      <span>Businesses</span>
+    </a>
+    <a href="?view=projects"      data-route="projects"     class="bb-item flex flex-col items-center justify-center gap-1 text-xs text-gray-600">
+      <i class="fa-solid fa-diagram-project text-[18px]"></i>
+      <span>Projects</span>
+    </a>
+    <a href="?view=events"        data-route="events"       class="bb-item flex flex-col items-center justify-center gap-1 text-xs text-gray-600">
+      <i class="fa-solid fa-calendar-days text-[18px]"></i>
+      <span>Events</span>
+    </a>
+    <a href="?view=schools"       data-route="schools"      class="bb-item flex flex-col items-center justify-center gap-1 text-xs text-gray-600">
+      <i class="fa-solid fa-graduation-cap text-[18px]"></i>
+      <span>Schools</span>
+    </a>
+  </div>
+</nav>
+<!-- Spacer so content isn't hidden behind the bar -->
+<div id="bottom-bar-spacer" class="h-16 md:hidden"></div>
 
 </body>
 </html>
