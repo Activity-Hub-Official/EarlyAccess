@@ -22,6 +22,15 @@
     return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;')
       .replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
   };
+  // Emoji/diacritics-insensitive normalizer for facet labels (global)
+  window.foldFacet = window.foldFacet || function(s){
+    s = String(s||'').toLowerCase();
+    try { s = s.replace(/\p{Extended_Pictographic}|\p{Emoji_Component}|\p{Emoji_Presentation}|\uFE0F/ug, ''); }
+    catch(e) { s = s.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g,''); }
+    s = s.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+    return s;
+  };
+
 
   window.normPlatform = window.normPlatform || function(platform, raw){
     if (!raw) return '';
@@ -212,6 +221,14 @@ input, textarea, select { font-size: 16px; }
   .tab-btn{ padding-left:10px !important; padding-right:10px !important; }
 }
 
+
+  /* Bottom bar styles */
+  #bottom-bar .bb-item { min-width: 0; padding: 6px 4px; }
+  #bottom-bar .bb-item.nav-active { color:#111827; }
+  #bottom-bar .bb-item.nav-active i { transform: translateY(-1px); }
+  @supports(padding: max(0px)) {
+    #bottom-bar .h-16 { padding-bottom: max(0px, env(safe-area-inset-bottom)); }
+  }
 </style>
 <style>
   /* Scoped to the share modal only */
@@ -311,7 +328,7 @@ input, textarea, select { font-size: 16px; }
 </style>
 
 </head>
-<body class="min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
+<body class="has-bottom-bar" class="min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
   <div class="flex w-full">
     <!-- ====== SIDEBAR ====== -->
     <aside class="hidden lg:flex lg:w-64 xl:w-72 lg:shrink-0 lg:sticky lg:top-0 lg:self-start lg:h-[100dvh] lg:overflow-y-auto border-r border-gray-200 sidebar-grad flex-col">
@@ -1087,7 +1104,7 @@ $('#shareBtn').onclick = ()=>{
       `).join('');
     }
 
-    const filteredByTheme = (arr)=> selectedThemes.size ? arr.filter(x=> selectedThemes.has(x.theme)) : arr;
+    const filteredByTheme = (arr)=> selectedThemes.size ? arr.filter(x=> { const keys=[x.theme].concat(x.themes||[]).map(window.foldFacet); for (const k of keys){ if (selectedThemes.has(k)) return true; } return false; }) : arr;
 
     function setSectionTitles(){
       $('#title-orgs').textContent  = (VIEW_MODE==='orgs')       ? 'All organizations' : 'Top organizations';
@@ -1574,6 +1591,16 @@ $('#shareBtn').onclick = ()=>{
         u.searchParams.delete('search');
         u.searchParams.set('facet', facet);
         u.searchParams.set('value', value);
+        // store normalized key to avoid emoji issues
+        const facetKey = (s => {
+          if (!s) return '';
+          s = String(s).toLowerCase();
+          try { s = s.replace(/\p{Extended_Pictographic}|\p{Emoji_Component}|\p{Emoji_Presentation}|\uFE0F/ug, ''); } catch(e) { s = s.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g,''); }
+          s = s.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+          return s;
+        })(value);
+        if (facetKey) u.searchParams.set('valkey', facetKey);
+
         u.searchParams.set('type', type);
         u.searchParams.set('scope', scope);
         if (excludeSlug) u.searchParams.set('exclude', excludeSlug);
@@ -1600,14 +1627,22 @@ function renderSearchResults(q, scope='all'){
         const url = new URL(location.href);
         const facet = url.searchParams.get('facet');
         const value = url.searchParams.get('value');
+        const valkeyParam = url.searchParams.get('valkey');
         const exclude = url.searchParams.get('exclude');
         const fold = s => String(s||'').trim().toLowerCase();
+        const foldFacet = s => {
+          s = String(s||'').toLowerCase();
+          try { s = s.replace(/\p{Extended_Pictographic}|\p{Emoji_Component}|\p{Emoji_Presentation}|\uFE0F/ug, ''); } catch(e) { s = s.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g,''); }
+          s = s.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+          return s;
+        };
         if (facet && value){
           const val = fold(value);
+          const valKey = valkeyParam ? String(valkeyParam) : foldFacet(value);
           pool = pool.filter(x=>{
             if (exclude && (x.slug===exclude || x.id===exclude)) return false;
-            if (facet==='theme') return [x.theme].concat(x.themes||[]).some(v=>fold(v)===val);
-            if (facet==='industry') return [x.industry].concat(x.industries||[]).some(v=>fold(v)===val);
+            if (facet==='theme') return [x.theme].concat(x.themes||[]).some(v=> foldFacet(v)===valKey );
+            if (facet==='industry') return [x.industry].concat(x.industries||[]).some(v=> foldFacet(v)===valKey );
             return true;
           });
           // Improve title when no text query
@@ -1690,23 +1725,45 @@ function renderSearchResults(q, scope='all'){
 
     // ---------- Browse chips ----------
     $$('#browse-chips .ah-chip').forEach(chip=>{
-      chip.addEventListener('click', ()=>{
-        const label = chip.textContent.trim();
-        const isAll = label.toLowerCase()==='all';
-        if(isAll){
-          $$('#browse-chips .ah-chip').forEach(c=>c.setAttribute('data-selected', c===chip?'true':'false'));
-          selectedThemes.clear();
-        }else{
-          const newState = chip.getAttribute('data-selected')!=='true';
-          chip.setAttribute('data-selected', newState?'true':'false');
-          const allChip = $$('#browse-chips .ah-chip').find(c=>c.textContent.trim().toLowerCase()==='all');
-          if (allChip) allChip.setAttribute('data-selected','false');
-          if(newState) selectedThemes.add(label); else selectedThemes.delete(label);
-          if(selectedThemes.size===0 && allChip) allChip.setAttribute('data-selected','true');
-        }
-        applyFiltersAndRender();
-      });
-    });
+  // Identify the special "All" chip once per handler
+  const chips = $$('#browse-chips .ah-chip');
+  const isAllChip = (el)=> el && el.textContent.trim().toLowerCase()==='all';
+  const allChip = chips.find(isAllChip);
+
+  // Ensure "All" is marked when nothing selected (idempotent at startup too)
+  if (selectedThemes.size === 0 && allChip) {
+    chips.forEach(c=> c.setAttribute('data-selected', isAllChip(c) ? 'true' : 'false'));
+  }
+
+  chip.addEventListener('click', ()=>{
+    const raw = chip.textContent.trim();
+    const key = window.foldFacet(raw);
+    const all = isAllChip(chip);
+
+    if (all) {
+      // Selecting "All" is always idempotent: clears other selections and marks itself selected
+      selectedThemes.clear();
+      chips.forEach(c=> c.setAttribute('data-selected', isAllChip(c) ? 'true' : 'false'));
+      applyFiltersAndRender();
+      return;
+    }
+
+    // Selecting any other chip -> deselect "All" automatically
+    if (allChip) allChip.setAttribute('data-selected','false');
+
+    const willSelect = chip.getAttribute('data-selected') !== 'true';
+    chip.setAttribute('data-selected', willSelect ? 'true' : 'false');
+
+    if (willSelect) selectedThemes.add(key); else selectedThemes.delete(key);
+
+    // If none selected after toggling, fall back to "All"
+    if (selectedThemes.size === 0 && allChip) {
+      allChip.setAttribute('data-selected','true');
+    }
+
+    applyFiltersAndRender();
+  });
+});
 
     // ---------- Drawer controls ----------
     const openBtn=$('#open-sidebar-btn'), drawer=$('#sidebar-drawer'), overlay=$('#drawer-overlay'), panel=$('#drawer-panel'), closeBtn=$('#close-drawer');
@@ -2311,7 +2368,71 @@ document.addEventListener('click', function(e){
   // Expose open function
   window.openLogoLightbox = openLogoLightbox;
 })();
+
+// --- Bottom bar SPA routing: mirror sidebar behavior ---
+(function(){
+  const navLinks = document.querySelectorAll('#bottom-bar [data-route]');
+  navLinks.forEach(a=>{
+    a.addEventListener('click', (e)=>{
+      e.preventDefault();
+      const view = a.getAttribute('data-route');
+      const url = new URL(location.href);
+      url.searchParams.set('view', view);
+      url.searchParams.delete('org');
+      history.pushState({view}, '', url);
+      if (typeof updateNavCurrent==='function') updateNavCurrent(view);
+      setActiveSidebar(view);
+      if (view==='orgs' || view==='businesses' || view==='projects' || view==='events' || view==='home' || view==='schools'){
+        // existing functions handle view switching
+        if (view==='home') { VIEW_MODE='home'; showDirectory(); applyFiltersAndRender(); }
+        else if (view==='orgs'){ VIEW_MODE='orgs'; showDirectory(); applyFiltersAndRender(); }
+        else if (view==='businesses'){ VIEW_MODE='businesses'; showDirectory(); applyFiltersAndRender(); }
+        else if (view==='projects'){ VIEW_MODE='projects'; showDirectory(); applyFiltersAndRender(); }
+        else if (view==='events'){ VIEW_MODE='events'; showDirectory(); applyFiltersAndRender(); }
+        else if (view==='schools'){ VIEW_MODE='schools'; showDirectory(); applyFiltersAndRender(); }
+        // show search view only when explicitly navigated by search
+        document.getElementById('view-search')?.classList.add('hidden');
+        document.getElementById('view-detail')?.classList.add('hidden');
+      }
+      // Scroll to top for new view
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  });
+})();
 </script>
+
+
+<!-- Mobile Bottom Bar -->
+<nav id="bottom-bar" class="fixed inset-x-0 bottom-0 z-[45] md:hidden bg-white/95 backdrop-blur border-t border-gray-200">
+  <div class="h-16 flex items-center justify-around pt-[env(safe-area-inset-top)] pb-[calc(env(safe-area-inset-bottom))]">
+    <a href="?view=home"          data-route="home"         class="bb-item flex flex-col items-center justify-center gap-1 text-xs text-gray-600 aria-[current=page]:text-black">
+      <i class="fa-solid fa-house text-[18px]"></i>
+      <span>Home</span>
+    </a>
+    <a href="?view=orgs"          data-route="orgs"         class="bb-item flex flex-col items-center justify-center gap-1 text-xs text-gray-600">
+      <i class="fa-solid fa-users text-[18px]"></i>
+      <span>Organizations</span>
+    </a>
+    <a href="?view=businesses"    data-route="businesses"   class="bb-item flex flex-col items-center justify-center gap-1 text-xs text-gray-600">
+      <i class="fa-solid fa-briefcase text-[18px]"></i>
+      <span>Businesses</span>
+    </a>
+    <a href="?view=projects"      data-route="projects"     class="bb-item flex flex-col items-center justify-center gap-1 text-xs text-gray-600">
+      <i class="fa-solid fa-diagram-project text-[18px]"></i>
+      <span>Projects</span>
+    </a>
+    <a href="?view=events"        data-route="events"       class="bb-item flex flex-col items-center justify-center gap-1 text-xs text-gray-600">
+      <i class="fa-solid fa-calendar-days text-[18px]"></i>
+      <span>Events</span>
+    </a>
+    <a href="?view=schools"       data-route="schools"      class="bb-item flex flex-col items-center justify-center gap-1 text-xs text-gray-600">
+      <i class="fa-solid fa-graduation-cap text-[18px]"></i>
+      <span>Schools</span>
+    </a>
+  </div>
+</nav>
+<!-- Spacer so content isn't hidden behind the bar -->
+<div id="bottom-bar-spacer" class="h-16 md:hidden"></div>
 
 </body>
 </html>
