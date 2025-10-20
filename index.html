@@ -1182,8 +1182,8 @@ $('#shareBtn').onclick = ()=>{
 
     function navigateToView(view, push=true){
       VIEW_MODE = view;
-      setActiveSidebar(view);
-      if (typeof updateNavCurrent==='function') updateNavCurrent(view);
+      setActiveSidebar(view); setActiveBottomBar(view);
+      if (typeof updateNavCurrent==='function') updateNavCurrent(view); setActiveBottomBar(view);
       showDirectory();
       if (push){
         const url = new URL(location.href);
@@ -1204,7 +1204,7 @@ $('#shareBtn').onclick = ()=>{
       $('#view-search').classList.add('hidden');
       $('#view-detail').classList.remove('hidden');
       renderDetail(o);
-      window.scrollTo({top:0,behavior:'smooth'});
+      window.scrollTo(0,0);
     }
 
     function showDirectory(){
@@ -1787,7 +1787,7 @@ function renderSearchResults(q, scope='all'){
       const url = new URL(location.href);
       const slug = url.searchParams.get('org');
       const view = url.searchParams.get('view') || 'home';
-      if (typeof updateNavCurrent==='function') updateNavCurrent(view);
+      if (typeof updateNavCurrent==='function') updateNavCurrent(view); setActiveBottomBar(view);
       const q = url.searchParams.get('search');
       const scope = url.searchParams.get('scope') || 'all';
       const sortParam = url.searchParams.get('sort');
@@ -2381,7 +2381,7 @@ document.addEventListener('click', function(e){
       url.searchParams.delete('org');
       history.pushState({view}, '', url);
       if (typeof updateNavCurrent==='function') updateNavCurrent(view);
-      setActiveSidebar(view);
+      setActiveSidebar(view); setActiveBottomBar(view);
       if (view==='orgs' || view==='businesses' || view==='projects' || view==='events' || view==='home' || view==='schools'){
         // existing functions handle view switching
         if (view==='home') { VIEW_MODE='home'; showDirectory(); applyFiltersAndRender(); }
@@ -2395,7 +2395,7 @@ document.addEventListener('click', function(e){
         document.getElementById('view-detail')?.classList.add('hidden');
       }
       // Scroll to top for new view
-      window.scrollTo({top:0, behavior:'smooth'});
+      window.scrollTo(0,0);
     });
   });
 })();
@@ -2403,7 +2403,7 @@ document.addEventListener('click', function(e){
 
 
 <!-- Mobile Bottom Bar -->
-<nav id="bottom-bar" class="fixed inset-x-0 bottom-0 z-[45] md:hidden bg-white/95 backdrop-blur border-t border-gray-200">
+<nav id="bottom-bar" class="fixed inset-x-0 bottom-0 z-[45] md:hidden bg-white/95 backdrop-blur border-t border-gray-200 py-2">
   <div class="h-16 flex items-center justify-around pt-[env(safe-area-inset-top)] pb-[calc(env(safe-area-inset-bottom))]">
     <a href="?view=home"          data-route="home"         class="bb-item flex flex-col items-center justify-center gap-1 text-xs text-gray-600 aria-[current=page]:text-black">
       <i class="fa-solid fa-house text-[18px]"></i>
@@ -2425,14 +2425,24 @@ document.addEventListener('click', function(e){
       <i class="fa-solid fa-calendar-days text-[18px]"></i>
       <span>Events</span>
     </a>
-    <a href="?view=schools"       data-route="schools"      class="bb-item flex flex-col items-center justify-center gap-1 text-xs text-gray-600">
-      <i class="fa-solid fa-graduation-cap text-[18px]"></i>
-      <span>Schools</span>
-    </a>
-  </div>
+    </div>
 </nav>
 <!-- Spacer so content isn't hidden behind the bar -->
-<div id="bottom-bar-spacer" class="h-16 md:hidden"></div>
+<div id="bottom-bar-spacer" class=" h-[4.5rem] md:hidden"></div>
+
+
+<script>
+// --- injected: keep bottom bar active state in sync
+function setActiveBottomBar(view) {
+  const bar = document.getElementById('bottom-bar');
+  if (!bar) return;
+  bar.querySelectorAll('[data-route]').forEach(a => {
+    const isActive = a.getAttribute('data-route') === view;
+    if (isActive) a.setAttribute('aria-current', 'page');
+    else a.removeAttribute('aria-current');
+  });
+}
+</script>
 
 </body>
 </html>
