@@ -434,6 +434,12 @@ body.has-bottom-bar main{
 @media (max-width:640px){.about-block{--about-lines:5;}}
 </style>
 
+
+<style id="ai-review-typing-style">
+.ai-cursor{display:inline-block;width:1px;height:1em;background:currentColor;animation:blink 1s steps(2,end) infinite;vertical-align:-.2em;margin-left:2px;opacity:.9}
+@keyframes blink{0%{opacity:1}50%{opacity:0}100%{opacity:1}}
+</style>
+
 </head>
 <body class="has-bottom-bar" class="min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
   <div class="flex w-full">
@@ -805,9 +811,8 @@ body.has-bottom-bar main{
                     <i class="fa-solid fa-calendar-days text-gray-500"></i> Events
                   </button>
                   <button class="tab-btn inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold border border-transparent text-gray-600 hover:bg-gray-50"
-                          role="tab" aria-selected="false" data-tab="contact">
-                    <i class="fa-solid fa-envelope text-gray-500"></i> Contact Info
-                  </button>
+                          role="tab" aria-selected="false" data-tab="ai">
+                    <i class="fa-solid fa-robot text-gray-500"></i>AI Review</button>
                 </nav>
 
                 <!-- Panels -->
@@ -824,7 +829,12 @@ body.has-bottom-bar main{
   </div>
 
     </section>
-    <section class="py-6">
+    
+<section class="py-6" id="overview-contact-inline">
+      <h2 class="text-lg font-semibold mb-2">Contact Info</h2>
+      <div class="text-sm text-gray-700">this is a test</div>
+    </section>
+<section class="py-6">
       <h2 class="text-lg font-semibold mb-2">Links</h2>
       <div id="d_links" class="flex flex-wrap gap-2"></div>
     </section>
@@ -837,9 +847,11 @@ body.has-bottom-bar main{
                   </div>
                 </div>
 
-                <div id="panel-contact" class="hidden">
-                  <div class="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-center text-gray-600">
-                    <div id="d_links" class="flex flex-wrap gap-2"></div>
+                <div id="panel-ai" class="hidden"><div class="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-gray-800">
+    <div class="prose max-w-none text-sm leading-6">
+      <p data-ai-review-body>Loading review…</p>
+    </div>
+  </div></div>
                   </div>
                 </div>
               </div>
@@ -2484,24 +2496,42 @@ document.addEventListener('click', function(e){
 
 // --- Bottom bar SPA routing: mirror sidebar behavior ---
 (function(){
-  const navLinks = document.querySelectorAll(', '', url);
-      if (typeof updateNavCurrent==='function') updateNavCurrent(view);
-      setActiveSidebar(view); setActiveBottomBar(view);
-      if (view==='orgs' || view==='businesses' || view==='projects' || view==='events' || view==='home' || view==='schools'){
-        // existing functions handle view switching
-        if (view==='home') { VIEW_MODE='home'; showDirectory(); applyFiltersAndRender(); }
-        else if (view==='orgs'){ VIEW_MODE='orgs'; showDirectory(); applyFiltersAndRender(); }
-        else if (view==='businesses'){ VIEW_MODE='businesses'; showDirectory(); applyFiltersAndRender(); }
-        else if (view==='projects'){ VIEW_MODE='projects'; showDirectory(); applyFiltersAndRender(); }
-        else if (view==='events'){ VIEW_MODE='events'; showDirectory(); applyFiltersAndRender(); }
-        else if (view==='schools'){ VIEW_MODE='schools'; showDirectory(); applyFiltersAndRender(); }
-        // show search view only when explicitly navigated by search
-        document.getElementById('view-search')?.classList.add('hidden');
-        document.getElementById('view-detail')?.classList.add('hidden');
+  // Bottom bar & sidebar share the same [data-route] API
+  const navLinks = document.querySelectorAll('[data-route]');
+  function navigate(view){
+    const next = view || 'home';
+    // push URL
+    try { history.pushState({view: next}, '', `?view=${encodeURIComponent(next)}`); } catch(_) {}
+    if (typeof updateNavCurrent === 'function') updateNavCurrent(next);
+    if (typeof setActiveSidebar === 'function') setActiveSidebar(next);
+    if (typeof setActiveBottomBar === 'function') setActiveBottomBar(next);
+    if (['orgs','businesses','projects','events','home','schools'].includes(next)){
+      if (next==='home') { VIEW_MODE='home'; showDirectory(); applyFiltersAndRender(); }
+      else if (next==='orgs'){ VIEW_MODE='orgs'; showDirectory(); applyFiltersAndRender(); }
+      else if (next==='businesses'){ VIEW_MODE='businesses'; showDirectory(); applyFiltersAndRender(); }
+      else if (next==='projects'){ VIEW_MODE='projects'; showDirectory(); applyFiltersAndRender(); }
+      else if (next==='events'){ VIEW_MODE='events'; showDirectory(); applyFiltersAndRender(); }
+      else if (next==='schools'){ VIEW_MODE='schools'; showDirectory(); applyFiltersAndRender(); }
+      // hide non-directory views
+      document.getElementById('view-search')?.classList.add('hidden');
+      document.getElementById('view-detail')?.classList.add('hidden');
+    }
+    window.scrollTo(0,0);
+  }
+  navLinks.forEach(a=>{
+    a.addEventListener('click', (e)=>{
+      // only hijack internal nav
+      const route = a.getAttribute('data-route');
+      if (route){
+        e.preventDefault();
+        navigate(route);
       }
-      // Scroll to top for new view
-      window.scrollTo(0,0);
     });
+  });
+  // handle back/forward
+  window.addEventListener('popstate', (ev)=>{
+    const view = (ev.state && ev.state.view) || new URL(location.href).searchParams.get('view') || 'home';
+    navigate(view);
   });
 })();
 </script>
@@ -2689,7 +2719,7 @@ document.addEventListener('DOMContentLoaded', function(){
   window.addEventListener('hashchange', loadAndRender);
   // Also refresh when user switches to the Contact tab (if tabs are buttons)
   document.body.addEventListener('click', function(ev){
-    const t = ev.target.closest && ev.target.closest('[data-tab="contact"], #tab-contact, [href="#contact"]');
+    const t = ev.target.closest && ev.target.closest('[data-tab="ai"], #tab-contact, [href="#contact"]');
     if(t) setTimeout(loadAndRender, 0);
   }, { passive: true });
 })();
@@ -2839,6 +2869,90 @@ document.addEventListener('DOMContentLoaded', function(){
   window.addEventListener('orientationchange', ()=>{ clearTimeout(resizeTimer); resizeTimer=setTimeout(initAll, 120); });
   if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', initAll); } else { initAll(); }
   // If detail view re-renders dynamically elsewhere, call initAll() after content swap.
+})();
+</script>
+
+
+<script>
+(function(){
+  if (window.__aiReviewPatched) return;
+  window.__aiReviewPatched = true;
+
+  // --- API source ---
+  const AI_REVIEWS_URL = 'https://sheet2api.com/v1/ubMLioGAT8Gm/ai-reviews';
+  let AI_REVIEWS_INDEX = null;
+
+  // --- helpers ---
+  function _normName(s){ return (s || '').trim().toLowerCase(); }
+
+  async function loadAIReviews(){
+    if (AI_REVIEWS_INDEX) return AI_REVIEWS_INDEX;
+    const res = await fetch(AI_REVIEWS_URL, { cache: 'no-store' });
+    const data = await res.json(); // [{ name, review }, ...]
+    AI_REVIEWS_INDEX = new Map((data || []).map(r => [_normName(r && r.name), (r && r.review) || '']));
+    return AI_REVIEWS_INDEX;
+  }
+
+  // streaming typing
+  function typeInto(el, text){
+    // cancel any existing stream
+    window.__aiStreamToken = (window.__aiStreamToken || 0) + 1;
+    const token = window.__aiStreamToken;
+
+    // reset and add cursor
+    el.textContent = '';
+    const cursor = document.createElement('span');
+    cursor.className = 'ai-cursor';
+    el.appendChild(cursor);
+
+    let i = 0;
+    (function step(){
+      if (token !== window.__aiStreamToken) return; // cancelled
+      if (i < text.length){
+        const ch = text[i++];
+        cursor.insertAdjacentText('beforebegin', ch);
+        let delay = 16 + Math.random()*32;  // 16–48ms base
+        if (/[\.!\?,:;]/.test(ch)) delay += 180 + Math.random()*120; // punctuation pause
+        if (ch === '\n') delay += 120;
+        setTimeout(step, delay);
+      } else {
+        cursor.remove();
+      }
+    })();
+  }
+
+  async function renderAIReviewFor(listingName){
+    const panel = document.getElementById('panel-ai');
+    const body = panel && panel.querySelector('[data-ai-review-body]');
+    if (!panel || !body) return;
+
+    body.textContent = 'Loading review…';
+    panel.classList.remove('hidden');
+
+    try {
+      const index = await loadAIReviews();
+      const review = index.get(_normName(listingName));
+      const text = (review && review.trim())
+        ? review.trim()
+        : 'No AI review is available yet for this listing.';
+      typeInto(body, text);
+    } catch (e){
+      console.error('AI Review fetch error:', e);
+      body.textContent = 'Unable to load AI review right now.';
+    }
+  }
+
+  // Click hook: when user opens the AI tab, stream the review for the current listing (#d_name)
+  document.addEventListener('click', function(e){
+    const btn = e.target.closest('[data-tab="ai"]');
+    if (!btn) return;
+    const el = document.getElementById('d_name');
+    const listingName = el ? el.textContent : '';
+    if (listingName && listingName.trim()) renderAIReviewFor(listingName);
+  });
+
+  // Expose if you want to trigger it programmatically after rendering details
+  window.renderAIReviewFor = renderAIReviewFor;
 })();
 </script>
 
