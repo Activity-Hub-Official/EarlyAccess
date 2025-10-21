@@ -346,6 +346,38 @@ input, textarea, select { font-size: 16px; }
   }
 </style>
 
+
+<style id="bb-active-style">
+/* Bottom bar: subtle selected state (color + slight weight) */
+/* Base bottom bar link */
+.bottom-bar a[data-route]{
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:4px; padding:8px 10px; text-decoration:none;
+  color:#6B7280; /* neutral-500-ish */
+  font-weight:500;
+  transition: color .15s ease, font-weight .15s ease, transform .08s ease;
+}
+/* Icon + label */
+.bottom-bar a[data-route] i{ font-size:20px; line-height:1; }
+.bottom-bar a[data-route] .bb-label{ font-size:12px; line-height:1; }
+/* Selected state (no large selector, just color + slight weight) */
+.bottom-bar a[aria-current="page"]{
+  color:#0B4BE0;
+  font-weight:600;
+}
+/* Optional: tiny tap feedback */
+.bottom-bar a[data-route]:active{ transform: scale(.98); }
+/* Nuke any previous big indicators (pill/underline/bubble) */
+.bottom-bar a::before,
+.bottom-bar a::after{ content:none !important; display:none !important; }
+</style>
+
+
+<style id="bb-label-fallback">
+/* If markup doesn't have .bb-label, style the 2nd child text span */
+.bottom-bar a[data-route] :nth-child(2):not(.bb-label){ font-size:12px; line-height:1; }
+</style>
+
 </head>
 <body class="has-bottom-bar" class="min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
   <div class="flex w-full">
@@ -2523,6 +2555,42 @@ document.addEventListener('DOMContentLoaded', function(){
     if (typeof setActiveBottomBar === 'function') setActiveBottomBar(view);
   }catch(e){ /* noop */ }
 });
+</script>
+
+
+<script id="bb-active-script">
+(function(){
+  function getRouteFromURL(){
+    try{
+      const u = new URL(window.location.href);
+      return u.searchParams.get('view');
+    }catch(e){ return null; }
+  }
+  function setActiveTab(route){
+    var links = document.querySelectorAll('.bottom-bar a[data-route]');
+    links.forEach(function(a){ a.removeAttribute('aria-current'); });
+    if(!route && links.length){ 
+      // If nothing in URL, try to use first marked as active already
+      var existing = document.querySelector('.bottom-bar a[aria-current="page"]');
+      if(existing) return;
+      route = links[0].getAttribute('data-route');
+    }
+    var el = route && document.querySelector('.bottom-bar a[data-route="'+route+'"]');
+    if(el){ el.setAttribute('aria-current','page'); }
+  }
+  // On load: from URL
+  document.addEventListener('DOMContentLoaded', function(){
+    setActiveTab(getRouteFromURL());
+    // Click handler to update instantly for SPA feel
+    document.body.addEventListener('click', function(ev){
+      var a = ev.target.closest && ev.target.closest('.bottom-bar a[data-route]');
+      if(!a) return;
+      // If the app intercepts navigation, we still want the visual feedback
+      var route = a.getAttribute('data-route');
+      setActiveTab(route);
+    }, { passive: true });
+  });
+})();
 </script>
 
 </body>
