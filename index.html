@@ -329,53 +329,52 @@ input, textarea, select { font-size: 16px; }
 
 
 <style>
-  /* --- injected: rounded selector for active bottom bar item */
-  #bottom-bar .bb-item {
-    position: relative;
-    border-radius: 9999px; /* pill shape */
-    padding: 8px 10px;
-  }
-  #bottom-bar .bb-item[aria-current="page"] {
-    background: rgba(15,23,42,.08); /* subtle filled pill */
-    box-shadow: 0 1px 2px rgba(0,0,0,.05) inset;
-  }
-  /* Improve icon/text contrast when active */
-  #bottom-bar .bb-item[aria-current="page"] i,
-  #bottom-bar .bb-item[aria-current="page"] span {
-    opacity: 1;
-  }
+  </style>
+
+
+
+
+
+<style id="bb-label-fallback">
+/* If markup doesn't have .bb-label, style the 2nd child text span */
+.bottom-bar a[data-route] :nth-child(2):not(.bb-label){ font-size:12px; line-height:1; }
 </style>
 
 
-<style id="bb-active-style">
+<style id="bb-active-style-v2">
 /* Bottom bar: subtle selected state (color + slight weight) */
-/* Base bottom bar link */
-.bottom-bar a[data-route]{
+
+/* Base bottom bar link (anchor items inside #bottom-bar) */
+#bottom-bar a[data-route]{
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   gap:4px; padding:8px 10px; text-decoration:none;
   color:#6B7280; /* neutral-500-ish */
   font-weight:500;
   transition: color .15s ease, font-weight .15s ease, transform .08s ease;
 }
-/* Icon + label */
-.bottom-bar a[data-route] i{ font-size:20px; line-height:1; }
-.bottom-bar a[data-route] .bb-label{ font-size:12px; line-height:1; }
-/* Selected state (no large selector, just color + slight weight) */
-.bottom-bar a[aria-current="page"]{
-  color:#0B4BE0;
-  font-weight:600;
+
+/* Icon + label sizing */
+#bottom-bar a[data-route] i{ font-size:20px; line-height:1; }
+#bottom-bar a[data-route] .bb-label{ font-size:12px; line-height:1; }
+
+/* Selected state — NO large selector/pill/overlay */
+#bottom-bar a[aria-current="page"]{
+  color:#0B4BE0 !important;
+  font-weight:600 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important; /* neutralize rounded-full pills if any */
 }
-/* Optional: tiny tap feedback */
-.bottom-bar a[data-route]:active{ transform: scale(.98); }
-/* Nuke any previous big indicators (pill/underline/bubble) */
-.bottom-bar a::before,
-.bottom-bar a::after{ content:none !important; display:none !important; }
-</style>
 
+/* Kill any pseudo-element indicators */
+#bottom-bar a[data-route]::before,
+#bottom-bar a[data-route]::after{ content:none !important; display:none !important; }
 
-<style id="bb-label-fallback">
-/* If markup doesn't have .bb-label, style the 2nd child text span */
-.bottom-bar a[data-route] :nth-child(2):not(.bb-label){ font-size:12px; line-height:1; }
+/* Small tap feedback */
+#bottom-bar a[data-route]:active{ transform: scale(.98); }
+
+/* Fallback if markup lacks .bb-label: style second child */
+#bottom-bar a[data-route] :nth-child(2):not(.bb-label){ font-size:12px; line-height:1; }
 </style>
 
 </head>
