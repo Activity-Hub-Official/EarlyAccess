@@ -419,6 +419,21 @@ body.has-bottom-bar main{
 #bottom-bar{ left: 0; right: 0; width: 100%; }
 </style>
 
+
+<style>
+.about-block{position:relative;--about-lines:6;--about-line-height:1.5;--about-gap:10px;margin-top:8px;}
+.about-text{margin:0;line-height:var(--about-line-height);overflow:hidden;transition:max-height 180ms ease;}
+.about-fade{position:absolute;left:0;right:0;bottom:34px;height:48px;pointer-events:none;
+  background:linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,.95));}
+@media (prefers-color-scheme: dark){
+  .about-fade{background:linear-gradient(to bottom, rgba(17,24,39,0), rgba(17,24,39,.95));}
+}
+.about-toggle{display:inline-block;margin-top:var(--about-gap);background:transparent;border:none;padding:6px 0;
+  font:inherit;color:#2563eb;cursor:pointer;}
+.about-block.is-expanded .about-fade{display:none;}
+@media (max-width:640px){.about-block{--about-lines:5;}}
+</style>
+
 </head>
 <body class="has-bottom-bar" class="min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
   <div class="flex w-full">
@@ -801,7 +816,13 @@ body.has-bottom-bar main{
   <div class="space-y-6">
     <section class="py-6">
       <h2 class="text-lg font-semibold mb-2">About</h2>
-      <p id="d_desc" class="text-[15px] leading-7 text-gray-700"></p>
+      
+  <div class="about-block" data-max-lines="6">
+    <p id="d_desc" class="about-text text-[15px] leading-7 text-gray-700"></p>
+    <div class="about-fade" aria-hidden="true"></div>
+    <button type="button" class="about-toggle" aria-expanded="false" aria-controls="d_desc">…see more</button>
+  </div>
+
     </section>
     <section class="py-6">
       <h2 class="text-lg font-semibold mb-2">Links</h2>
@@ -2750,6 +2771,74 @@ document.addEventListener('DOMContentLoaded', function(){
   // If your app toggles the bottom bar dynamically or fonts load late:
   setTimeout(schedule, 150);
   setTimeout(schedule, 600);
+})();
+</script>
+
+
+<script>
+(function(){
+  function px(n){return n+'px';}
+  function getLineHeight(el){
+    const lh = window.getComputedStyle(el).lineHeight;
+    if(lh.endsWith('px')) return parseFloat(lh);
+    const fs = parseFloat(window.getComputedStyle(el).fontSize) || 16;
+    return fs * 1.5;
+  }
+  function clampBlock(block){
+    const text = block.querySelector('.about-text');
+    const btn  = block.querySelector('.about-toggle');
+    const fade = block.querySelector('.about-fade');
+    if(!text || !btn) return;
+    // lines from data attr or CSS var
+    const dataLines = parseInt(block.getAttribute('data-max-lines'),10);
+    const cssVar = getComputedStyle(block).getPropertyValue('--about-lines').trim();
+    const cssLines = parseInt(cssVar,10);
+    const maxLines = Number.isFinite(dataLines) ? dataLines : (Number.isFinite(cssLines) ? cssLines : 6);
+    const lineHeight = getLineHeight(text);
+    const collapsedMax = lineHeight * maxLines;
+    // measure full
+    const prev = text.style.maxHeight;
+    text.style.maxHeight = 'none';
+    const fullHeight = text.scrollHeight;
+    // short -> no toggle
+    if(fullHeight <= collapsedMax + 1){
+      if(btn) btn.style.display='none';
+      if(fade) fade.style.display='none';
+      text.style.maxHeight='none';
+      block.classList.remove('is-expanded');
+      if(btn){ btn.setAttribute('aria-expanded','false'); btn.textContent='…see more'; }
+      return;
+    }
+    // collapsed state
+    block.classList.remove('is-expanded');
+    if(btn){ btn.style.display='inline-block'; btn.setAttribute('aria-expanded','false'); btn.textContent='…see more'; }
+    if(fade) fade.style.display='';
+    text.style.maxHeight = px(collapsedMax);
+    block.__aboutState = {collapsedMax, fullHeight};
+    if(!block.__bound && btn){
+      btn.addEventListener('click', function(){
+        const expanded = block.classList.toggle('is-expanded');
+        if(expanded){
+          text.style.maxHeight = px(block.__aboutState.fullHeight);
+          btn.setAttribute('aria-expanded','true');
+          btn.textContent='…see less';
+          if(fade) fade.style.display='none';
+        }else{
+          text.style.maxHeight = px(block.__aboutState.collapsedMax);
+          btn.setAttribute('aria-expanded','false');
+          btn.textContent='…see more';
+          if(fade) fade.style.display='';
+        }
+      });
+      block.__bound = true;
+    }
+  }
+  function initAll(){ document.querySelectorAll('.about-block').forEach(clampBlock); }
+  let resizeTimer;
+  window.addEventListener('resize', ()=>{ clearTimeout(resizeTimer); resizeTimer=setTimeout(initAll, 120); });
+  window.addEventListener('orientationchange', ()=>{ clearTimeout(resizeTimer); resizeTimer=setTimeout(initAll, 120); });
+  if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', initAll); } else { initAll(); }
+  // If detail view re-renders dynamically elsewhere, call initAll() after content swap.
 })();
 </script>
 
