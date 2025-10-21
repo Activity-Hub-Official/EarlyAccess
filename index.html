@@ -223,11 +223,11 @@ input, textarea, select { font-size: 16px; }
 
 
   /* Bottom bar styles */
-  #bottom-bar .bb-item { min-width: 0; padding: 6px 4px; }
-  #bottom-bar .bb-item.nav-active { color:#111827; }
-  #bottom-bar .bb-item.nav-active i { transform: translateY(-1px); }
+  
+  
+  
   @supports(padding: max(0px)) {
-    #bottom-bar .h-16 { padding-bottom: max(0px, env(safe-area-inset-bottom)); }
+    
   }
 </style>
 <style>
@@ -329,52 +329,36 @@ input, textarea, select { font-size: 16px; }
 
 
 <style>
-  </style>
-
-
-
-
-
-<style id="bb-label-fallback">
-/* If markup doesn't have .bb-label, style the 2nd child text span */
-.bottom-bar a[data-route] :nth-child(2):not(.bb-label){ font-size:12px; line-height:1; }
+  /* --- injected: rounded selector for active bottom bar item */
+  
+  
+  /* Improve icon/text contrast when active */
+  
 </style>
 
 
-<style id="bb-active-style-v2">
-/* Bottom bar: subtle selected state (color + slight weight) */
-
-/* Base bottom bar link (anchor items inside #bottom-bar) */
+<style id="bb-active-style-v3">
+/* Bottom bar minimal active styling */
 #bottom-bar a[data-route]{
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   gap:4px; padding:8px 10px; text-decoration:none;
-  color:#6B7280; /* neutral-500-ish */
-  font-weight:500;
+  color:#6B7280; font-weight:500;
   transition: color .15s ease, font-weight .15s ease, transform .08s ease;
 }
-
-/* Icon + label sizing */
 #bottom-bar a[data-route] i{ font-size:20px; line-height:1; }
-#bottom-bar a[data-route] .bb-label{ font-size:12px; line-height:1; }
+#bottom-bar a[data-route] .bb-label,
+#bottom-bar a[data-route] :nth-child(2):not(.bb-label){ font-size:12px; line-height:1; }
 
-/* Selected state — NO large selector/pill/overlay */
+/* Active: no bg, no pill, no shadow */
 #bottom-bar a[aria-current="page"]{
   color:#0B4BE0 !important;
   font-weight:600 !important;
   background: transparent !important;
-  box-shadow: none !important;
-  border-radius: 0 !important; /* neutralize rounded-full pills if any */
+  box-shadow:none !important;
+  border-color: transparent !important;
 }
-
-/* Kill any pseudo-element indicators */
 #bottom-bar a[data-route]::before,
 #bottom-bar a[data-route]::after{ content:none !important; display:none !important; }
-
-/* Small tap feedback */
-#bottom-bar a[data-route]:active{ transform: scale(.98); }
-
-/* Fallback if markup lacks .bb-label: style second child */
-#bottom-bar a[data-route] :nth-child(2):not(.bb-label){ font-size:12px; line-height:1; }
 </style>
 
 </head>
@@ -776,7 +760,7 @@ input, textarea, select { font-size: 16px; }
 
                 <div id="panel-contact" class="hidden">
                   <div class="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-center text-gray-600">
-                    Contact info coming soon.
+                    <div id="d_links" class="flex flex-wrap gap-2"></div>
                   </div>
                 </div>
               </div>
@@ -2421,15 +2405,7 @@ document.addEventListener('click', function(e){
 
 // --- Bottom bar SPA routing: mirror sidebar behavior ---
 (function(){
-  const navLinks = document.querySelectorAll('#bottom-bar [data-route]');
-  navLinks.forEach(a=>{
-    a.addEventListener('click', (e)=>{
-      e.preventDefault();
-      const view = a.getAttribute('data-route');
-      const url = new URL(location.href);
-      url.searchParams.set('view', view);
-      url.searchParams.delete('org');
-      history.pushState({view}, '', url);
+  const navLinks = document.querySelectorAll(', '', url);
       if (typeof updateNavCurrent==='function') updateNavCurrent(view);
       setActiveSidebar(view); setActiveBottomBar(view);
       if (view==='orgs' || view==='businesses' || view==='projects' || view==='events' || view==='home' || view==='schools'){
@@ -2557,38 +2533,86 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 
 
-<script id="bb-active-script">
+<script id="contact-email-populator">
 (function(){
-  function getRouteFromURL(){
-    try{
-      const u = new URL(window.location.href);
-      return u.searchParams.get('view');
-    }catch(e){ return null; }
+  if (window.__contactEmailInit) return; window.__contactEmailInit = true;
+
+  function slug(s){ return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,''); }
+  function parseEmails(v){
+    v = String(v||'').trim();
+    if(!v) return [];
+    // Some rows contain "https://email@domain.com/" -> strip scheme/trailing slash
+    v = v.replace(/https?:\/\//gi,'').replace(/\/+/g,'/').replace(/\/$/,'');
+    // Split by | , ; or whitespace blocks
+    const parts = v.split(/[|,;\s]+/g).map(s => s.trim()).filter(Boolean);
+    // Keep only valid-looking emails
+    const emails = parts.filter(x => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(x.toLowerCase()));
+    // De-dupe (case-insensitive)
+    return Array.from(new Set(emails.map(e => e.toLowerCase())));
   }
-  function setActiveTab(route){
-    var links = document.querySelectorAll('.bottom-bar a[data-route]');
-    links.forEach(function(a){ a.removeAttribute('aria-current'); });
-    if(!route && links.length){ 
-      // If nothing in URL, try to use first marked as active already
-      var existing = document.querySelector('.bottom-bar a[aria-current="page"]');
-      if(existing) return;
-      route = links[0].getAttribute('data-route');
+  function emailChip(addr){
+    const href = `mailto:${addr}`;
+    return `<a class="contact-item px-3 py-2 rounded-full bg-gray-100 border border-gray-200 hover:bg-gray-200 transition" href="${href}" rel="nofollow noopener" target="_self">
+      <i class="fa-solid fa-envelope"></i><span>${addr}</span>
+    </a>`;
+  }
+  function setContact(el, emails){
+    if(!el) return;
+    if(!emails || !emails.length){
+      el.innerHTML = '<div class="text-gray-500">No email provided.</div>';
+      return;
     }
-    var el = route && document.querySelector('.bottom-bar a[data-route="'+route+'"]');
-    if(el){ el.setAttribute('aria-current','page'); }
+    el.innerHTML = emails.map(emailChip).join('');
   }
-  // On load: from URL
-  document.addEventListener('DOMContentLoaded', function(){
-    setActiveTab(getRouteFromURL());
-    // Click handler to update instantly for SPA feel
-    document.body.addEventListener('click', function(ev){
-      var a = ev.target.closest && ev.target.closest('.bottom-bar a[data-route]');
-      if(!a) return;
-      // If the app intercepts navigation, we still want the visual feedback
-      var route = a.getAttribute('data-route');
-      setActiveTab(route);
-    }, { passive: true });
-  });
+
+  async function loadAndRender(){
+    try{
+      // Re-use global API_URL if available
+      var url = (typeof API_URL !== 'undefined' && API_URL) ? API_URL : "https://sheet2api.com/v1/ubMLioGAT8Gm/updated-listings";
+      const u = new URL(window.location.href);
+      const orgSlug = u.searchParams.get('org');
+      if(!orgSlug) return; // Not on a detail page
+
+      const res = await fetch(url, { cache: 'no-store' });
+      const raw = await res.json();
+      const rows = Array.isArray(raw) ? raw : (raw.data || []);
+
+      // Normalize rows and locate the one matching the slug
+      let hit = null;
+      for(const r of rows){
+        const name = (r.name || r.Name || '').toString();
+        const s = slug(name);
+        if(s === orgSlug){ hit = r; break; }
+      }
+      const container = document.querySelector('#panel-contact #d_links');
+      if(!hit){ setContact(container, []); return; }
+
+      // Primary: r.emails (string). Fallback: scrape r.other_links for embedded email-like tokens.
+      let emails = parseEmails(hit.emails || hit.email || '');
+      if(!emails.length && hit.other_links){
+        // pull anything that looks like an email from other_links
+        const m = String(hit.other_links||'').match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi);
+        if(m) emails = parseEmails(m.join(' '));
+      }
+      setContact(container, emails);
+    }catch(e){
+      const container = document.querySelector('#panel-contact #d_links');
+      if(container){
+        container.innerHTML = '<div class="text-red-600">Failed to load contact info.</div>';
+      }
+      console.error('Contact email render error:', e);
+    }
+  }
+
+  // Run on first load and also on history changes (if app uses SPA nav)
+  document.addEventListener('DOMContentLoaded', loadAndRender);
+  window.addEventListener('popstate', loadAndRender);
+  window.addEventListener('hashchange', loadAndRender);
+  // Also refresh when user switches to the Contact tab (if tabs are buttons)
+  document.body.addEventListener('click', function(ev){
+    const t = ev.target.closest && ev.target.closest('[data-tab="contact"], #tab-contact, [href="#contact"]');
+    if(t) setTimeout(loadAndRender, 0);
+  }, { passive: true });
 })();
 </script>
 
