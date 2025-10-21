@@ -396,6 +396,118 @@ body.no-hscroll #detailRoot {
 #bottom-bar{ left: 0; right: 0; width: 100% !important; }
 </style>
 
+
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f8fa">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b0f14">
+
+
+<style id="auto-dark-mode">
+:root{
+  /* Light theme (default) */
+  --bg: #f7f8fa;
+  --surface: #ffffff;
+  --surface-2: #fcfdff;
+  --border: #e3e8ef;
+  --muted: #6B7280;
+  --text: #222831;
+  --text-2: #374151;
+  --pill-bg: #f3f4f6;
+  --pill-border: #e5e7eb;
+  --nav-bg: rgba(255,255,255,0.95);
+  --shadow: 0 4px 16px rgba(17,24,39,0.05);
+  --accent: #0B4BE0;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg: #0b0f14;
+    --surface: #0f1115;
+    --surface-2: #12151b;
+    --border: #1f2937;
+    --muted: #9CA3AF;
+    --text: #e5e7eb;
+    --text-2: #d1d5db;
+    --pill-bg: #131922;
+    --pill-border: #222b36;
+    --nav-bg: rgba(15,17,21,0.92);
+    --shadow: 0 8px 24px rgba(0,0,0,0.45);
+    --accent: #5ea0ff;
+  }
+}
+
+/* Global */
+body{ background: var(--bg) !important; color: var(--text) !important; }
+.site-root, main{ background: transparent !important; color: inherit; }
+hr, .divider, .border, .ring-1, .ring{ border-color: var(--border) !important; }
+.text-gray-500{ color: var(--muted) !important; }
+.text-gray-600{ color: var(--muted) !important; }
+.text-gray-700{ color: var(--text-2) !important; }
+.bg-white{ background-color: var(--surface) !important; }
+.bg-gray-50{ background-color: var(--surface-2) !important; }
+.bg-gray-100{ background-color: var(--pill-bg) !important; }
+.border-gray-200{ border-color: var(--pill-border) !important; }
+.border-gray-300{ border-color: var(--border) !important; }
+
+/* Cards */
+.soft-card, .card-elev{
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+  box-shadow: var(--shadow) !important;
+}
+.card-elev:hover{ box-shadow: 0 10px 30px rgba(0,0,0,.35) !important; }
+
+/* Navbars + bottom bar */
+.navbar, .topbar, .headerbar{ background: var(--nav-bg) !important; backdrop-filter: blur(8px); }
+#bottom-bar{ background: var(--nav-bg) !important; border-top-color: var(--border) !important; }
+#bottom-bar a[data-route]{ color: var(--muted); }
+#bottom-bar a[aria-current="page"]{ color: var(--accent) !important; }
+
+/* Pills & badges */
+.token, .badge, .ah-pill, .facet-pill, .tag-pill{
+  background: var(--pill-bg) !important;
+  border-color: var(--pill-border) !important;
+  color: var(--text-2) !important;
+}
+
+/* Buttons */
+button, .btn{
+  color: var(--text);
+  border-color: var(--pill-border);
+  background: var(--surface);
+}
+button:hover, .btn:hover{ background: var(--surface-2); }
+.btn-primary, .bg-ah-600{ background: var(--accent) !important; color: #fff !important; }
+.btn-primary:hover{ filter: brightness(1.05); }
+
+/* Inputs */
+input, textarea, select{
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--pill-border);
+}
+input::placeholder, textarea::placeholder{ color: var(--muted); }
+
+/* Detail header / share modal */
+#shareModal .modal-card{ background: var(--surface); border-color: var(--border); }
+#shareModal .share-chip__label{ color: var(--text); }
+#shareModal .share-section-title{ color: var(--muted); }
+
+/* Menus & dropdowns */
+.search-menu, .dropdown, .popover{
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+  box-shadow: var(--shadow);
+}
+
+/* Links */
+a{ color: var(--accent); }
+a:hover{ filter: brightness(1.1); }
+
+/* Icons that were hard-coded gray -> use muted in dark */
+i.text-gray-400, .text-gray-400{ color: var(--muted) !important; }
+</style>
+
 </head>
 <body class="has-bottom-bar" class="min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
   <div class="flex w-full">
@@ -2652,19 +2764,73 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 
 
+
 <script id="no-hscroll-detail-script">
 (function(){
-  function hasDetailParam(){
-    try{ return new URL(window.location.href).searchParams.has('org'); }
+  function isDetail(){
+    try{ return new URL(location.href).searchParams.has('org'); }
     catch(e){ return false; }
   }
   function apply(){
-    if(hasDetailParam()) document.body.classList.add('no-hscroll');
-    else document.body.classList.remove('no-hscroll');
+    document.body.classList.toggle('no-hscroll', isDetail());
   }
-  document.addEventListener('DOMContentLoaded', apply);
-  window.addEventListener('popstate', apply);
-  window.addEventListener('hashchange', apply);
+  function patchHistory(){
+    if (window.__noHScrollPatched) return;
+    window.__noHScrollPatched = true;
+    ['pushState','replaceState'].forEach(function(fn){
+      var orig = history[fn];
+      history[fn] = function(){
+        var ret = orig.apply(this, arguments);
+        window.dispatchEvent(new Event('locationchange'));
+        return ret;
+      };
+    });
+    window.addEventListener('popstate', function(){ window.dispatchEvent(new Event('locationchange')); });
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    patchHistory();
+    apply();
+
+    // Apply after SPA navigations
+    window.addEventListener('locationchange', apply);
+    window.addEventListener('hashchange', apply);
+
+    // Also apply right after clicking cards or any link that goes to a detail view
+    document.addEventListener('click', function(ev){
+      var a = ev.target && ev.target.closest && ev.target.closest('a[href], [data-nav]');
+      if(!a) return;
+      var href = a.getAttribute && a.getAttribute('href');
+      var dataNav = a.getAttribute && a.getAttribute('data-nav');
+      if ((href && href.indexOf('?org=') !== -1) || dataNav){
+        // Give the app a tick to update the URL/DOM, then apply
+        setTimeout(apply, 0);
+      }
+    }, true); // capture to run before app may stop propagation
+  });
+})();
+</script>
+
+
+
+<script id="auto-dark-mode-script">
+(function(){
+  // Ensure meta theme-color updates as system theme changes (Safari iOS)
+  const light = document.querySelector('meta[name="theme-color"][media*="light"]');
+  const dark = document.querySelector('meta[name="theme-color"][media*="dark"]');
+  const mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+  function apply(){
+    if(!mq) return;
+    if(mq.matches){
+      if(dark) dark.setAttribute('content','#0b0f14');
+    }else{
+      if(light) light.setAttribute('content','#f7f8fa');
+    }
+  }
+  if(mq){
+    mq.addEventListener ? mq.addEventListener('change', apply) : mq.addListener(apply);
+    apply();
+  }
 })();
 </script>
 
