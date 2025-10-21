@@ -361,6 +361,41 @@ input, textarea, select { font-size: 16px; }
 #bottom-bar a[data-route]::after{ content:none !important; display:none !important; }
 </style>
 
+
+<style id="no-hscroll-detail-fix">
+/* Apply only when body has .no-hscroll (we set this when ?org= is present) */
+body.no-hscroll, body.no-hscroll html {
+  overflow-x: hidden !important;
+}
+body.no-hscroll * {
+  /* Prevent children from creating overflow */
+  max-width: 100%;
+}
+
+/* Common culprits on mobile: 100vw and negative margins */
+body.no-hscroll .w-screen { width: 100% !important; }
+body.no-hscroll [class*="-mx-"] { margin-left: 0 !important; margin-right: 0 !important; }
+
+/* Ensure media doesn't blow width */
+body.no-hscroll img, 
+body.no-hscroll video, 
+body.no-hscroll svg, 
+body.no-hscroll canvas { max-width: 100% !important; height: auto; }
+
+/* Containers in the detail page */
+body.no-hscroll .site-root, 
+body.no-hscroll main, 
+body.no-hscroll .detail-wrap, 
+body.no-hscroll .content-wrap, 
+body.no-hscroll #detailRoot {
+  overflow-x: hidden !important;
+  width: 100% !important;
+}
+
+/* Bottom bar: ensure it doesn't exceed viewport width */
+#bottom-bar{ left: 0; right: 0; width: 100% !important; }
+</style>
+
 </head>
 <body class="has-bottom-bar" class="min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
   <div class="flex w-full">
@@ -2613,6 +2648,23 @@ document.addEventListener('DOMContentLoaded', function(){
     const t = ev.target.closest && ev.target.closest('[data-tab="contact"], #tab-contact, [href="#contact"]');
     if(t) setTimeout(loadAndRender, 0);
   }, { passive: true });
+})();
+</script>
+
+
+<script id="no-hscroll-detail-script">
+(function(){
+  function hasDetailParam(){
+    try{ return new URL(window.location.href).searchParams.has('org'); }
+    catch(e){ return false; }
+  }
+  function apply(){
+    if(hasDetailParam()) document.body.classList.add('no-hscroll');
+    else document.body.classList.remove('no-hscroll');
+  }
+  document.addEventListener('DOMContentLoaded', apply);
+  window.addEventListener('popstate', apply);
+  window.addEventListener('hashchange', apply);
 })();
 </script>
 
