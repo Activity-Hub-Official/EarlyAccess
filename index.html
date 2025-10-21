@@ -397,6 +397,28 @@ body.no-hscroll #detailRoot {
 </style>
 
 
+
+<style id="bottom-bar-padding-fix">
+:root{ --bbh: 64px; } /* default; will be updated by JS */
+body.has-bottom-bar,
+body.has-bottom-bar .site-root,
+body.has-bottom-bar main{
+  /* Keep content clear of the fixed bottom bar + iOS safe area */
+  padding-bottom: calc(var(--bbh) + env(safe-area-inset-bottom, 0px));
+}
+/* Fallback for very old iOS */
+@supports not (padding: max(0px)) {
+  body.has-bottom-bar,
+  body.has-bottom-bar .site-root,
+  body.has-bottom-bar main{
+    padding-bottom: calc(var(--bbh) + constant(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* Ensure bottom bar itself doesn't create horizontal overflow */
+#bottom-bar{ left: 0; right: 0; width: 100%; }
+</style>
+
 </head>
 <body class="has-bottom-bar" class="min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
   <div class="flex w-full">
@@ -2703,6 +2725,33 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
 
+
+
+<script id="bottom-bar-padding-script">
+(function(){
+  function setBBPadding(){
+    try{
+      var bb = document.getElementById('bottom-bar');
+      var h = bb ? Math.round(bb.getBoundingClientRect().height) : 0;
+      if(!h){ h = 64; } // sensible default
+      document.documentElement.style.setProperty('--bbh', h + 'px');
+      // Ensure the class is present
+      document.body.classList.add('has-bottom-bar');
+    }catch(e){ /* noop */ }
+  }
+  var raf = window.requestAnimationFrame || function(fn){ return setTimeout(fn, 0); };
+  function schedule(){ raf(setBBPadding); }
+
+  document.addEventListener('DOMContentLoaded', schedule);
+  window.addEventListener('load', schedule);
+  window.addEventListener('resize', schedule);
+  window.addEventListener('orientationchange', schedule);
+
+  // If your app toggles the bottom bar dynamically or fonts load late:
+  setTimeout(schedule, 150);
+  setTimeout(schedule, 600);
+})();
+</script>
 
 </body>
 </html>
