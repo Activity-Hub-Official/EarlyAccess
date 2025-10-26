@@ -2524,14 +2524,9 @@ function buildSpellingSuggestion(q){
   }).join(' ');
 
   if(!changed) return '';
-  // ensure it actually helps search
-  const base = searchData(rawQ, 'all').total;
-  const alt  = searchData(corrected, 'all').total;
-  if (alt > base || base < 3){ // accept if strictly better OR original is very thin
-    return corrected;
-  }
-  return '';
+  return corrected;
 }
+
 async function pickAltQuery(q, scope){
   const sc = scope || 'all';
   const primaryRes = searchData(q, sc);
@@ -2813,7 +2808,10 @@ async function routeFromURL(){
     const o = DATA.find(x=>x.slug===slug);
     if(o){
       $('#view-directory').classList.add('hidden');
-      $('...-detail').classList.remove('hidden');
+      const detailView = document.getElementById('view-detail');
+      if(detailView){
+        detailView.classList.remove('hidden');
+      }
       renderDetail(o);
       return;
     }
