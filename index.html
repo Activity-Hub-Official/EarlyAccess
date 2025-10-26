@@ -443,7 +443,6 @@ body.has-bottom-bar main{
 @keyframes blink{0%{opacity:1}50%{opacity:0}100%{opacity:1}}
 </style>
 
-
 <style id="onboarding-chrome-visibility">
 /* Hide top & bottom chrome during onboarding */
 body.onboarding-mode #appTopBar,
@@ -457,7 +456,6 @@ body.onboarding-mode {
   padding-bottom: 0 !important;
 }
 </style>
-
 </head>
 <body class="has-bottom-bar min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
   <div class="flex w-full">
@@ -603,25 +601,26 @@ body.onboarding-mode {
       </div>
 
       
-      <!-- ====== ONBOARDING STEP 1 (Account Setup) ====== -->
+      
+      <!-- ====== ONBOARDING STEP 1 (Account Basics) ====== -->
       <div id="view-onboarding-account" class="hidden min-h-screen bg-white flex flex-col">
         <div class="p-6 flex-1 flex flex-col">
           <div class="text-center mb-8">
             <div class="mx-auto w-12 h-12 rounded-xl bg-ah-600 text-white flex items-center justify-center text-xl font-semibold shadow">
               AH
             </div>
-            <h1 class="mt-4 text-xl font-semibold text-gray-900">Create your account</h1>
-            <p class="text-sm text-gray-500">Join your campus community</p>
+            <h1 class="mt-4 text-2xl font-semibold text-gray-900">Create your account</h1>
+            <p class="text-sm text-gray-500">We’ll set up your profile so you can join orgs and RSVP faster.</p>
           </div>
 
-          <form id="onboarding-form" class="space-y-4 max-w-sm w-full mx-auto">
+          <form class="space-y-4 max-w-sm w-full mx-auto">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Full name</label>
               <input
-                id="ob-name"
+                id="ob-fullname"
                 type="text"
-                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-[15px] focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
-                placeholder="Jordan Rivera"
+                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
+                placeholder="Your name"
               />
             </div>
 
@@ -630,8 +629,8 @@ body.onboarding-mode {
               <input
                 id="ob-email"
                 type="email"
-                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-[15px] focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
-                placeholder="you@stjohns.edu"
+                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
+                placeholder="you@example.com"
               />
             </div>
 
@@ -640,32 +639,144 @@ body.onboarding-mode {
               <input
                 id="ob-password"
                 type="password"
-                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-[15px] focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
+                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
                 placeholder="••••••••"
               />
               <p class="text-[12px] text-gray-400 mt-1">No worries, this is just a demo ✌️</p>
             </div>
 
             <button
-              id="ob-continue"
               type="button"
-              class="w-full mt-6 bg-ah-600 text-white rounded-lg py-2.5 text-[15px] font-medium shadow hover:bg-ah-700 active:bg-ah-800 transition"
+              class="w-full mt-6 bg-ah-600 text-white rounded-lg font-medium shadow hover:bg-ah-700 active:bg-ah-800 transition active:scale-[.99]"
+              onclick="nextOnboardingStep('school')"
             >
               Continue
             </button>
           </form>
-        </div>
 
-        <div class="p-4 text-center text-[12px] text-gray-400">
-          By continuing you agree to nothing, because this is just a demo ✌️
+          <div class="text-center text-[12px] text-gray-400 mt-6 max-w-sm mx-auto">
+            By continuing you agree to nothing, because this is just a demo ✌️
+          </div>
         </div>
       </div>
 
-      <!-- ====== ONBOARDING STEP 2 (Interests) ====== -->
+      <!-- ====== ONBOARDING STEP 2 (School Email) ====== -->
+      <div id="view-onboarding-school-email" class="hidden min-h-screen bg-white flex flex-col">
+        <div class="p-6 flex-1 flex flex-col">
+          <div class="text-center mb-6 max-w-sm mx-auto">
+            <h1 class="text-2xl font-semibold text-gray-900 mb-1">Verify your school</h1>
+            <p class="text-sm text-gray-500">
+              Use your university email so we can match you with St. John’s University and show you the right clubs and events.
+            </p>
+          </div>
+
+          <div class="space-y-4 max-w-sm w-full mx-auto">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">University email</label>
+              <input
+                id="ob-school-email"
+                type="email"
+                placeholder="name@stjohns.edu"
+                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
+              />
+            </div>
+
+            <div class="rounded-lg border border-gray-200 bg-gray-50 p-3 text-xs text-gray-600">
+              We’ll use this to connect you to St. John’s University — Queens.
+            </div>
+          </div>
+
+          <div class="mt-8 flex gap-3 max-w-sm w-full mx-auto">
+            <button
+              type="button"
+              class="flex-1 rounded-lg border border-gray-300 bg-white text-gray-700 font-medium py-3 active:scale-[.99]"
+              onclick="prevOnboardingStep('account')"
+            >
+              Back
+            </button>
+
+            <button
+              type="button"
+              class="flex-1 rounded-lg bg-ah-600 text-white font-medium py-3 active:scale-[.99]"
+              onclick="nextOnboardingStep('academics')"
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== ONBOARDING STEP 3 (Academics) ====== -->
+      <div id="view-onboarding-academics" class="hidden min-h-screen bg-white flex flex-col">
+        <div class="p-6 flex-1 flex flex-col">
+          <div class="text-center mb-6 max-w-sm mx-auto">
+            <h1 class="text-2xl font-semibold text-gray-900 mb-1">Your program</h1>
+            <p class="text-sm text-gray-500">
+              This helps student orgs and career events find you.
+            </p>
+          </div>
+
+          <div class="space-y-4 max-w-sm w-full mx-auto">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Year</label>
+              <select
+                id="ob-year"
+                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-base bg-white focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
+              >
+                <option value="">Select year…</option>
+                <option>Freshman</option>
+                <option>Sophomore</option>
+                <option>Junior</option>
+                <option>Senior</option>
+                <option>Graduate</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Major</label>
+              <select
+                id="ob-major"
+                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-base bg-white focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
+              >
+                <option value="">Select major…</option>
+                <option>Accounting</option>
+                <option>Finance</option>
+                <option>Computer Science</option>
+                <option>Cybersecurity</option>
+                <option>Marketing</option>
+                <option>Biology</option>
+                <option>Psychology</option>
+                <option>Undecided / Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mt-8 flex gap-3 max-w-sm w-full mx-auto">
+            <button
+              type="button"
+              class="flex-1 rounded-lg border border-gray-300 bg-white text-gray-700 font-medium py-3 active:scale-[.99]"
+              onclick="prevOnboardingStep('school')"
+            >
+              Back
+            </button>
+
+            <button
+              type="button"
+              class="flex-1 rounded-lg bg-ah-600 text-white font-medium py-3 active:scale-[.99]"
+              onclick="nextOnboardingStep('interests')"
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== ONBOARDING STEP 4 (Interests) ====== -->
       <div id="view-onboarding-interests" class="hidden min-h-screen bg-white flex flex-col">
         <div class="flex-1 p-6 flex flex-col">
           <div class="text-center mb-6">
-            <h1 class="text-xl font-semibold text-gray-900">What are you into?</h1>
+            <h1 class="text-2xl font-semibold text-gray-900 mb-1">What are you into?</h1>
             <p class="text-sm text-gray-500">We’ll personalize clubs and events</p>
           </div>
 
@@ -673,17 +784,27 @@ body.onboarding-mode {
             <!-- cards injected via JS -->
           </div>
 
-          <button
-            id="ob-finish"
-            type="button"
-            class="w-full max-w-sm mx-auto mt-8 bg-ah-600 text-white rounded-lg py-2.5 text-[15px] font-medium shadow hover:bg-ah-700 active:bg-ah-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled
-          >
-            Finish
-          </button>
+          <div class="mt-8 flex gap-3 max-w-sm w-full mx-auto">
+            <button
+              type="button"
+              class="flex-1 rounded-lg border border-gray-300 bg-white text-gray-700 font-medium py-3 active:scale-[.99]"
+              onclick="prevOnboardingStep('academics')"
+            >
+              Back
+            </button>
+
+            <button
+              id="ob-finish"
+              type="button"
+              class="flex-1 bg-ah-600 text-white rounded-lg font-medium py-3 shadow hover:bg-ah-700 active:bg-ah-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled
+              onclick="finishOnboarding()"
+            >
+              Finish
+            </button>
+          </div>
         </div>
       </div>
-
       <!-- ====== DIRECTORY (Explore / Category / Events) ====== -->
       <div id="view-directory" class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
@@ -2591,76 +2712,93 @@ async function updateDidYouMeanBar(q, scope){
       });
     }
 
-    function showOnboardingStep(step){
+    const ONBOARDING_STEP_MAP = {
+      account: 'view-onboarding-account',
+      school: 'view-onboarding-school-email',
+      academics: 'view-onboarding-academics',
+      interests: 'view-onboarding-interests'
+    };
+
+    function showOnboardingStepInternal(stepKey){
       const bodyEl = document.body;
       bodyEl.classList.add('onboarding-mode');
       bodyEl.classList.remove('has-bottom-bar');
-      const s1 = $('#view-onboarding-account');
-      const s2 = $('#view-onboarding-interests');
-      const dir = $('#view-directory');
-      const srch = $('#view-search');
-      const det = $('#view-detail');
 
-      if(step === 1){
-        s1 && s1.classList.remove('hidden');
-        s2 && s2.classList.add('hidden');
-      } else {
-        s1 && s1.classList.add('hidden');
-        s2 && s2.classList.remove('hidden');
+      // toggle onboarding sections
+      Object.entries(ONBOARDING_STEP_MAP).forEach(([key,id])=>{
+        const el = document.getElementById(id);
+        if(!el) return;
+        if(key === stepKey){
+          el.classList.remove('hidden');
+        } else {
+          el.classList.add('hidden');
+        }
+      });
+
+      // hide the rest of the app behind onboarding
+      ['view-directory','view-search','view-detail'].forEach(id=>{
+        const el = document.getElementById(id);
+        if(el) el.classList.add('hidden');
+      });
+
+      // ensure the interest grid is rendered when we hit that step
+      if(stepKey === 'interests'){
         renderInterestGrid();
       }
 
-      // hide the rest of the app behind onboarding
-      dir && dir.classList.add('hidden');
-      srch && srch.classList.add('hidden');
-      det && det.classList.add('hidden');
+      // scroll to top so header spacing feels right
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
     }
 
-    function showMainApp(){
+    window.nextOnboardingStep = function(nextKey){
+      showOnboardingStepInternal(nextKey);
+    };
+
+    window.prevOnboardingStep = function(prevKey){
+      showOnboardingStepInternal(prevKey);
+    };
+
+    window.enterOnboarding = function enterOnboarding(){
+      showOnboardingStepInternal('account');
+    };
+
+    window.finishOnboarding = function finishOnboarding(){
       const bodyEl = document.body;
       bodyEl.classList.remove('onboarding-mode');
       bodyEl.classList.add('has-bottom-bar');
 
+      // hide onboarding screens
+      Object.values(ONBOARDING_STEP_MAP).forEach(id=>{
+        const el = document.getElementById(id);
+        if(el) el.classList.add('hidden');
+      });
+
+      // show main directory / home
+      const homeView = document.getElementById('view-directory');
+      if(homeView) homeView.classList.remove('hidden');
+
+      // force header & bottom nav visible immediately (no bounce-scroll)
       const topBarEl = document.getElementById('appTopBar');
-      if (topBarEl) {
-        topBarEl.classList.remove('hidden');
+      if(topBarEl){
+        topBarEl.classList.remove('hidden','opacity-0','-translate-y-full');
         topBarEl.style.opacity = '';
         topBarEl.style.transform = '';
       }
-
       const bottomBarEl = document.getElementById('bottom-bar');
-      if (bottomBarEl) {
+      if(bottomBarEl){
         bottomBarEl.classList.remove('hidden');
       }
 
-      const s1 = $('#view-onboarding-account');
-      const s2 = $('#view-onboarding-interests');
-      s1 && s1.classList.add('hidden');
-      s2 && s2.classList.add('hidden');
+      // scroll to top so header is in-frame
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
 
       markOnboardingDone();
 
-      // ensure user sees chrome immediately
-      window.scrollTo({top:0,left:0,behavior:'auto'});
-
       // jump into normal app
       routeFromURL();
-    }
+    };
 
-    function initOnboardingFlow(){
-      // step1 -> step2
-      const cont = $('#ob-continue');
-      cont && cont.addEventListener('click', ()=>{
-        showOnboardingStep(2);
-      });
-
-      // step2 -> finish
-      const fin = $('#ob-finish');
-      fin && fin.addEventListener('click', ()=>{
-        if(selectedInterests.size === 0) return;
-        showMainApp();
-      });
-    }
+    
 async function routeFromURL(){
   const url = new URL(location.href);
   const slug = url.searchParams.get('org');
@@ -2762,14 +2900,14 @@ async function routeFromURL(){
     (window.navigator.standalone === true);
 
   if (isStandalone && !hasCompletedOnboarding()){
-    initOnboardingFlow();
-    showOnboardingStep(1);
+    enterOnboarding();
     return;
   }
 
   // normal entry point
   routeFromURL();
 }
+
 
 
     window.addEventListener('popstate', routeFromURL);
