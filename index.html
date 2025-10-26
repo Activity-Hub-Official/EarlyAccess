@@ -14,6 +14,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.basic.min.js"></script>
+<script src="wordpos-browser.js"></script>
+
 <script>
 // --- DuckDuckGo favicon helpers (GLOBAL). Must load before renderDetail ---
 (function(){
@@ -585,6 +587,88 @@ body.has-bottom-bar main{
         </div>
       </div>
 
+      
+      <!-- ====== ONBOARDING STEP 1 (Account Setup) ====== -->
+      <div id="view-onboarding-account" class="hidden min-h-screen bg-white flex flex-col">
+        <div class="p-6 flex-1 flex flex-col">
+          <div class="text-center mb-8">
+            <div class="mx-auto w-12 h-12 rounded-xl bg-ah-600 text-white flex items-center justify-center text-xl font-semibold shadow">
+              AH
+            </div>
+            <h1 class="mt-4 text-xl font-semibold text-gray-900">Create your account</h1>
+            <p class="text-sm text-gray-500">Join your campus community</p>
+          </div>
+
+          <form id="onboarding-form" class="space-y-4 max-w-sm w-full mx-auto">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+              <input
+                id="ob-name"
+                type="text"
+                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-[15px] focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
+                placeholder="Jordan Rivera"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                id="ob-email"
+                type="email"
+                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-[15px] focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
+                placeholder="you@stjohns.edu"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+              <input
+                id="ob-password"
+                type="password"
+                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-[15px] focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
+                placeholder="••••••••"
+              />
+              <p class="text-[12px] text-gray-400 mt-1">No worries, this is just a demo ✌️</p>
+            </div>
+
+            <button
+              id="ob-continue"
+              type="button"
+              class="w-full mt-6 bg-ah-600 text-white rounded-lg py-2.5 text-[15px] font-medium shadow hover:bg-ah-700 active:bg-ah-800 transition"
+            >
+              Continue
+            </button>
+          </form>
+        </div>
+
+        <div class="p-4 text-center text-[12px] text-gray-400">
+          By continuing you agree to nothing, because this is just a demo ✌️
+        </div>
+      </div>
+
+      <!-- ====== ONBOARDING STEP 2 (Interests) ====== -->
+      <div id="view-onboarding-interests" class="hidden min-h-screen bg-white flex flex-col">
+        <div class="flex-1 p-6 flex flex-col">
+          <div class="text-center mb-6">
+            <h1 class="text-xl font-semibold text-gray-900">What are you into?</h1>
+            <p class="text-sm text-gray-500">We’ll personalize clubs and events</p>
+          </div>
+
+          <div id="interest-grid" class="grid grid-cols-2 gap-3 max-w-sm mx-auto w-full">
+            <!-- cards injected via JS -->
+          </div>
+
+          <button
+            id="ob-finish"
+            type="button"
+            class="w-full max-w-sm mx-auto mt-8 bg-ah-600 text-white rounded-lg py-2.5 text-[15px] font-medium shadow hover:bg-ah-700 active:bg-ah-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled
+          >
+            Finish
+          </button>
+        </div>
+      </div>
+
       <!-- ====== DIRECTORY (Explore / Category / Events) ====== -->
       <div id="view-directory" class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
@@ -709,6 +793,7 @@ body.has-bottom-bar main{
 
       <!-- ====== SEARCH RESULTS VIEW ====== -->
       <div id="view-search" class="hidden">
+  <div id="didyoumean-bar" class="hidden"></div>
         <div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
           <div class="mt-2 flex items-center justify-between w-full pr-2">
             <div>
@@ -752,6 +837,30 @@ body.has-bottom-bar main{
             <div id="rs-projects-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
             <div id="rs-projects-empty" class="hidden text-sm text-gray-500">No projects match.</div>
           </section>
+
+          <section id="rs-alt-wrapper" class="hidden pt-8 border-t border-gray-200">
+            <h2 class="text-lg font-semibold mb-1" id="rs-alt-heading">Related results</h2>
+            <p class="text-sm text-gray-500 mb-4" id="rs-alt-desc"></p>
+
+            <section id="rs-alt-orgs" class="mb-6">
+              <h3 class="text-base font-semibold mb-3" id="rs-alt-orgs-title">Organizations</h3>
+              <div id="rs-alt-orgs-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+              <div id="rs-alt-orgs-empty" class="hidden text-sm text-gray-500">No organizations match.</div>
+            </section>
+
+            <section id="rs-alt-biz" class="mb-6">
+              <h3 class="text-base font-semibold mb-3" id="rs-alt-biz-title">Businesses</h3>
+              <div id="rs-alt-biz-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+              <div id="rs-alt-biz-empty" class="hidden text-sm text-gray-500">No businesses match.</div>
+            </section>
+
+            <section id="rs-alt-projects" class="mb-2">
+              <h3 class="text-base font-semibold mb-3" id="rs-alt-projects-title">Projects</h3>
+              <div id="rs-alt-projects-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+              <div id="rs-alt-projects-empty" class="hidden text-sm text-gray-500">No projects match.</div>
+            </section>
+          </section>
+
         </div>
       </div>
 
@@ -1409,14 +1518,9 @@ $('#shareBtn').onclick = ()=>{
 }
 
 function getSuggestion(q){
-  const rawQ = (q || '').trim();
-  if(!rawQ || !window.fuse) return '';
-  const top = window.fuse.search(rawQ, { limit: 1 })[0];
-  if(!top || !top.item) return '';
-  const cand = (top.item.name || '').trim();
-  if(!cand || cand.toLowerCase() === rawQ.toLowerCase()) return '';
-  return cand;
+  return buildSpellingSuggestion(q) || '';
 }
+
 
     function popularOrgList(){
       let orgs = DATA.filter(x=>x.kind==='org');
@@ -1490,33 +1594,28 @@ function getSuggestion(q){
   const q = searchInput.value;
   clearBtn.classList.toggle('hidden', !q);
   let html = '';
-  currentItems = []; activeIndex = -1;
+  currentItems = [];
+  activeIndex = -1;
 
   if(!q.trim()){
     html = renderEmptyMenuDesktop();
   } else {
     const { byKind } = searchData(q);
     const blocks = [];
-    if(searchScope==='all'){ 
+    if(searchScope==='all'){
       blocks.push(
-        section('Organizations', byKind.orgs), 
-        section('Businesses', byKind.businesses), 
+        section('Organizations', byKind.orgs),
+        section('Businesses', byKind.businesses),
         section('Projects', byKind.projects)
-      ); 
+      );
+    } else if(searchScope==='orgs'){
+      blocks.push(section('Organizations', byKind.orgs));
+    } else if(searchScope==='businesses'){
+      blocks.push(section('Businesses', byKind.businesses));
+    } else if(searchScope==='projects'){
+      blocks.push(section('Projects', byKind.projects));
     }
-    else if(searchScope==='orgs'){ blocks.push(section('Organizations', byKind.orgs)); }
-    else if(searchScope==='businesses'){ blocks.push(section('Businesses', byKind.businesses)); }
-    else if(searchScope==='projects'){ blocks.push(section('Projects', byKind.projects)); }
-
     html = blocks.join('') || `<div class="px-3 py-6 text-sm text-gray-500">No results for “${q.replace(/</g,'&lt;')}”.</div>`;
-
-    const sug = getSuggestion(q);
-    if(sug){
-      const safeSug = sug.replace(/</g,'&lt;');
-      html = 
-        `<div class="px-3 py-2 text-[13px] text-gray-500 italic">Did you mean <button class="did-you-mean-btn underline text-ah-600" data-q="${safeSug}">${safeSug}</button>?</div>` 
-        + html;
-    }
   }
 
   resultsEl.innerHTML = html;
@@ -1540,15 +1639,8 @@ function getSuggestion(q){
       renderSearchMenu();
     });
   });
-
-  $$('.did-you-mean-btn', resultsEl).forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      searchInput.value = btn.getAttribute('data-q');
-      searchInput.focus();
-      renderSearchMenu();
-    });
-  });
 }
+
 
     function highlightIndex(i){
       if(!currentItems.length) return;
@@ -1611,32 +1703,28 @@ function getSuggestion(q){
   if(!mResultsEl) return;
   const q = mSearchInput ? mSearchInput.value : '';
   let html = '';
-  mItems = []; mActiveIndex = -1;
+  mItems = [];
+  mActiveIndex = -1;
+
   if(!q.trim()){
     html = renderEmptyMenuMobile();
   } else {
     const { byKind } = searchData(q);
     const blocks = [];
-    if(searchScope==='all'){ 
+    if(searchScope==='all'){
       blocks.push(
-        section('Organizations', byKind.orgs), 
-        section('Businesses', byKind.businesses), 
+        section('Organizations', byKind.orgs),
+        section('Businesses', byKind.businesses),
         section('Projects', byKind.projects)
-      ); 
+      );
+    } else if(searchScope==='orgs'){
+      blocks.push(section('Organizations', byKind.orgs));
+    } else if(searchScope==='businesses'){
+      blocks.push(section('Businesses', byKind.businesses));
+    } else if(searchScope==='projects'){
+      blocks.push(section('Projects', byKind.projects));
     }
-    else if(searchScope==='orgs'){ blocks.push(section('Organizations', byKind.orgs)); }
-    else if(searchScope==='businesses'){ blocks.push(section('Businesses', byKind.businesses)); }
-    else if(searchScope==='projects'){ blocks.push(section('Projects', byKind.projects)); }
-
     html = blocks.join('') || `<div class="px-3 py-6 text-[14px] text-gray-500">No results for “${q.replace(/</g,'&lt;')}”.</div>`;
-
-    const sug = getSuggestion(q);
-    if(sug){
-      const safeSug = sug.replace(/</g,'&lt;');
-      html =
-        `<div class="px-3 py-2 text-[13px] text-gray-500 italic">Did you mean <button class="did-you-mean-btn underline text-ah-600" data-q="${safeSug}">${safeSug}</button>?</div>` 
-        + html;
-    }
   }
 
   mResultsEl.innerHTML = html;
@@ -1661,17 +1749,8 @@ function getSuggestion(q){
       mRenderMenu();
     });
   });
-
-  $$('.did-you-mean-btn', mResultsEl).forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      if(mSearchInput){
-        mSearchInput.value = btn.getAttribute('data-q');
-        mSearchInput.focus();
-      }
-      mRenderMenu();
-    });
-  });
 }
+
 
 
     // ----- shared tabs + scope pill for both menus -----
@@ -1821,7 +1900,7 @@ function getSuggestion(q){
         history.pushState({search:q, scope, sort:SEARCH_SORT}, '', u);
       }
       setScope(scope);
-      renderSearchResults(q, scope);
+      renderSearchResults(q, scope); updateDidYouMeanBar(q, scope);
     }
 
     
@@ -1856,53 +1935,59 @@ function getSuggestion(q){
       setScope(scope);
       renderSearchResults('', scope);
     }
-function renderSearchResults(q, scope='all'){
-      $('#srch-title').textContent = `Results for “${q}”`;
-      $$('.srch-scope').forEach(btn=>{
-        btn.classList.remove('bg-gray-100','font-medium');
-        if(btn.getAttribute('data-scope')===scope) btn.classList.add('bg-gray-100','font-medium');
-        btn.onclick = ()=> navigateToSearch(q, btn.getAttribute('data-scope'));
-      });
+async function renderSearchResults(q, scope='all'){
+  // update page heading + scope pills
+  $('#srch-title').textContent = `Results for “${q}”`;
+  $$('.srch-scope').forEach(btn=>{
+    btn.classList.remove('bg-gray-100','font-medium');
+    if(btn.getAttribute('data-scope')===scope) btn.classList.add('bg-gray-100','font-medium');
+    btn.onclick = ()=> navigateToSearch(q, btn.getAttribute('data-scope'));
+  });
 
-      const terms = q.trim().toLowerCase().split(/\s+/).filter(Boolean);
-      const match = o => terms.every(t => o.name.toLowerCase().includes(t) || o.theme.toLowerCase().includes(t) || o.industry.toLowerCase().includes(t) || o.tagline.toLowerCase().includes(t));
-      let pool = DATA;
-      if(terms.length) pool = pool.filter(match);
-      pool = scopeFilter(pool, scope);
-      // Apply facet deep-link filter if present in URL
-      try{
-        const url = new URL(location.href);
-        const facet = url.searchParams.get('facet');
-        const value = url.searchParams.get('value');
-        const valkeyParam = url.searchParams.get('valkey');
-        const exclude = url.searchParams.get('exclude');
-        const fold = s => String(s||'').trim().toLowerCase();
-        const foldFacet = s => {
-          s = String(s||'').toLowerCase();
-          try { s = s.replace(/\p{Extended_Pictographic}|\p{Emoji_Component}|\p{Emoji_Presentation}|\uFE0F/ug, ''); } catch(e) { s = s.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g,''); }
-          s = s.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
-          return s;
-        };
-        if (facet && value){
-          const val = fold(value);
-          const valKey = valkeyParam ? String(valkeyParam) : foldFacet(value);
-          pool = pool.filter(x=>{
-            if (exclude && (x.slug===exclude || x.id===exclude)) return false;
-            if (facet==='theme') return [x.theme].concat(x.themes||[]).some(v=> foldFacet(v)===valKey );
-            if (facet==='industry') return [x.industry].concat(x.industries||[]).some(v=> foldFacet(v)===valKey );
-            return true;
-          });
-          // Improve title when no text query
-          if (!q || !q.trim()) {
-            const scopeLabel = ({orgs:'Organizations', businesses:'Businesses', projects:'Projects'})[scope] || 'All';
-            $('#srch-title').textContent = `${scopeLabel} with ${facet} “${value}”`;
-          }
-        }
-      }catch(e){ console.warn('facet filter', e); }
+  // Get primary + alternate (suggestion / synonym) result sets
+  const { primaryRes, bestQuery, bestRes } = await pickAltQuery(q, scope);
 
-      const orgs = sortList(pool.filter(x=>x.kind==='org'), SEARCH_SORT, q);
-      const biz  = sortList(pool.filter(x=>x.kind==='business'), SEARCH_SORT, q);
-      const prj  = sortList(pool.filter(x=>x.kind==='project'), SEARCH_SORT, q);
+  // ----- PRIMARY RESULTS RENDER -----
+  const mainPool = primaryRes.pool;
+
+  try{
+    const url = new URL(location.href);
+    const facet = url.searchParams.get('facet');
+    const value = url.searchParams.get('value');
+    const typeParam = url.searchParams.get('type'); // 'org' | 'business' | 'project'
+    const exclude = url.searchParams.get('exclude');
+
+    if (facet && value) {
+      let poolFacet = mainPool.slice();
+      if (exclude) {
+        poolFacet = poolFacet.filter(o => !(o[facet] || '').toLowerCase().includes(value.toLowerCase()));
+      } else {
+        poolFacet = poolFacet.filter(o => (o[facet] || '').toLowerCase().includes(value.toLowerCase()));
+      }
+
+      const scopeFromType =
+        (typeParam==='org') ? 'orgs' :
+        (typeParam==='business' ? 'businesses' :
+        (typeParam==='project' ? 'projects' : 'all'));
+
+      const poolScoped = scopeFilter(poolFacet, scopeFromType || 'all');
+
+      const orgsFacet = sortList(poolScoped.filter(x=>x.kind==='org'), SEARCH_SORT, q);
+      const bizFacet  = sortList(poolScoped.filter(x=>x.kind==='business'), SEARCH_SORT, q);
+      const prjFacet  = sortList(poolScoped.filter(x=>x.kind==='project'), SEARCH_SORT, q);
+
+      $('#rs-orgs-title').textContent = `Organizations (${orgsFacet.length})`;
+      $('#rs-biz-title').textContent  = `Businesses (${bizFacet.length})`;
+      $('#rs-projects-title').textContent = `Projects (${prjFacet.length})`;
+
+      renderGrid(orgsFacet, 'rs-orgs-grid', 'rs-orgs-empty', null);
+      renderGrid(bizFacet,  'rs-biz-grid',  'rs-biz-empty',  null);
+      renderGrid(prjFacet,  'rs-projects-grid', 'rs-projects-empty', null);
+
+    } else {
+      const orgs = sortList(mainPool.filter(x=>x.kind==='org'), SEARCH_SORT, q);
+      const biz  = sortList(mainPool.filter(x=>x.kind==='business'), SEARCH_SORT, q);
+      const prj  = sortList(mainPool.filter(x=>x.kind==='project'), SEARCH_SORT, q);
 
       $('#rs-orgs-title').textContent = `Organizations (${orgs.length})`;
       $('#rs-biz-title').textContent  = `Businesses (${biz.length})`;
@@ -1911,10 +1996,77 @@ function renderSearchResults(q, scope='all'){
       renderGrid(orgs, 'rs-orgs-grid', 'rs-orgs-empty', null);
       renderGrid(biz,  'rs-biz-grid',  'rs-biz-empty',  null);
       renderGrid(prj,  'rs-projects-grid', 'rs-projects-empty', null);
-
-      const lbl = document.getElementById('srch-sort-label');
-      if (lbl) lbl.textContent = {relevance:'Relevance', az:'A → Z', za:'Z → A', popular:'Popular', verified:'Verified first'}[SEARCH_SORT];
     }
+  }catch(e){
+    console.warn('facet filter', e);
+    const orgs = sortList(mainPool.filter(x=>x.kind==='org'), SEARCH_SORT, q);
+    const biz  = sortList(mainPool.filter(x=>x.kind==='business'), SEARCH_SORT, q);
+    const prj  = sortList(mainPool.filter(x=>x.kind==='project'), SEARCH_SORT, q);
+
+    $('#rs-orgs-title').textContent = `Organizations (${orgs.length})`;
+    $('#rs-biz-title').textContent  = `Businesses (${biz.length})`;
+    $('#rs-projects-title').textContent = `Projects (${prj.length})`;
+
+    renderGrid(orgs, 'rs-orgs-grid', 'rs-orgs-empty', null);
+    renderGrid(biz,  'rs-biz-grid',  'rs-biz-empty',  null);
+    renderGrid(prj,  'rs-projects-grid', 'rs-projects-empty', null);
+  }
+
+  // ----- ALT RESULTS RENDER (suggestion / synonym) -----
+  const altWrap = document.getElementById('rs-alt-wrapper');
+  if(altWrap){
+    if(bestRes && bestQuery && bestQuery.toLowerCase() !== q.toLowerCase()){
+      altWrap.classList.remove('hidden');
+
+      const altHead = document.getElementById('rs-alt-heading');
+      const altDesc = document.getElementById('rs-alt-desc');
+      if(altHead) altHead.textContent = `Related results for “${bestQuery}”`;
+      if(altDesc) altDesc.textContent = (bestQuery !== q)
+        ? `Your search for “${q}” had limited matches. We also looked for “${bestQuery}”.`
+        : '';
+
+      const altPool = bestRes.pool;
+      const altOrgs = sortList(altPool.filter(x=>x.kind==='org'), SEARCH_SORT, bestQuery);
+      const altBiz  = sortList(altPool.filter(x=>x.kind==='business'), SEARCH_SORT, bestQuery);
+      const altPrj  = sortList(altPool.filter(x=>x.kind==='project'), SEARCH_SORT, bestQuery);
+
+      const altOrgsTitle = document.getElementById('rs-alt-orgs-title');
+      const altBizTitle  = document.getElementById('rs-alt-biz-title');
+      const altPrjTitle  = document.getElementById('rs-alt-projects-title');
+      if(altOrgsTitle) altOrgsTitle.textContent = `Organizations (${altOrgs.length})`;
+      if(altBizTitle)  altBizTitle.textContent  = `Businesses (${altBiz.length})`;
+      if(altPrjTitle)  altPrjTitle.textContent  = `Projects (${altPrj.length})`;
+
+      renderGrid(altOrgs, 'rs-alt-orgs-grid', 'rs-alt-orgs-empty', null);
+      renderGrid(altBiz,  'rs-alt-biz-grid',  'rs-alt-biz-empty',  null);
+      renderGrid(altPrj,  'rs-alt-projects-grid', 'rs-alt-projects-empty', null);
+
+    } else {
+      altWrap.classList.add('hidden');
+      const altDesc = document.getElementById('rs-alt-desc');
+      if(altDesc) altDesc.textContent = '';
+      ['rs-alt-orgs-grid','rs-alt-biz-grid','rs-alt-projects-grid'].forEach(id=>{
+        const el = document.getElementById(id);
+        if(el) el.innerHTML = '';
+      });
+    }
+  }
+
+  // ----- sort label update (unchanged) -----
+  const lbl = document.getElementById('srch-sort-label');
+  if (lbl) {
+    const dict = {
+      relevance:'Relevance',
+      az:'A → Z',
+      za:'Z → A',
+      popular:'Popular',
+      verified:'Verified first'
+    };
+    lbl.textContent = dict[SEARCH_SORT] || dict['relevance'];
+  }
+}
+
+
 
     // ---------- Directory SORT controls ----------
     const labelMap = {relevance:'Relevance',az:'A → Z',za:'Z → A',popular:'Popular',verified:'Verified first'};
@@ -2030,54 +2182,499 @@ function renderSearchResults(q, scope='all'){
     document.querySelectorAll('[data-close="share"]').forEach(el=> el.addEventListener('click', ()=> document.getElementById('shareModal').classList.add('hidden')));
 
     // ---------- Router ----------
-    function routeFromURL(){
-      const url = new URL(location.href);
-      const slug = url.searchParams.get('org');
-      const view = url.searchParams.get('view') || 'home';
-      if (typeof updateNavCurrent==='function') updateNavCurrent(view); setActiveBottomBar(view);
-      const q = url.searchParams.get('search');
-      const scope = url.searchParams.get('scope') || 'all';
-      const sortParam = url.searchParams.get('sort');
+    
 
-      if(slug){
-        const o = DATA.find(x=>x.slug===slug);
-        if(o){ $('#view-directory').classList.add('hidden'); $('#view-search').classList.add('hidden'); $('#view-detail').classList.remove('hidden'); renderDetail(o); return; }
-      }
+// Map some common synonyms to broaden search (e.g. "girls" -> "women")
+// SYNONYM_MAP removed (using WordNet now);
 
-      
-      const facet = url.searchParams.get('facet');
-      const value = url.searchParams.get('value');
-      const typeParam = url.searchParams.get('type'); // 'org' | 'business' | 'project'
-      const exclude = url.searchParams.get('exclude');
-      if (facet && value) {
-        SEARCH_SORT = sortParam || 'relevance';
-        const scopeFromType = (typeParam==='org') ? 'orgs' : (typeParam==='business' ? 'businesses' : (typeParam==='project' ? 'projects' : 'all'));
-        $('#view-directory').classList.add('hidden');
-        $('#view-detail').classList.add('hidden');
-        $('#view-search').classList.remove('hidden');
-        setScope(scopeFromType || 'all');
-        renderSearchResults('', scopeFromType || 'all');
-        return;
-      }
-if(q){
-        SEARCH_SORT = sortParam || 'relevance';
-        CURRENT_QUERY = q;
-        const sLbl = document.getElementById('srch-sort-label'); if(sLbl) sLbl.textContent = {relevance:'Relevance', az:'A → Z', za:'Z → A', popular:'Popular', verified:'Verified first'}[SEARCH_SORT];
-        $('#view-directory').classList.add('hidden');
-        $('#view-detail').classList.add('hidden');
-        $('#view-search').classList.remove('hidden');
-        setScope(scope);
-        renderSearchResults(q, scope);
-        return;
-      }
+// Produce an alternate query string by swapping known synonyms.
+// Returns '' if nothing changed.
+// (old getSynonymQuery removed - now implemented above with WordNet / wordpos)
 
-      VIEW_MODE = ['home','orgs','businesses','projects','events'].includes(view) ? view : 'home';
-      DIR_SORT = sortParam || 'popular';
-      updateDirSortLabels();
-      setActiveSidebar(VIEW_MODE);
-      showDirectory();
-      applyFiltersAndRender();
+
+// Decide on an alternate query (suggestion or synonym) and gather results.
+// Returns { primaryRes, bestQuery, bestRes }
+
+// --- Synonym / WordNet helpers ---------------------------------------------
+
+let wordposInstance = null;
+
+// create or return the WordPOS instance if available
+function ensureWordpos(){
+  if (!wordposInstance && window.WordPOS){
+    // WordPOS is expected to be exposed by wordpos-browser.js
+    wordposInstance = new WordPOS();
+  }
+  return wordposInstance;
+}
+
+// lookup synonyms for a single word using WordNet via wordpos
+function lookupWordSyns(word){
+  return new Promise((resolve)=>{
+    const inst = ensureWordpos();
+    if(!inst || !inst.lookup){
+      resolve([]);
+      return;
     }
+    try {
+      inst.lookup(word, (results)=>{
+        const all = new Set();
+        if(Array.isArray(results)){
+          results.forEach(sense=>{
+            if(Array.isArray(sense.synonyms)){
+              sense.synonyms.forEach(s=> all.add(String(s)));
+            }
+          });
+        }
+        resolve([...all]);
+      });
+    } catch(e){
+        console.warn('lookupWordSyns error', e);
+        resolve([]);
+    }
+  });
+}
+
+// Build an alternate query by swapping in synonyms that actually improve recall.
+// We try each word in the query, gather synonyms from WordNet, and for each synonym
+// we build a candidate query and measure how many hits searchData() returns.
+// We pick the best-performing rewrite (if any).
+async function getSynonymQuery(q){
+  const rawQ = (q || '').trim();
+  if(!rawQ) return '';
+  const baseRes = searchData(rawQ, 'all');
+  const baseTotal = baseRes.total;
+
+  const terms = rawQ.split(/\s+/);
+  let globalBestQuery = '';
+  let globalBestScore = baseTotal;
+
+  for (let ti = 0; ti < terms.length; ti++){
+    const originalWord = terms[ti];
+    if(!originalWord || originalWord.length < 3) continue;
+
+    const syns = await lookupWordSyns(originalWord);
+    for (const cand of syns){
+      if(!cand || cand.length < 3) continue;
+      if(cand.toLowerCase() === originalWord.toLowerCase()) continue;
+
+      const swapped = terms.map((w,idx)=> idx===ti ? cand : w).join(' ');
+      if(swapped.toLowerCase() === rawQ.toLowerCase()) continue;
+
+      const testRes = searchData(swapped, 'all');
+      const score = testRes.total;
+
+      if(score > globalBestScore){
+        globalBestScore = score;
+        globalBestQuery = swapped;
+      }
+    }
+  }
+
+  if(globalBestQuery && globalBestQuery.toLowerCase() !== rawQ.toLowerCase()){
+    return globalBestQuery;
+  }
+  return '';
+}
+
+// ---------- Token vocabulary & spelling suggestion (query-level) ----------
+let TOKEN_VOCAB = null;      // Map token -> freq
+let VOCAB_LIST = null;       // Array of { token, freq }
+let fuseVocab = null;        // Fuse index over tokens (not items)
+
+// simple word tokenizer
+function tokenizeText(txt){
+  return String(txt||'').toLowerCase().match(/[a-z]+/g) || [];
+}
+
+// Build a token vocabulary from DATA (names, tagline, theme, industry)
+function buildTokenVocab(){
+  const freq = new Map();
+  const add = (s)=>{
+    tokenizeText(s).forEach(t=>{
+      freq.set(t, (freq.get(t)||0) + 1);
+    });
+  };
+  (DATA||[]).forEach(o=>{
+    add(o.name);
+    add(o.tagline);
+    add(o.theme);
+    add(o.industry);
+  });
+  TOKEN_VOCAB = freq;
+  VOCAB_LIST = Array.from(freq.entries()).map(([token, freq])=>({token, freq}));
+
+  if (window.Fuse){
+    fuseVocab = new Fuse(VOCAB_LIST, {
+      includeScore: true,
+      keys: ['token'],
+      threshold: 0.3,
+      distance: 50,
+      minMatchCharLength: 2
+    });
+  }
+}
+
+// quick Levenshtein (edit distance)
+function levenshtein(a,b){
+  a = a||''; b = b||'';
+  const m = a.length, n = b.length;
+  const dp = Array.from({length: m+1}, (_,i)=> new Array(n+1).fill(0));
+  for(let i=0;i<=m;i++) dp[i][0]=i;
+  for(let j=0;j<=n;j++) dp[0][j]=j;
+  for(let i=1;i<=m;i++){
+    for(let j=1;j<=n;j++){
+      const cost = a[i-1]===b[j-1] ? 0 : 1;
+      dp[i][j] = Math.min(
+        dp[i-1][j] + 1,
+        dp[i][j-1] + 1,
+        dp[i-1][j-1] + cost
+      );
+    }
+  }
+  return dp[m][n];
+}
+
+// find a single token correction
+function correctToken(t){
+  const tok = String(t||'').toLowerCase();
+  if(!tok) return '';
+  if (TOKEN_VOCAB && TOKEN_VOCAB.has(tok)) return tok;
+
+  // prefix completion (e.g., "jew" -> "jewish")
+  let best = null, bestFreq = -1;
+  if (VOCAB_LIST){
+    for(const {token, freq} of VOCAB_LIST){
+      if (token.startsWith(tok) && Math.abs(token.length - tok.length) <= 4){
+        if (freq > bestFreq){
+          best = token; bestFreq = freq;
+        }
+      }
+    }
+  }
+  if (best) return best;
+
+  // fallback: Fuse search on token vocab
+  if (fuseVocab){
+    const res = fuseVocab.search(tok, { limit: 5 });
+    for(const r of res){
+      const cand = r.item.token;
+      // guardrails: same first letter + small edit distance
+      if (cand[0] === tok[0] && levenshtein(tok, cand) <= 2){
+        return cand;
+      }
+    }
+  }
+
+  return '';
+}
+
+// Build a corrected query string (token-by-token).
+// Only return a different query if at least one token got a confident correction
+// *and* it improves the result count meaningfully.
+function buildSpellingSuggestion(q){
+  const rawQ = String(q||'').trim();
+  if(!rawQ) return '';
+  const terms = rawQ.split(/\s+/);
+  let changed = false;
+
+  const corrected = terms.map(t=>{
+    const c = correctToken(t);
+    if (c && c !== t.toLowerCase()){
+      changed = true;
+      return c;
+    }
+    return t;
+  }).join(' ');
+
+  if(!changed) return '';
+  // ensure it actually helps search
+  const base = searchData(rawQ, 'all').total;
+  const alt  = searchData(corrected, 'all').total;
+  if (alt > base || base < 3){ // accept if strictly better OR original is very thin
+    return corrected;
+  }
+  return '';
+}
+async function pickAltQuery(q, scope){
+  const sc = scope || 'all';
+  const primaryRes = searchData(q, sc);
+
+  let bestQuery = '';
+  let bestRes = null;
+
+  // 1. Fuzzy/typo suggestion first (Fuse-based)
+  const sug = getSuggestion(q);
+  if(sug && sug.toLowerCase() !== q.toLowerCase()){
+    const sugRes = searchData(sug, sc);
+    if(sugRes.total > 0){
+      bestQuery = sug;
+      bestRes = sugRes;
+    }
+  }
+
+  // 2. Synonym expansion if:
+  //    - we still don't have alt OR
+  //    - primary results look thin (<3)
+  if(!bestRes || primaryRes.total < 3){
+    const synQ = await getSynonymQuery(q); // async
+    if(synQ && synQ.toLowerCase() !== q.toLowerCase()){
+      const synRes = searchData(synQ, sc);
+      if(
+        synRes.total > 0 &&
+        (
+          !bestRes ||
+          (primaryRes.total < 3 && synRes.total > bestRes.total)
+        )
+      ){
+        bestQuery = synQ;
+        bestRes = synRes;
+      }
+    }
+  }
+
+  return { primaryRes, bestQuery, bestRes };
+}
+
+async function updateDidYouMeanBar(q, scope){
+  const bar = document.getElementById('didyoumean-bar');
+  if(!bar) return;
+
+  const { primaryRes, bestQuery, bestRes } = await pickAltQuery(q, scope || 'all');
+
+  if(bestQuery && bestRes && bestQuery.toLowerCase() !== q.toLowerCase()){
+    const safeQuery = bestQuery.replace(/</g,'&lt;');
+    bar.classList.remove('hidden');
+    bar.innerHTML = `
+      <div class="px-4 py-2 text-[14px] text-gray-600 bg-gray-50 border-b border-gray-200 flex flex-wrap gap-2 items-center">
+        <span class="italic">Did you mean</span>
+        <button class="did-you-mean-btn underline text-ah-600 font-medium" data-q="${safeQuery}">
+          ${safeQuery}
+        </button>
+        <span class="italic">?</span>
+      </div>
+    `;
+
+    $$('#didyoumean-bar .did-you-mean-btn').forEach(btn=>{
+      btn.addEventListener('click', async ()=>{
+        const newQ = btn.getAttribute('data-q') || '';
+        if (typeof CURRENT_QUERY !== 'undefined') {
+          CURRENT_QUERY = newQ;
+        }
+        if (typeof searchInput !== 'undefined' && searchInput) {
+          searchInput.value = newQ;
+        }
+        if (typeof mSearchInput !== 'undefined' && mSearchInput) {
+          mSearchInput.value = newQ;
+        }
+        await renderSearchResults(newQ, scope || 'all');
+        await updateDidYouMeanBar(newQ, scope || 'all');
+      });
+    });
+  } else {
+    bar.classList.add('hidden');
+    bar.innerHTML = '';
+  }
+}
+
+
+
+
+    // ---------- PWA onboarding config ----------
+    const ONBOARDING_KEY = 'ah_onboarded_v1';
+
+    function hasCompletedOnboarding(){
+      try { return localStorage.getItem(ONBOARDING_KEY) === 'true'; }
+      catch { return false; }
+    }
+
+    function markOnboardingDone(){
+      try { localStorage.setItem(ONBOARDING_KEY, 'true'); }
+      catch {}
+    }
+
+    const ONBOARDING_INTERESTS = [
+      {
+        key: 'cultural',
+        icon: 'fa-handshake-angle',
+        label: 'Cultural / Identity',
+        desc: 'Communities & heritage orgs'
+      },
+      {
+        key: 'stem',
+        icon: 'fa-flask',
+        label: 'STEM',
+        desc: 'Science & tech orgs'
+      },
+      {
+        key: 'volunteer',
+        icon: 'fa-hand-holding-heart',
+        label: 'Service / Volunteering',
+        desc: 'Give back on campus'
+      },
+      {
+        key: 'career',
+        icon: 'fa-briefcase',
+        label: 'Career & Professional',
+        desc: 'Networking & growth'
+      },
+      {
+        key: 'arts',
+        icon: 'fa-palette',
+        label: 'Arts & Media',
+        desc: 'Creative & performing arts'
+      },
+      {
+        key: 'health',
+        icon: 'fa-heart-pulse',
+        label: 'Health & Wellness',
+        desc: 'Fitness, mental health'
+      }
+    ];
+
+    let selectedInterests = new Set();
+
+    function renderInterestGrid(){
+      const grid = $('#interest-grid');
+      if(!grid) return;
+      grid.innerHTML = '';
+
+      ONBOARDING_INTERESTS.forEach(item=>{
+        const btn = document.createElement('button');
+        btn.className = [
+          'interest-card',
+          'rounded-xl border border-gray-300 bg-white p-4 flex flex-col items-center text-center text-gray-700',
+          'active:scale-[0.98] transition'
+        ].join(' ');
+        btn.setAttribute('data-key', item.key);
+        btn.setAttribute('data-active','false');
+
+        btn.innerHTML = `
+          <div class="w-10 h-10 rounded-lg bg-ah-50 text-ah-600 flex items-center justify-center text-lg mb-2">
+            <i class="fa-solid ${item.icon}"></i>
+          </div>
+          <div class="text-[14px] font-medium">${item.label}</div>
+          <div class="text-[12px] text-gray-500 leading-tight">${item.desc}</div>
+        `;
+
+        btn.addEventListener('click', ()=>{
+          const k = item.key;
+          const finishBtn = $('#ob-finish');
+          if(selectedInterests.has(k)){
+            selectedInterests.delete(k);
+            btn.classList.remove('ring-2','ring-ah-500','border-ah-600','bg-ah-50');
+          }else{
+            selectedInterests.add(k);
+            btn.classList.add('ring-2','ring-ah-500','border-ah-600','bg-ah-50');
+          }
+          if(finishBtn){
+            finishBtn.disabled = (selectedInterests.size === 0);
+          }
+        });
+
+        grid.appendChild(btn);
+      });
+    }
+
+    function showOnboardingStep(step){
+      const s1 = $('#view-onboarding-account');
+      const s2 = $('#view-onboarding-interests');
+      const dir = $('#view-directory');
+      const srch = $('#view-search');
+      const det = $('#view-detail');
+
+      if(step === 1){
+        s1 && s1.classList.remove('hidden');
+        s2 && s2.classList.add('hidden');
+      } else {
+        s1 && s1.classList.add('hidden');
+        s2 && s2.classList.remove('hidden');
+        renderInterestGrid();
+      }
+
+      // hide the rest of the app behind onboarding
+      dir && dir.classList.add('hidden');
+      srch && srch.classList.add('hidden');
+      det && det.classList.add('hidden');
+    }
+
+    function showMainApp(){
+      const s1 = $('#view-onboarding-account');
+      const s2 = $('#view-onboarding-interests');
+      s1 && s1.classList.add('hidden');
+      s2 && s2.classList.add('hidden');
+
+      markOnboardingDone();
+      // jump into normal app
+      routeFromURL();
+    }
+
+    function initOnboardingFlow(){
+      // step1 -> step2
+      const cont = $('#ob-continue');
+      cont && cont.addEventListener('click', ()=>{
+        showOnboardingStep(2);
+      });
+
+      // step2 -> finish
+      const fin = $('#ob-finish');
+      fin && fin.addEventListener('click', ()=>{
+        if(selectedInterests.size === 0) return;
+        showMainApp();
+      });
+    }
+async function routeFromURL(){
+  const url = new URL(location.href);
+  const slug = url.searchParams.get('org');
+  const view = url.searchParams.get('view') || 'home';
+  if (typeof updateNavCurrent==='function') updateNavCurrent(view);
+  setActiveBottomBar(view);
+  const q = url.searchParams.get('search');
+  const scope = url.searchParams.get('scope') || 'all';
+  const sortParam = url.searchParams.get('sort');
+
+  if(slug){
+    const o = DATA.find(x=>x.slug===slug);
+    if(o){
+      $('#view-directory').classList.add('hidden');
+      $('...-detail').classList.remove('hidden');
+      renderDetail(o);
+      return;
+    }
+  }
+
+  // facet / filter route logic for search & directory views
+  const facet = url.searchParams.get('facet');
+  const value = url.searchParams.get('value');
+  const typeParam = url.searchParams.get('type');
+  const exclude = url.searchParams.get('exclude');
+
+  if(q){
+    CURRENT_QUERY = q;
+    VIEW_MODE = 'search';
+    SEARCH_SORT = sortParam || 'relevance';
+    updateDirSortLabels();
+    setActiveSidebar('search');
+
+    $('#view-directory').classList.add('hidden');
+    $('#view-detail').classList.add('hidden');
+    $('#view-search').classList.remove('hidden');
+
+    setScope(scope);
+
+    await renderSearchResults(q, scope);
+    await updateDidYouMeanBar(q, scope);
+    return;
+  }
+
+  VIEW_MODE = ['home','orgs','businesses','projects','events'].includes(view) ? view : 'home';
+  DIR_SORT = sortParam || 'popular';
+  updateDirSortLabels();
+  setActiveSidebar(VIEW_MODE);
+  showDirectory();
+  applyFiltersAndRender();
+}
+
 
     // Intercept sidebar links for SPA nav
     $$('[data-route]').forEach(a=>{
@@ -2086,14 +2683,20 @@ if(q){
 
     // ---------- Load data ----------
     async function loadData(){
+  // show skeleton loaders
   showSkeletons('orgs-grid'); showSkeletons('biz-grid'); showSkeletons('projects-grid'); showSkeletons('events-grid');
+
+  // fetch data
   try{
     const r = await fetch(API_URL,{headers:{Accept:'application/json'}});
     const arr = await r.json();
     DATA = (Array.isArray(arr)?arr:[]).map(normalize).filter(Boolean);
-  }catch(e){ console.error(e); DATA=[]; }
+  }catch(e){
+    console.error(e);
+    DATA = [];
+  }
 
-  // Build Fuse.js index for fuzzy
+  // build Fuse index for fuzzy search on DATA
   if (window.Fuse){
     window.fuse = new Fuse(DATA, {
       includeScore: true,
@@ -2109,9 +2712,27 @@ if(q){
     });
   }
 
+  // build vocab for query correction/suggestions
+  buildTokenVocab();
+
+  // initialize default scope pills
+  setScope('all');
+
+  // Detect standalone PWA
+  const isStandalone =
+    (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+    (window.navigator.standalone === true);
+
+  if (isStandalone && !hasCompletedOnboarding()){
+    initOnboardingFlow();
+    showOnboardingStep(1);
+    return;
+  }
+
+  // normal entry point
   routeFromURL();
-  setScope('all'); // initialize both pills
 }
+
 
     window.addEventListener('popstate', routeFromURL);
     loadData();
