@@ -2526,7 +2526,6 @@ function buildSpellingSuggestion(q){
   if(!changed) return '';
   return corrected;
 }
-
 async function pickAltQuery(q, scope){
   const sc = scope || 'all';
   const primaryRes = searchData(q, sc);
@@ -2625,43 +2624,16 @@ async function updateDidYouMeanBar(q, scope){
     }
 
     const ONBOARDING_INTERESTS = [
-      {
-        key: 'cultural',
-        icon: 'fa-handshake-angle',
-        label: 'Cultural / Identity',
-        desc: 'Communities & heritage orgs'
-      },
-      {
-        key: 'stem',
-        icon: 'fa-flask',
-        label: 'STEM',
-        desc: 'Science & tech orgs'
-      },
-      {
-        key: 'volunteer',
-        icon: 'fa-hand-holding-heart',
-        label: 'Service / Volunteering',
-        desc: 'Give back on campus'
-      },
-      {
-        key: 'career',
-        icon: 'fa-briefcase',
-        label: 'Career & Professional',
-        desc: 'Networking & growth'
-      },
-      {
-        key: 'arts',
-        icon: 'fa-palette',
-        label: 'Arts & Media',
-        desc: 'Creative & performing arts'
-      },
-      {
-        key: 'health',
-        icon: 'fa-heart-pulse',
-        label: 'Health & Wellness',
-        desc: 'Fitness, mental health'
-      }
-    ];
+  { key: 'academic',     icon: 'fa-book-open',     label: 'Academic',                 desc: 'Majors, study & academic orgs' },
+  { key: 'professional', icon: 'fa-briefcase',     label: 'Professional Development', desc: 'Career & networking groups' },
+  { key: 'service',      icon: 'fa-handshake-angle', label: 'Service / Volunteering', desc: 'Community service & outreach' },
+  { key: 'recreational', icon: 'fa-gamepad',       label: 'Recreational',             desc: 'Hobbies, fun, casual social' },
+  { key: 'sports',       icon: 'fa-dumbbell',      label: 'Sports & Athletics',       desc: 'Club sports & fitness teams' },
+  { key: 'spiritual',    icon: 'fa-hands-praying', label: 'Religious / Spiritual',    desc: 'Faith & spiritual groups' },
+  { key: 'cultural',     icon: 'fa-people-group',  label: 'Cultural / Identity-Based',desc: 'Identity, heritage, affinity' },
+  { key: 'arts',         icon: 'fa-palette',       label: 'Arts & Media',             desc: 'Creative, performing, media' },
+  { key: 'activism',     icon: 'fa-bullhorn',      label: 'Political / Activism',     desc: 'Advocacy & civic action' }
+];
 
     let selectedInterests = new Set();
 
@@ -2809,9 +2781,7 @@ async function routeFromURL(){
     if(o){
       $('#view-directory').classList.add('hidden');
       const detailView = document.getElementById('view-detail');
-      if(detailView){
-        detailView.classList.remove('hidden');
-      }
+            if(detailView){ detailView.classList.remove('hidden'); }
       renderDetail(o);
       return;
     }
