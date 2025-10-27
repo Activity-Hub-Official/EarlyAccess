@@ -456,13 +456,7 @@ body.onboarding-mode {
   padding-bottom: 0 !important;
 }
 </style>
-
-<style>
-@media (prefers-reduced-motion: reduce) {
-  .animate-spin, .animate-ping { animation: none !important; }
-}
-</style>
-</head>
+<style>@media (prefers-reduced-motion: reduce){.animate-spin,.animate-ping{animation:none!important}}</style></head>
 <body class="has-bottom-bar min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
   <div class="flex w-full">
     <!-- ====== SIDEBAR ====== -->
@@ -2649,42 +2643,66 @@ async function updateDidYouMeanBar(q, scope){
     }
 
     const ONBOARDING_INTERESTS = [
-  { key: 'academic', icon: 'fa-book-open', label: 'Academic', desc: 'Majors, study & academic orgs',
-    tileClass: 'bg-blue-600 text-white border border-blue-700 shadow-lg shadow-blue-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 ring-white focus:outline-none',
-    iconClass: 'w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/20 text-white' },
-  { key: 'professional', icon: 'fa-briefcase', label: 'Professional Development', desc: 'Career & networking groups',
-    tileClass: 'bg-amber-500 text-black border border-amber-600 shadow-lg shadow-amber-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 ring-white focus:outline-none',
-    iconClass: 'w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-black/10 text-black' },
-  { key: 'service', icon: 'fa-hand-holding-heart', label: 'Service & Volunteering', desc: 'Community & philanthropy',
-    tileClass: 'bg-emerald-600 text-white border border-emerald-700 shadow-lg shadow-emerald-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 ring-white focus:outline-none',
-    iconClass: 'w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/20 text-white' },
-  { key: 'cultural', icon: 'fa-globe', label: 'Cultural & Identity', desc: 'Affinity & cultural orgs',
-    tileClass: 'bg-violet-600 text-white border border-violet-700 shadow-lg shadow-violet-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 ring-white focus:outline-none',
-    iconClass: 'w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/20 text-white' },
-  { key: 'arts', icon: 'fa-paintbrush', label: 'Arts & Media', desc: 'Design, music, film & media',
-    tileClass: 'bg-pink-600 text-white border border-pink-700 shadow-lg shadow-pink-900/20 px-4 py-5 rounded-xl active:cale-[.99] transition-all ring-offset-2 ring-white focus:outline-none'.replace('cale', 'scale'),
-    iconClass: 'w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/20 text-white' },
-  { key: 'faith', icon: 'fa-place-of-worship', label: 'Faith & Spiritual', desc: 'Religious & spiritual life',
-    tileClass: 'bg-indigo-600 text-white border border-indigo-700 shadow-lg shadow-indigo-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 ring-white focus:outline-none',
-    iconClass: 'w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/20 text-white' },
-  { key: 'entrepreneurship', icon: 'fa-lightbulb', label: 'Entrepreneurship', desc: 'Startup & founder clubs',
-    tileClass: 'bg-orange-500 text-black border border-orange-600 shadow-lg shadow-orange-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 ring-white focus:outline-none',
-    iconClass: 'w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-black/10 text-black' },
-  { key: 'tech', icon: 'fa-microchip', label: 'Tech & Engineering', desc: 'Coding, robotics, AI',
-    tileClass: 'bg-slate-900 text-white border border-slate-800 shadow-lg shadow-black/30 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 ring-white focus:outline-none',
-    iconClass: 'w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/10 text-white' },
-  { key: 'health', icon: 'fa-heart-pulse', label: 'Health & Wellness', desc: 'Mental, physical, nutrition',
-    tileClass: 'bg-rose-600 text-white border border-rose-700 shadow-lg shadow-rose-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 ring-white focus:outline-none',
-    iconClass: 'w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/20 text-white' },
-  { key: 'recreational', icon: 'fa-gamepad', label: 'Recreational', desc: 'Hobbies, fun, casual social',
-    tileClass: 'bg-fuchsia-600 text-white border border-fuchsia-700 shadow-lg shadow-fuchsia-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 ring-white focus:outline-none',
-    iconClass: 'w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/20 text-white' },
-  { key: 'sports', icon: 'fa-dumbbell', label: 'Sports & Athletics', desc: 'Club sports & fitness teams',
-    tileClass: 'bg-red-600 text-white border border-red-700 shadow-lg shadow-red-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 ring-white focus:outline-none',
-    iconClass: 'w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/20 text-white' },
-  { key: 'careerprep', icon: 'fa-user-graduate', label: 'Career Prep', desc: 'Resume, interviews, internships',
-    tileClass: 'bg-teal-600 text-white border border-teal-700 shadow-lg shadow-teal-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 ring-white focus:outline-none',
-    iconClass: 'w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/20 text-white' }
+  { key: 'academic', icon: 'fa-book-open', label: 'Academic',
+    desc: 'Majors, study & academic orgs',
+    tileClass: 'bg-blue-600 text-white border border-blue-700 shadow-lg shadow-blue-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 focus:outline-none flex flex-col items-center text-center',
+    iconClass: 'mx-auto w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/20 text-white'
+  },
+  { key: 'professional', icon: 'fa-briefcase', label: 'Professional Development',
+    desc: 'Career & networking groups',
+    tileClass: 'bg-amber-500 text-black border border-amber-600 shadow-lg shadow-amber-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 focus:outline-none flex flex-col items-center text-center',
+    iconClass: 'mx-auto w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-black/10 text-black'
+  },
+  { key: 'service', icon: 'fa-hand-holding-heart', label: 'Service & Volunteering',
+    desc: 'Community & philanthropy',
+    tileClass: 'bg-emerald-600 text-white border border-emerald-700 shadow-lg shadow-emerald-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 focus:outline-none flex flex-col items-center text-center',
+    iconClass: 'mx-auto w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/20 text-white'
+  },
+  { key: 'cultural', icon: 'fa-globe', label: 'Cultural & Identity',
+    desc: 'Affinity & cultural orgs',
+    tileClass: 'bg-violet-600 text-white border border-violet-700 shadow-lg shadow-violet-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 focus:outline-none flex flex-col items-center text-center',
+    iconClass: 'mx-auto w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/20 text-white'
+  },
+  { key: 'arts', icon: 'fa-paintbrush', label: 'Arts & Media',
+    desc: 'Design, music, film & media',
+    tileClass: 'bg-pink-600 text-white border border-pink-700 shadow-lg shadow-pink-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 focus:outline-none flex flex-col items-center text-center',
+    iconClass: 'mx-auto w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/20 text-white'
+  },
+  { key: 'faith', icon: 'fa-place-of-worship', label: 'Faith & Spiritual',
+    desc: 'Religious & spiritual life',
+    tileClass: 'bg-indigo-600 text-white border border-indigo-700 shadow-lg shadow-indigo-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 focus:outline-none flex flex-col items-center text-center',
+    iconClass: 'mx-auto w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/20 text-white'
+  },
+  { key: 'entrepreneurship', icon: 'fa-lightbulb', label: 'Entrepreneurship',
+    desc: 'Startup & founder clubs',
+    tileClass: 'bg-orange-500 text-black border border-orange-600 shadow-lg shadow-orange-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 focus:outline-none flex flex-col items-center text-center',
+    iconClass: 'mx-auto w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-black/10 text-black'
+  },
+  { key: 'tech', icon: 'fa-microchip', label: 'Tech & Engineering',
+    desc: 'Coding, robotics, AI',
+    tileClass: 'bg-slate-900 text-white border border-slate-800 shadow-lg shadow-black/30 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 focus:outline-none flex flex-col items-center text-center',
+    iconClass: 'mx-auto w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/10 text-white'
+  },
+  { key: 'health', icon: 'fa-heart-pulse', label: 'Health & Wellness',
+    desc: 'Mental, physical, nutrition',
+    tileClass: 'bg-rose-600 text-white border border-rose-700 shadow-lg shadow-rose-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 focus:outline-none flex flex-col items-center text-center',
+    iconClass: 'mx-auto w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/20 text-white'
+  },
+  { key: 'recreational', icon: 'fa-gamepad', label: 'Recreational',
+    desc: 'Hobbies, fun, casual social',
+    tileClass: 'bg-fuchsia-600 text-white border border-fuchsia-700 shadow-lg shadow-fuchsia-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 focus:outline-none flex flex-col items-center text-center',
+    iconClass: 'mx-auto w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/20 text-white'
+  },
+  { key: 'sports', icon: 'fa-dumbbell', label: 'Sports & Athletics',
+    desc: 'Club sports & fitness teams',
+    tileClass: 'bg-red-600 text-white border border-red-700 shadow-lg shadow-red-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 focus:outline-none flex flex-col items-center text-center',
+    iconClass: 'mx-auto w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/20 text-white'
+  },
+  { key: 'careerprep', icon: 'fa-user-graduate', label: 'Career Prep',
+    desc: 'Resume, interviews, internships',
+    tileClass: 'bg-teal-600 text-white border border-teal-700 shadow-lg shadow-teal-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 focus:outline-none flex flex-col items-center text-center',
+    iconClass: 'mx-auto w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/20 text-white'
+  }
 ];
 
     let selectedInterests = new Set();
@@ -2707,7 +2725,7 @@ async function updateDidYouMeanBar(q, scope){
       </div>
     `;
 
-    // a11y roles
+    // accessibility
     btn.setAttribute('role','button');
     btn.setAttribute('tabindex','0');
     btn.setAttribute('aria-pressed','false');
@@ -2716,27 +2734,37 @@ async function updateDidYouMeanBar(q, scope){
       const k = item.key;
       const finishBtn = $('#ob-finish');
       const on = selectedInterests.has(k);
+
       if(on){
         selectedInterests.delete(k);
-        btn.classList.remove('ring-2','ring-white','outline','outline-2','outline-white');
+        btn.classList.remove('ring-2','ring-ah-500');
       } else {
         selectedInterests.add(k);
-        btn.classList.add('ring-2','ring-white','outline','outline-2','outline-white');
+        btn.classList.add('ring-2','ring-ah-500');
       }
+
       btn.setAttribute('aria-pressed', String(!on));
-      if(finishBtn) finishBtn.disabled = (selectedInterests.size === 0);
+
+      if(finishBtn){
+        finishBtn.disabled = (selectedInterests.size === 0);
+      }
     }
 
     btn.addEventListener('click', toggle);
     btn.addEventListener('keydown', (e)=>{
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        toggle();
+      }
     });
 
     grid.appendChild(btn);
   });
 
   const finishBtn = $('#ob-finish');
-  if(finishBtn) finishBtn.disabled = (selectedInterests.size === 0);
+  if(finishBtn){
+    finishBtn.disabled = (selectedInterests.size === 0);
+  }
 }
 
     const ONBOARDING_STEP_MAP = {
@@ -4043,21 +4071,19 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 
 <!-- Onboarding loading overlay -->
-<div id="onboarding-loading-overlay"
-  class="hidden fixed inset-0 z-[9999] flex flex-col items-center justify-center text-white
-         bg-gradient-to-br from-indigo-600 via-fuchsia-500 to-pink-500">
-  <div class="relative mb-5">
-    <!-- outer spinner ring -->
-    <div class="w-14 h-14 rounded-full border-4 border-white/20 border-t-white animate-spin"></div>
-
-    <!-- inner pulsing dot -->
-    <div class="absolute inset-0 flex items-center justify-center">
-      <div class="w-4 h-4 rounded-full bg-white/90 animate-ping"></div>
-      <div class="w-2 h-2 rounded-full bg-white absolute"></div>
+<div id="onboarding-loading-overlay" class="hidden fixed inset-0 z-[9999] text-white">
+  <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 via-fuchsia-500 to-pink-500"></div>
+  <div class="absolute inset-0 flex flex-col items-center justify-center text-white">
+    <div class="relative mb-5">
+      <div class="w-14 h-14 rounded-full border-4 border-white/20 border-t-white animate-spin"></div>
+      <div class="absolute inset-0 flex items-center justify-center">
+        <div class="w-4 h-4 rounded-full bg-white/90 animate-ping"></div>
+        <div class="w-2 h-2 rounded-full bg-white absolute"></div>
+      </div>
     </div>
+    <div id="onboarding-loading-message" class="text-sm text-white/90 text-center px-8 leading-tight"></div>
   </div>
-  <div id="onboarding-loading-message" class="text-sm text-white/90 text-center px-8 leading-tight"></div>
-</div>
+</div>>
 
-</body></body>
+</body>
 </html>
