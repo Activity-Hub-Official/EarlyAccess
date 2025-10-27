@@ -2877,6 +2877,7 @@ async function updateDidYouMeanBar(q, scope){
       showOnboardingStepInternal('account');
     };
 
+
 window.showAuthMode = function(mode){
   const signupForm = document.getElementById('signup-form');
   const signinForm = document.getElementById('signin-form');
@@ -2884,6 +2885,9 @@ window.showAuthMode = function(mode){
   const tabSignin = document.getElementById('auth-tab-signin');
 
   if(!signupForm || !signinForm || !tabSignup || !tabSignin) return;
+
+  // remember which path we're taking
+  window.AUTH_MODE = (mode === 'signin') ? 'signin' : 'signup';
 
   if(mode === 'signin'){
     signupForm.classList.add('hidden');
@@ -2899,17 +2903,61 @@ window.showAuthMode = function(mode){
   }
 };
 
-// fast path for existing accounts: skip the rest of onboarding
+// fast path for existing accounts: skip the rest of onboarding,
+// still show the animated "Personalizing clubs..." overlay.
 window.quickSignIn = function quickSignIn(){
-  // reuse the same animated finalize flow
+  window.AUTH_MODE = 'signin';
   finishOnboarding();
 };
 
+// initialize default tab state on load
+showAuthMode('signup');
 
 
-    window.finishOnboarding = function finishOnboarding(){
-  // helper to finalize and drop user into main app
-  function completeOnboardingFinalize(){
+
+
+    
+window.finishOnboarding = function finishOnboarding(){
+
+  // collect data & POST to Google Form if this is a brand-new signup
+  try {
+    const mode = window.AUTH_MODE || 'signup';
+    if (mode === 'signup') {
+      const fullName = (document.getElementById('ob-fullname')||{}).value || '';
+      const email = (document.getElementById('ob-email')||{}).value || '';
+      const password = (document.getElementById('ob-password')||{}).value || '';
+      const uniEmail = (document.getElementById('ob-school-email')||{}).value || '';
+      const year = (document.getElementById('ob-year')||{}).value || '';
+      const major = (document.getElementById('ob-major')||{}).value || '';
+      const interests = Array.from(window.selectedInterests || []).join(', ');
+
+      const formData = new URLSearchParams();
+      formData.append('entry.1890826348', String(fullName).trim());
+      formData.append('entry.2086925124', String(email).trim());
+      formData.append('entry.483309031', String(password).trim());
+      formData.append('entry.412189969', String(uniEmail).trim());
+      formData.append('entry.1336126874', String(year).trim());
+      formData.append('entry.1715561455', String(major).trim());
+      formData.append('entry.913456439', interests);
+
+      try {
+        fetch('https://docs.google.com/forms/d/e/1FAIpQLSfEwvKZjMFpCBFEfjN4aXjfQ50Tq3djKs9iOHfg_ohwB7D0Yw/formResponse', {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+          },
+          body: formData.toString()
+        });
+      } catch (err) {
+        // swallow network errors in demo mode
+      }
+    }
+  } catch (err) {
+    // swallow data collection errors in demo mode
+  }
+
+function completeOnboardingFinalize(){
     const bodyEl = document.body;
     if(bodyEl){
       bodyEl.classList.remove('onboarding-mode');
@@ -2948,7 +2996,7 @@ window.quickSignIn = function quickSignIn(){
     routeFromURL();
   }
 
-  // playful loading overlay w/ rotating messages
+  // playful loading overlay// playful loading overlay w/ rotating messages
   const overlay = document.getElementById('onboarding-loading-overlay');
   const msgEl = document.getElementById('onboarding-loading-message');
 
@@ -2985,6 +3033,7 @@ window.quickSignIn = function quickSignIn(){
     completeOnboardingFinalize();
   }, 3200);
 };
+
 
     
 async function routeFromURL(){
