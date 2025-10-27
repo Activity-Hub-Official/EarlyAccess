@@ -2817,40 +2817,83 @@ async function updateDidYouMeanBar(q, scope){
     };
 
     window.finishOnboarding = function finishOnboarding(){
-      const bodyEl = document.body;
+  // helper to finalize and drop user into main app
+  function completeOnboardingFinalize(){
+    const bodyEl = document.body;
+    if(bodyEl){
       bodyEl.classList.remove('onboarding-mode');
       bodyEl.classList.add('has-bottom-bar');
+    }
 
-      // hide onboarding screens
+    // hide onboarding screens
+    if (typeof ONBOARDING_STEP_MAP !== 'undefined'){
       Object.values(ONBOARDING_STEP_MAP).forEach(id=>{
         const el = document.getElementById(id);
         if(el) el.classList.add('hidden');
       });
+    }
 
-      // show main directory / home
-      const homeView = document.getElementById('view-directory');
-      if(homeView) homeView.classList.remove('hidden');
+    // show main directory / home
+    const homeView = document.getElementById('view-directory');
+    if(homeView) homeView.classList.remove('hidden');
 
-      // force header & bottom nav visible immediately (no bounce-scroll)
-      const topBarEl = document.getElementById('appTopBar');
-      if(topBarEl){
-        topBarEl.classList.remove('hidden','opacity-0','-translate-y-full');
-        topBarEl.style.opacity = '';
-        topBarEl.style.transform = '';
-      }
-      const bottomBarEl = document.getElementById('bottom-bar');
-      if(bottomBarEl){
-        bottomBarEl.classList.remove('hidden');
-      }
+    // force header & bottom nav visible immediately (no bounce-scroll)
+    const topBarEl = document.getElementById('appTopBar');
+    if(topBarEl){
+      topBarEl.classList.remove('hidden','opacity-0','-translate-y-full');
+      topBarEl.style.opacity = '';
+      topBarEl.style.transform = '';
+    }
+    const bottomBarEl = document.getElementById('bottom-bar');
+    if(bottomBarEl){
+      bottomBarEl.classList.remove('hidden');
+    }
 
-      // scroll to top so header is in-frame
-      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    // scroll to top so header is in-frame
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
 
-      markOnboardingDone();
+    // mark onboarding as done + route normally
+    markOnboardingDone();
+    routeFromURL();
+  }
 
-      // jump into normal app
-      routeFromURL();
-    };
+  // playful loading overlay w/ rotating messages
+  const overlay = document.getElementById('onboarding-loading-overlay');
+  const msgEl = document.getElementById('onboarding-loading-message');
+
+  const LOADING_MESSAGES = [
+    "Personalizing clubs for you…",
+    "Finding events you’ll actually go to…",
+    "Asking student orgs nicely for their flyers…",
+    "Setting you up on campus ✦"
+  ];
+
+  if(!overlay || !msgEl){
+    // fallback: just finalize immediately
+    completeOnboardingFinalize();
+    return;
+  }
+
+  overlay.classList.remove('hidden');
+
+  let i = 0;
+  msgEl.textContent = LOADING_MESSAGES[i] || "";
+  i++;
+
+  const interval = setInterval(()=>{
+    if(i < LOADING_MESSAGES.length){
+      msgEl.textContent = LOADING_MESSAGES[i] || "";
+      i++;
+    }
+  }, 1200);
+
+  // after ~3.2s, hide overlay and finalize onboarding
+  setTimeout(()=>{
+    clearInterval(interval);
+    overlay.classList.add('hidden');
+    completeOnboardingFinalize();
+  }, 3200);
+};
 
     
 async function routeFromURL(){
@@ -4025,6 +4068,12 @@ document.addEventListener('DOMContentLoaded', function(){
 
 })();
 </script>
+
+<!-- Onboarding loading overlay -->
+<div id="onboarding-loading-overlay" class="hidden fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white text-gray-800">
+  <div class="w-12 h-12 mb-4 rounded-full border-4 border-ah-600 border-t-transparent animate-spin"></div>
+  <div id="onboarding-loading-message" class="text-sm text-gray-600 text-center px-8 leading-tight"></div>
+</div>
 
 </body>
 </html>
