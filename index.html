@@ -604,60 +604,120 @@ body.onboarding-mode {
       
       <!-- ====== ONBOARDING STEP 1 (Account Basics) ====== -->
       <div id="view-onboarding-account" class="hidden min-h-screen bg-white flex flex-col">
-        <div class="p-6 flex-1 flex flex-col" data-onboarding-scroll="true">
-          <div class="text-center mb-8">
-            <div class="mx-auto w-12 h-12 rounded-xl bg-ah-600 text-white flex items-center justify-center text-xl font-semibold shadow">
-              AH
-            </div>
-            <h1 class="mt-4 text-2xl font-semibold text-gray-900">Create your account</h1>
-            <p class="text-sm text-gray-500">We’ll set up your profile so you can join orgs and RSVP faster.</p>
-          </div>
+  <div class="p-6 flex-1 flex flex-col" data-onboarding-scroll="true">
+    <div class="text-center mb-8">
+      <div class="mx-auto w-12 h-12 rounded-xl bg-ah-600 text-white flex items-center justify-center text-xl font-semibold shadow">
+        AH
+      </div>
+      <h1 class="mt-4 text-2xl font-semibold text-gray-900">Welcome</h1>
+      <p class="text-sm text-gray-500">Sign up or sign in to continue.</p>
+    </div>
 
-          <form class="space-y-4 max-w-sm w-full mx-auto">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Full name</label>
-              <input
-                id="ob-fullname"
-                type="text"
-                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
-                placeholder="Your name"
-              />
-            </div>
+    <div class="max-w-sm w-full mx-auto mb-4 flex items-center justify-center gap-2 text-sm font-medium">
+      <button
+        id="auth-tab-signup"
+        type="button"
+        class="px-3 py-1.5 rounded-lg bg-gray-900 text-white border border-gray-900"
+        onclick="showAuthMode('signup')"
+      >
+        Sign up
+      </button>
+      <button
+        id="auth-tab-signin"
+        type="button"
+        class="px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 border border-gray-300"
+        onclick="showAuthMode('signin')"
+      >
+        Sign in
+      </button>
+    </div>
 
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-              <input
-                id="ob-email"
-                type="email"
-                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
-                placeholder="you@example.com"
-              />
-            </div>
-
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-              <input
-                id="ob-password"
-                type="password"
-                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
-                placeholder="••••••••"
-              />
-              <p class="text-[12px] text-gray-400 mt-1">No worries, this is just a demo ✌️</p>
-            </div>
-
-            <button
-              type="button"
-              class="w-full mt-6 bg-ah-600 text-white rounded-lg font-medium shadow hover:bg-ah-700 active:bg-ah-800 transition active:scale-[.99]"
-              onclick="nextOnboardingStep('school')"
-            >
-              Continue
-            </button>
-          </form>
-
-          <div class="text-center text-[12px] text-gray-400 mt-6 max-w-sm mx-auto">
-            By continuing you agree to nothing, because this is just a demo ✌️
-          </div>
+    <!-- SIGN UP FORM -->
+    <div id="signup-form" class="max-w-sm w-full mx-auto">
+      <form class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Full name</label>
+          <input
+            id="ob-fullname"
+            type="text"
+            class="w-full rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
+            placeholder="Your name"
+          />
         </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+          <input
+            id="ob-email"
+            type="email"
+            class="w-full rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
+            placeholder="you@example.com"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+          <input
+            id="ob-password"
+            type="password"
+            class="w-full rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
+            placeholder="••••••••"
+          />
+          <p class="text-[12px] text-gray-400 mt-1">No worries, this is just a demo ✌️</p>
+        </div>
+
+        <button
+          type="button"
+          class="w-full mt-6 bg-ah-600 text-white rounded-lg hover:bg-ah-700 active:bg-ah-800 transition active:scale-[.99]"
+          onclick="nextOnboardingStep('school')"
+        >
+          Continue
+        </button>
+      </form>
+    </div>
+
+    <!-- SIGN IN FORM -->
+    <div id="signin-form" class="hidden max-w-sm w-full mx-auto">
+      <form class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+          <input
+            id="login-email"
+            type="email"
+            class="w-full rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
+            placeholder="you@example.com"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+          <input
+            id="login-password"
+            type="password"
+            class="w-full rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
+            placeholder="••••••••"
+          />
+        </div>
+
+        <button
+          type="button"
+          class="w-full mt-6 bg-ah-600 text-white rounded-lg hover:bg-ah-700 active:bg-ah-800 transition active:scale-[.99]"
+          onclick="quickSignIn()"
+        >
+          Continue
+        </button>
+      </form>
+
+      <div class="text-[12px] text-gray-400 text-center mt-3">
+        We’ll drop you right into the app after a quick setup ✦
+      </div>
+    </div>
+
+    <div class="text-center text-[12px] text-gray-400 mt-6 max-w-sm mx-auto">
+      By continuing you agree to nothing, because this is just a demo ✌️
+    </div>
+  </div>
+</div>
       </div>
 
       <!-- ====== ONBOARDING STEP 2 (School Email) ====== -->
@@ -2817,6 +2877,36 @@ async function updateDidYouMeanBar(q, scope){
       showOnboardingStepInternal('account');
     };
 
+window.showAuthMode = function(mode){
+  const signupForm = document.getElementById('signup-form');
+  const signinForm = document.getElementById('signin-form');
+  const tabSignup = document.getElementById('auth-tab-signup');
+  const tabSignin = document.getElementById('auth-tab-signin');
+
+  if(!signupForm || !signinForm || !tabSignup || !tabSignin) return;
+
+  if(mode === 'signin'){
+    signupForm.classList.add('hidden');
+    signinForm.classList.remove('hidden');
+    tabSignup.className = "px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 border border-gray-300";
+    tabSignin.className = "px-3 py-1.5 rounded-lg bg-gray-900 text-white border border-gray-900";
+  } else {
+    // default signup
+    signupForm.classList.remove('hidden');
+    signinForm.classList.add('hidden');
+    tabSignup.className = "px-3 py-1.5 rounded-lg bg-gray-900 text-white border border-gray-900";
+    tabSignin.className = "px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 border border-gray-300";
+  }
+};
+
+// fast path for existing accounts: skip the rest of onboarding
+window.quickSignIn = function quickSignIn(){
+  // reuse the same animated finalize flow
+  finishOnboarding();
+};
+
+
+
     window.finishOnboarding = function finishOnboarding(){
   // helper to finalize and drop user into main app
   function completeOnboardingFinalize(){
@@ -4083,7 +4173,9 @@ document.addEventListener('DOMContentLoaded', function(){
     </div>
     <div id="onboarding-loading-message" class="text-sm text-white/90 text-center px-8 leading-tight"></div>
   </div>
-</div>>
+</div>
+  <div id="onboarding-loading-message" class="text-sm text-gray-600 text-center px-8 leading-tight"></div>
+</div>
 
 </body>
 </html>
