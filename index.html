@@ -2698,13 +2698,14 @@ async function updateDidYouMeanBar(q, scope){
       'ring-offset-2 ring-ah-500 focus:outline-none',
     ].join(' ');
 
+    // NOTE: no backslashes before ${...} so template interpolation works
     btn.innerHTML = `
-      <div class="w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold \${item.colorClass}">
-        <i class="fa-solid \${item.icon}"></i>
+      <div class="w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold ${item.colorClass}">
+        <i class="fa-solid ${item.icon}"></i>
       </div>
       <div class="text-center text-ah-900">
-        <div class="font-medium text-[15px] leading-tight">\${item.label}</div>
-        <div class="text-xs text-ah-600 leading-tight">\${item.desc}</div>
+        <div class="font-medium text-[15px] leading-tight">${item.label}</div>
+        <div class="text-xs text-ah-600 leading-tight">${item.desc}</div>
       </div>
     `;
 
