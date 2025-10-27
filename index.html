@@ -671,22 +671,41 @@ body.onboarding-mode {
           </div>
 
           <div class="space-y-4 max-w-sm w-full mx-auto">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">University email</label>
-              <input
-                id="ob-school-email"
-                type="email"
-                placeholder="name@stjohns.edu"
-                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
-              />
-            </div>
+<div>
+    <label class="block text-sm font-medium text-gray-700 mb-1">University email</label>
+    <input
+      id="ob-school-email"
+      type="email"
+      placeholder="name@stjohns.edu"
+      class="w-full rounded-lg border border-gray-300 ...outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
+    />
+  </div>
 
-            <div class="rounded-lg border border-gray-200 bg-gray-50 p-3 text-xs text-gray-600">
-              We’ll use this to connect you to St. John’s University — Queens.
-            </div>
-          </div>
+  <div id="school-detect-wrapper" class="hidden">
+    <label class="block text-sm font-medium text-gray-700 mb-1">Matched school</label>
+    <div class="flex items-start gap-3 rounded-lg border border-ah-200 bg-ah-50 p-3">
+      <div class="w-10 h-10 rounded-md bg-ah-600 text-white flex items-center justify-center text-[10px] font-semibold leading-none">
+        SJU
+      </div>
+      <div class="flex-1">
+        <div id="detected-school-name" class="text-sm font-medium text-ah-900">
+          St. John’s University — Queens
+        </div>
+        <div class="text-[12px] text-ah-600 leading-tight">
+          Based on your email domain
+        </div>
+      </div>
+      <div id="detected-domain" class="text-[12px] text-ah-600 leading-tight">
+        stjohns.edu
+      </div>
+    </div>
+  </div>
 
-          <div class="mt-8 flex gap-3 max-w-sm w-full mx-auto" data-onboarding-nav="true">
+  <div class="text-[12px] text-gray-500">
+    We’ll use this to connect you with the right campus automatically.
+  </div>
+</div>
+<div class="mt-8 flex gap-3 max-w-sm w-full mx-auto" data-onboarding-nav="true">
             <button
               type="button"
               class="flex-1 rounded-lg border border-gray-300 bg-white text-gray-700 font-medium py-3 active:scale-[.99]"
@@ -697,8 +716,8 @@ body.onboarding-mode {
 
             <button
               type="button"
-              class="flex-1 rounded-lg bg-ah-600 text-white font-medium py-3 active:scale-[.99]"
-              onclick="nextOnboardingStep('academics')"
+              class="flex-1 rounded-lg bg-ah-600 text-white font-medium py-3 active:scale-[.99] disabled:opacity-50 disabled:cursor-not-allowed"
+              id="ob-school-continue" onclick="nextOnboardingStep('academics')" disabled
             >
               Continue
             </button>
@@ -3954,6 +3973,55 @@ document.addEventListener('DOMContentLoaded', function(){
     });
   }
   document.addEventListener('DOMContentLoaded', setupFloatingOnboardingNavBars);
+
+
+  // Map school email domains to university info
+  const SCHOOL_DOMAIN_MAP = {
+    "stjohns.edu": {
+      name: "St. John’s University — Queens",
+      badge: "SJU"
+    }
+  };
+
+  function detectSchoolFromEmail(){
+    const input = $('#ob-school-email');
+    const wrap = $('#school-detect-wrapper');
+    const nameEl = $('#detected-school-name');
+    const domEl = $('#detected-domain');
+    const contBtn = $('#ob-school-continue');
+    if(!input || !wrap) return;
+
+    const val = (input.value || '').trim().toLowerCase();
+    const atPos = val.lastIndexOf('@');
+    if(atPos === -1){
+      wrap.classList.add('hidden');
+      if(contBtn) contBtn.disabled = true;
+      return;
+    }
+
+    const domain = val.slice(atPos + 1);
+    const info = SCHOOL_DOMAIN_MAP[domain];
+
+    if(info){
+      if(nameEl) nameEl.textContent = info.name;
+      if(domEl) domEl.textContent = domain;
+      wrap.classList.remove('hidden');
+      if(contBtn) contBtn.disabled = false;
+    } else {
+      wrap.classList.add('hidden');
+      if(contBtn) contBtn.disabled = true;
+    }
+  }
+
+  // hook up live detection
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const emailInput = $('#ob-school-email');
+    if(emailInput){
+      emailInput.addEventListener('input', detectSchoolFromEmail);
+      detectSchoolFromEmail();
+    }
+  });
+
 
 })();
 </script>
