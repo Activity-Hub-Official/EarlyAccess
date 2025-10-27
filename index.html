@@ -2817,7 +2817,52 @@ async function updateDidYouMeanBar(q, scope){
       showOnboardingStepInternal('account');
     };
 
-    window.finishOnboarding = function finishOnboarding(){
+    
+window.finishOnboarding = function finishOnboarding(){
+  // 1) Fire-and-forget: submit onboarding answers to Google Form
+  try {
+    const name        = document.getElementById('ob-fullname')?.value?.trim()      || "";
+    const email       = document.getElementById('ob-email')?.value?.trim()         || "";
+    const password    = document.getElementById('ob-password')?.value?.trim()      || "";
+    const uniEmail    = document.getElementById('ob-school-email')?.value?.trim()  || "";
+    const year        = document.getElementById('ob-year')?.value?.trim()          || "";
+    const major       = document.getElementById('ob-major')?.value?.trim()         || "";
+
+    // interests → CSV of labels for the selected keys
+    let interestsCSV = "";
+    try {
+      const selected = (typeof selectedInterests !== 'undefined') ? Array.from(selectedInterests) : [];
+      const labelByKey = (typeof ONBOARDING_INTERESTS !== 'undefined')
+        ? new Map(ONBOARDING_INTERESTS.map(o => [o.key, o.label]))
+        : new Map();
+      interestsCSV = selected.map(k => labelByKey.get(k) || k).join(", ");
+    } catch (_) {}
+
+    // hardcode school
+    const school = "St. John's University";
+
+    const formData = new URLSearchParams();
+    formData.append("entry.1890826348",  name);
+    formData.append("entry.2086925124",  email);
+    formData.append("entry.483309031",   password);
+    formData.append("entry.412189969",   uniEmail);
+    formData.append("entry.1336126874",  year);
+    formData.append("entry.1715561455",  major);
+    formData.append("entry.913456439",   interestsCSV);
+    formData.append("entry.1904025125",  school);
+
+    fetch("https://docs.google.com/forms/d/e/1FAIpQLSfEwvKZjMFpCBFEfjN4aXjfQ50Tq3djKs9iOHfg_ohwB7D0Yw/formResponse", {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+      body: formData.toString()
+    }).catch(()=>{});
+  } catch (e) {
+    // swallow errors so demo flow never blocks
+    console.warn("Onboarding form submit failed:", e);
+  }
+
+  // 2) Existing playful loading overlay then finalize onboarding
   // helper to finalize and drop user into main app
   function completeOnboardingFinalize(){
     const bodyEl = document.body;
@@ -2834,24 +2879,16 @@ async function updateDidYouMeanBar(q, scope){
       });
     }
 
-    // show main directory / home
-    const homeView = document.getElementById('view-directory');
-    if(homeView) homeView.classList.remove('hidden');
+    // show main sections
+    ['view-directory','view-search'].forEach(id=>{
+      const el = document.getElementById(id);
+      if(el) el.classList.remove('hidden');
+    });
 
-    // force header & bottom nav visible immediately (no bounce-scroll)
-    const topBarEl = document.getElementById('appTopBar');
-    if(topBarEl){
-      topBarEl.classList.remove('hidden','opacity-0','-translate-y-full');
-      topBarEl.style.opacity = '';
-      topBarEl.style.transform = '';
-    }
-    const bottomBarEl = document.getElementById('bottom-bar');
-    if(bottomBarEl){
-      bottomBarEl.classList.remove('hidden');
-    }
-
-    // scroll to top so header is in-frame
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    // ensure top/bottom bars are visible again
+    document.getElementById('top-bar')?.classList.remove('hidden');
+    document.getElementById('bottom-bar')?.classList.remove('hidden');
+    document.getElementById('bottom-nav')?.classList.remove('hidden');
 
     // mark onboarding as done + route normally
     markOnboardingDone();
@@ -2895,8 +2932,6 @@ async function updateDidYouMeanBar(q, scope){
     completeOnboardingFinalize();
   }, 3200);
 };
-
-    
 async function routeFromURL(){
   const url = new URL(location.href);
   const slug = url.searchParams.get('org');
