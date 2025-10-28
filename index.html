@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -517,91 +518,154 @@ body.onboarding-mode {
     <main class="flex-1 min-h-screen min-w-0">
       <!-- Top bar -->
       <div id="appTopBar" class="sticky top-0 z-30 bg-white/80 topbar border-b border-gray-200">
-        <div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 h-14 flex items-center gap-3">
-          <div class="flex items-center gap-3">
-            <button id="open-sidebar-btn" class="p-2 rounded-md hover:bg-gray-100 lg:hidden" aria-label="Open sidebar"><i class="fa-solid fa-bars text-[20px]"></i></button>
-            <div class="w-8 h-8 grid place-items-center rounded-lg ah-grad text-white font-bold lg:hidden"><img src="https://i.imgur.com/7dO0mhL.png" alt="Activity Hub" class="w-6 h-6 object-contain pointer-events-none" loading="lazy"/ class="w-full h-full object-cover pointer-events-none" loading="lazy"></div>
-            <div id="nav-current-view" class="hidden lg:flex items-center gap-2 text-lg font-semibold text-ah-900"><i id="nav-current-icon" class="fa-solid fa-house text-[18px] text-ah-600"></i> <span id="nav-current-label">Home</span></div>
-          </div>
+  <!-- Desktop / tablet header row -->
+  <div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 h-14 flex items-center gap-3">
 
-          <!-- SEARCH + MENU (desktop) -->
-          <div class="flex-1 mx-2 hidden md:flex justify-start min-w-0">
-            <div class="relative w-full max-w-lg" id="searchbox" role="combobox" aria-haspopup="listbox" aria-owns="search-menu" aria-expanded="false">
-              <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[14px]"></i>
+    <!-- LEFT: menu button + logo + current view -->
+    <div class="flex items-center gap-3">
+      <!-- sidebar toggle (mobile / md) -->
+      <button id="open-sidebar-btn" class="p-2 rounded-md border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 hover:text-gray-900 md:hidden" aria-label="Open sidebar">
+        <i class="fa-solid fa-bars text-[20px]"></i>
+      </button>
 
-              <!-- SCOPE PILL (in-input) -->
-              <span id="scope-pill" class="hidden absolute left-8 top-1/2 -translate-y-1/2"></span>
+      <!-- App icon / logo -->
+      <div class="w-8 h-8 grid place-items-center rounded-xl bg-gradient-to-br from-blue-600 to-blue-400 text-white text-[14px] font-semibold shadow-sm select-none pointer-events-none">
+        AH
+      </div>
 
-              <input id="global-search" type="search" aria-autocomplete="list" aria-controls="search-menu"
-                     class="w-full rounded-full bg-gray-50 border border-gray-200 pl-10 pr-24 py-2.5 text-sm placeholder-gray-400 shadow-sm focus:border-ah-600 focus:ring-2 focus:ring-ah-500/20 outline-none transition search-soft"
-                     placeholder="Search clubs, businesses, projects…" />
-              <button id="clear-search" class="hidden absolute right-9 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" aria-label="Clear"><i class="fa-solid fa-xmark"></i></button>
-              <span class="pointer-events-none flex items-center justify-start absolute right-3 top-1/2 -translate-y-1/2 select-none rounded-md border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] tracking-wider text-gray-500 shadow-sm">/</span>
+      <!-- Current view label (desktop only) -->
+      <div id="nav-current-view" class="hidden lg:flex items-center gap-2 text-lg font-semibold text-gray-800 whitespace-nowrap">
+        <i class="fa-solid fa-house text-ah-600"></i>
+        <span id="nav-current-label">Home</span>
+      </div>
+    </div>
 
-              <!-- Dropdown menu -->
-              <div id="search-menu" class="search-menu hidden">
-                <div class="rounded-xl border border-gray-200 bg-white shadow-2xl overflow-hidden">
-                  <div class="flex items-center gap-1 p-2 border-b border-gray-100">
-                    <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="all">All</button>
-                    <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50" data-scope="orgs"><i class="fa-solid fa-users mr-1.5"></i> Orgs</button>
-                    <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50" data-scope="businesses"><i class="fa-solid fa-briefcase mr-1.5"></i> Businesses</button>
-                    <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50" data-scope="projects"><i class="fa-solid fa-diagram-project mr-1.5"></i> Projects</button>
-                    <div class="ml-auto text-[11px] text-gray-500 pr-2">↑/↓ to navigate • Enter to open</div>
-                  </div>
-                  <div id="search-results" role="listbox" class="max-h-[60vh] overflow-auto py-2"></div>
-                  <div id="search-footer" class="flex items-center justify-between px-3 py-2 border-t border-gray-100 text-xs text-gray-500">
-                    <div>Press <span class="search-badge">Esc</span> to close • <span class="search-badge">Enter</span> to open</div>
-                    <button id="search-clear-recents" class="text-gray-500 hover:text-gray-700 hidden">Clear recent</button>
-                  </div>
-                </div>
-              </div>
+    <!-- MIDDLE: global search (desktop only) -->
+    <div class="flex-1 mx-2 hidden md:flex justify-start min-w-0">
+      <div
+        class="relative w-full max-w-lg"
+        id="searchbox"
+        role="combobox"
+        aria-haspopup="listbox"
+        aria-owns="search-menu"
+        aria-expanded="false"
+      >
+        <!-- magnifying glass icon -->
+        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[14px]"></i>
+
+        <!-- dynamic scope pill -->
+        <span id="scope-pill" class="hidden absolute left-8 top-1/2 -translate-y-1/2"></span>
+
+        <!-- search input -->
+        <input
+          id="global-search"
+          type="search"
+          aria-autocomplete="list"
+          aria-controls="search-menu"
+          class="w-full rounded-full bg-gray-50 border border-gray-300 pl-8 pr-10 py-1.5 text-[13px] text-gray-900 placeholder-gray-400 focus:bg-white focus:border-ah-500 focus:ring-2 focus:ring-ah-500/20 outline-none transition search-soft"
+          placeholder="Search clubs, businesses, projects…"
+        />
+
+        <!-- clear search button -->
+        <button
+          id="clear-search"
+          class="hidden absolute right-8 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-[12px]"
+          aria-label="Clear"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <!-- keyboard hint "/" -->
+        <span class="pointer-events-none flex items-center justify-center absolute right-2 top-1/2 -translate-y-1/2 h-5 min-w-[20px] rounded border border-gray-300 bg-white px-1 text-[10px] font-medium leading-none tracking-wider text-gray-500 shadow-sm">/</span>
+
+        <!-- dropdown menu -->
+        <div id="search-menu" class="search-menu hidden">
+          <div class="rounded-xl border border-gray-200 bg-white shadow-2xl overflow-hidden">
+            <!-- scope tabs -->
+            <div class="flex items-center gap-1 p-2 border-b border-gray-100">
+              <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="all">All</button>
+              <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="orgs"><i class="fa-solid fa-users mr-1.5"></i> Orgs</button>
+              <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="biz"><i class="fa-solid fa-briefcase mr-1.5"></i> Businesses</button>
+              <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="projects"><i class="fa-solid fa-diagram-project mr-1.5"></i> Projects</button>
+
+              <div class="ml-auto text-[11px] text-gray-500 pr-2">↑/↓ to navigate • Enter to open</div>
             </div>
-          </div>
 
-          <!-- Right controls -->
-          <div class="ml-auto flex items-center gap-2">
-            <button id="mobile-search-btn" class="p-2 rounded-md hover:bg-gray-100 md:hidden" aria-label="Search"><i class="fa-solid fa-magnifying-glass text-[18px]"></i></button>
-            <button class="relative p-2 rounded-md hover:bg-gray-100" aria-label="Notifications"><i class="fa-regular fa-bell text-[20px]"></i><span class="absolute -top-0.5 -right-0.5 text-[10px] bg-red-500 text-white rounded-full w-4 h-4 grid place-items-center">3</span></button>
-            <div class="w-8 h-8 rounded-full bg-gray-200 grid place-items-center text-xs font-semibold">SK</div>
-          </div>
-        </div>
+            <!-- populated by JS -->
+            <div id="search-results" role="listbox" class="max-h-[60vh] overflow-auto py-2"></div>
 
-        <!-- Mobile inline search + full menu -->
-        <div id="mobile-search" class="md:hidden hidden border-t border-gray-200 bg-white">
-          <div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-2">
-            <div id="m-searchbox" class="relative" role="combobox" aria-haspopup="listbox" aria-owns="m-search-menu" aria-expanded="false">
-              <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[14px]"></i>
-              <!-- mobile scope pill -->
-              <span id="m-scope-pill" class="hidden absolute left-8 top-1/2 -translate-y-1/2"></span>
-
-              <input id="mobile-global-search" type="search"
-                     class="w-full rounded-full bg-gray-50 border border-gray-200 pl-10 pr-10 py-2.5 text-sm placeholder-gray-400 shadow-sm focus:border-ah-600 focus:ring-2 focus:ring-ah-500/20 outline-none transition search-soft"
-                     placeholder="Search clubs, businesses, projects…" />
-
-              <!-- Mobile dropdown (same structure) -->
-              <div id="m-search-menu" class="search-menu hidden">
-                <div class="rounded-xl border border-gray-200 bg-white shadow-2xl overflow-hidden">
-                  <div class="flex items-center gap-1 p-2 border-b border-gray-100">
-                    <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="all">All</button>
-                    <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50" data-scope="orgs"><i class="fa-solid fa-users mr-1.5"></i> Orgs</button>
-                    <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50" data-scope="businesses"><i class="fa-solid fa-briefcase mr-1.5"></i> Businesses</button>
-                    <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50" data-scope="projects"><i class="fa-solid fa-diagram-project mr-1.5"></i> Projects</button>
-                    <div class="ml-auto text-[11px] text-gray-500 pr-2">Tap a result • Enter to open</div>
-                  </div>
-                  <div id="m-search-results" role="listbox" class="max-h-[70vh] overflow-auto py-2"></div>
-                  <div id="m-search-footer" class="flex items-center justify-between px-3 py-2 border-t border-gray-100 text-xs text-gray-500">
-                    <div>Tap outside to close</div>
-                    <button id="m-search-clear-recents" class="text-gray-500 hover:text-gray-700 hidden">Clear recent</button>
-                  </div>
-                </div>
+            <!-- footer -->
+            <div id="search-footer" class="flex items-center justify-between px-3 py-2 border-t border-gray-100 text-xs text-gray-500">
+              <div>
+                Press <span class="search-badge">Esc</span> to close •
+                <span class="search-badge">Enter</span> to open
               </div>
+              <button id="search-clear-recents" class="text-gray-500 hover:text-gray-700 hidden">Clear recent</button>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
-      
-      
+    <!-- RIGHT: login CTA -->
+    <div class="ml-auto flex items-center gap-3">
+      <button
+        id="loginBtn"
+        class="h-9 px-3 flex items-center justify-center rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-neutral-900 transition"
+      >
+        Log in
+      </button>
+    </div>
+
+  </div> <!-- end header row -->
+
+  <!-- Mobile inline search + full menu -->
+  <div id="mobile-search" class="md:hidden hidden border-t border-gray-200 bg-white">
+    <div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-2">
+      <div
+        id="m-searchbox"
+        class="relative"
+        role="combobox"
+        aria-haspopup="listbox"
+        aria-owns="m-search-menu"
+        aria-expanded="false"
+      >
+        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[14px]"></i>
+
+        <!-- mobile scope pill -->
+        <span id="m-scope-pill" class="hidden absolute left-8 top-1/2 -translate-y-1/2"></span>
+
+        <input
+          id="mobile-global-search"
+          type="search"
+          class="w-full rounded-full bg-gray-50 border border-gray-300 pl-8 pr-3 py-2 text-[14px] text-gray-900 placeholder-gray-400 focus:bg-white focus:border-ah-500 focus:ring-2 focus:ring-ah-500/20 outline-none transition search-soft"
+          placeholder="Search clubs, businesses, projects…"
+        />
+
+        <!-- Mobile dropdown (same structure) -->
+        <div id="m-search-menu" class="search-menu hidden">
+          <div class="rounded-xl border border-gray-200 bg-white shadow-2xl overflow-hidden">
+            <div class="flex items-center gap-1 p-2 border-b border-gray-100">
+              <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="all">All</button>
+              <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="orgs"><i class="fa-solid fa-users mr-1.5"></i> Orgs</button>
+              <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="biz"><i class="fa-solid fa-briefcase mr-1.5"></i> Businesses</button>
+              <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="projects"><i class="fa-solid fa-diagram-project mr-1.5"></i> Projects</button>
+              <div class="ml-auto text-[11px] text-gray-500 pr-2">Tap a result • Enter to open</div>
+            </div>
+
+            <div id="m-search-results" role="listbox" class="max-h-[70vh] overflow-auto py-2"></div>
+
+            <div id="m-search-footer" class="flex items-center justify-between px-3 py-2 border-t border-gray-100 text-xs text-gray-500">
+              <div>Tap outside to close</div>
+              <button id="m-search-clear-recents" class="text-gray-500 hover:text-gray-700 hidden">Clear recent</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
       <!-- ====== ONBOARDING STEP 1 (Account Basics) ====== -->
       <div id="view-onboarding-account" class="hidden min-h-screen bg-white flex flex-col">
         <div class="p-6 flex-1 flex flex-col" data-onboarding-scroll="true">
