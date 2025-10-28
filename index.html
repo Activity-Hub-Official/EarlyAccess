@@ -4,7 +4,7 @@
 <head>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <title>Activity Hub – Explore (v25)</title>
 
   <!-- App & site icons -->
@@ -612,139 +612,30 @@ body.onboarding-mode {
       </div>
     </div>
 
-    <!-- RIGHT: profile / create / login -->
-<div class="ml-auto flex items-center gap-2">
+    <!-- RIGHT: mobile search trigger + login CTA -->
+    <div class="ml-auto flex items-center gap-2">
+      <!-- mobile / small-screen search button -->
+      <button
+        id="mobile-search-btn"
+        class="md:hidden h-9 w-9 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 active:bg-gray-100 shadow-sm"
+        aria-label="Search"
+      >
+        <i class="fa-solid fa-magnifying-glass text-[18px]"></i>
+      </button>
 
-  <!-- MOBILE avatar (visible < md) -->
-  <button
-    id="mobileProfileBtn"
-    class="md:hidden h-9 w-9 grid place-items-center rounded-full border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 active:bg-gray-100 shadow-sm"
-    aria-label="Profile"
-  >
-    <i class="fa-regular fa-user text-[18px]"></i>
-  </button>
-
-  <!-- DESKTOP actions (hidden < md) -->
-  <div class="hidden md:flex items-center gap-2 relative">
-
-    <!-- CREATE button -->
-    <button
-      id="createMenuButton"
-      class="h-9 px-3 flex items-center gap-1 rounded-lg border border-gray-300 bg-white text-sm font-medium text-gray-800 hover:bg-gray-50 active:bg-gray-100 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-white transition"
-      aria-haspopup="menu"
-      aria-expanded="false"
-      aria-controls="createMenu"
-    >
-      <i class="fa-solid fa-plus text-[14px]"></i>
-      <span>Create</span>
-      <i class="fa-solid fa-chevron-down text-[12px] text-gray-500"></i>
-    </button>
-
-    <!-- DROPDOWN MENU -->
-    <div
-      id="createMenu"
-      class="absolute right-0 top-[110%] z-40 w-56 rounded-xl border border-gray-200 bg-white shadow-xl ring-1 ring-black/5 hidden"
-      role="menu"
-      aria-labelledby="createMenuButton"
-    >
-      <div class="py-2 text-sm text-gray-800">
-
-        <!-- Org Page -->
-        <button
-          class="w-full flex items-start gap-2 px-3 py-2 hover:bg-gray-50 text-left focus:bg-gray-50 focus:outline-none"
-          role="menuitem"
-          data-action="create-org"
-        >
-          <div class="h-9 w-9 flex items-center justify-center rounded-md bg-blue-50 text-blue-600 border border-blue-100 text-[14px]">
-            <i class="fa-solid fa-users"></i>
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="font-medium leading-5 text-gray-900">
-              Organization Page
-            </div>
-            <div class="text-[12px] leading-4 text-gray-500">
-              Clubs, orgs, campus groups
-            </div>
-          </div>
-        </button>
-
-        <!-- Business Page -->
-        <button
-          class="w-full flex items-start gap-2 px-3 py-2 hover:bg-gray-50 text-left focus:bg-gray-50 focus:outline-none"
-          role="menuitem"
-          data-action="create-business"
-        >
-          <div class="h-9 w-9 flex items-center justify-center rounded-md bg-emerald-50 text-emerald-600 border border-emerald-100 text-[14px]">
-            <i class="fa-solid fa-store"></i>
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="font-medium leading-5 text-gray-900">
-              Business Page
-            </div>
-            <div class="text-[12px] leading-4 text-gray-500">
-              Student-run brands & services
-            </div>
-          </div>
-        </button>
-
-        <!-- Project Page -->
-        <button
-          class="w-full flex items-start gap-2 px-3 py-2 hover:bg-gray-50 text-left focus:bg-gray-50 focus:outline-none"
-          role="menuitem"
-          data-action="create-project"
-        >
-          <div class="h-9 w-9 flex items-center justify-center rounded-md bg-purple-50 text-purple-600 border border-purple-100 text-[14px]">
-            <i class="fa-solid fa-lightbulb"></i>
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="font-medium leading-5 text-gray-900">
-              Project Page
-            </div>
-            <div class="text-[12px] leading-4 text-gray-500">
-              Side projects, research, startups
-            </div>
-          </div>
-        </button>
-
-        <div class="my-2 h-px bg-gray-200"></div>
-
-        <!-- Event -->
-        <button
-          class="w-full flex items-start gap-2 px-3 py-2 hover:bg-gray-50 text-left focus:bg-gray-50 focus:outline-none"
-          role="menuitem"
-          data-action="create-event"
-        >
-          <div class="h-9 w-9 flex items-center justify-center rounded-md bg-rose-50 text-rose-600 border border-rose-100 text-[14px]">
-            <i class="fa-solid fa-calendar-plus"></i>
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="font-medium leading-5 text-gray-900">
-              Event
-            </div>
-            <div class="text-[12px] leading-4 text-gray-500">
-              One-time meetup, workshop, etc.
-            </div>
-          </div>
-        </button>
-
-      </div>
+      <!-- login button (all breakpoints) -->
+      <button
+        id="loginBtn"
+        class="h-9 px-3 flex items-center justify-center rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-neutral-900 transition"
+      >
+        Log in
+      </button>
     </div>
-
-    <!-- LOGIN button -->
-    <button
-      id="loginBtn"
-      class="h-9 px-3 flex items-center justify-center rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-white transition"
-    >
-      Log in
-    </button>
-
-  </div>
-</div>
 
   </div> <!-- end header row -->
 
   <!-- Mobile inline search + full menu -->
-  <div id="mobile-search" class="md:border-t border-gray-200 bg-white">
+  <div id="mobile-search" class="md:hidden hidden border-t border-gray-200 bg-white">
     <div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-2">
       <div
         id="m-searchbox"
@@ -4293,60 +4184,6 @@ document.addEventListener('DOMContentLoaded', function(){
 })();
 </script>
 
-<script>
-(function(){
-  const btn = document.getElementById("createMenuButton");
-  const menu = document.getElementById("createMenu");
-  if(!btn || !menu) return;
-
-  function closeMenu(){
-    if(menu.classList.contains("hidden")) return;
-    menu.classList.add("hidden");
-    btn.setAttribute("aria-expanded","false");
-  }
-
-  function openMenu(){
-    if(!menu.classList.contains("hidden")) return;
-    menu.classList.remove("hidden");
-    btn.setAttribute("aria-expanded","true");
-  }
-
-  btn.addEventListener("click", (e)=>{
-    e.stopPropagation();
-    if(menu.classList.contains("hidden")) openMenu();
-    else closeMenu();
-  });
-
-  document.addEventListener("click",(e)=>{
-    if(menu.classList.contains("hidden")) return;
-    if(!menu.contains(e.target) && !btn.contains(e.target)){
-      closeMenu();
-    }
-  });
-
-  menu.querySelectorAll("[data-action]").forEach(item=>{
-    item.addEventListener("click",(e)=>{
-      const action = e.currentTarget.getAttribute("data-action");
-      closeMenu();
-      switch(action){
-        case "create-org":
-          console.log("Create Organization Page");
-          break;
-        case "create-business":
-          console.log("Create Business Page");
-          break;
-        case "create-project":
-          console.log("Create Project Page");
-          break;
-        case "create-event":
-          console.log("Create Event");
-          break;
-      }
-    });
-  });
-})();
-</script>
-
 <!-- Onboarding loading overlay -->
 <div id="onboarding-loading-overlay" class="hidden fixed inset-0 z-[9999] text-white">
   <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 via-fuchsia-500 to-pink-500"></div>
@@ -4360,7 +4197,7 @@ document.addEventListener('DOMContentLoaded', function(){
     </div>
     <div id="onboarding-loading-message" class="text-sm text-white/90 text-center px-8 leading-tight"></div>
   </div>
-</div>
+</div>>
 
 </body>
 </html>
