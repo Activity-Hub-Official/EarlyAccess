@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -517,18 +516,23 @@ body.onboarding-mode {
     <!-- ====== MAIN ====== -->
     <main class="flex-1 min-h-screen min-w-0">
       <!-- Top bar -->
-      <div id="appTopBar" class="sticky top-0 z-30 bg-white/80 topbar border-b border-gray-200">
-  <!-- Desktop / tablet header row -->
+      
+<div id="appTopBar" class="sticky top-0 z-30 bg-white/80 topbar border-b border-gray-200">
+  <!-- Header row -->
   <div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 h-14 flex items-center gap-3">
 
-    <!-- LEFT: menu button + app logo (mobile) + current view (desktop) -->
-    <div class="flex items-center gap-3">
-      <!-- sidebar toggle (mobile / md) -->
-      <button id="open-sidebar-btn" class="p-2 rounded-md border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 hover:text-gray-900 md:hidden" aria-label="Open sidebar">
+    <!-- LEFT cluster -->
+    <div class="flex items-center gap-3 shrink-0">
+      <!-- Sidebar toggle (mobile only) -->
+      <button
+        id="open-sidebar-btn"
+        class="p-2 rounded-md border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 hover:text-gray-900 md:hidden"
+        aria-label="Open sidebar"
+      >
         <i class="fa-solid fa-bars text-[20px]"></i>
       </button>
 
-      <!-- Brand logo (mobile only) -->
+      <!-- App logo (mobile only) -->
       <div class="w-8 h-8 rounded-xl overflow-hidden shadow-sm md:hidden">
         <img
           src="https://i.imgur.com/7dO0mhL.png"
@@ -539,13 +543,29 @@ body.onboarding-mode {
       </div>
 
       <!-- Current view label (desktop only) -->
-      <div id="nav-current-view" class="hidden lg:flex items-center gap-2 text-lg font-semibold text-gray-800 whitespace-nowrap">
+      <div
+        id="nav-current-view"
+        class="hidden lg:flex items-center gap-2 text-lg font-semibold text-gray-800 whitespace-nowrap"
+      >
         <i class="fa-solid fa-house text-ah-600"></i>
         <span id="nav-current-label">Home</span>
       </div>
     </div>
 
-    <!-- MIDDLE: global search (desktop only) -->
+    <!-- MOBILE inline search bar -->
+    <div class="flex-1 md:hidden min-w-0">
+      <div class="relative w-full">
+        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[14px]"></i>
+        <input
+          id="mobile-inline-search"
+          type="search"
+          class="w-full rounded-full bg-gray-100 border border-gray-300 pl-8 pr-3 py-1.5 text-[13px] text-gray-900 placeholder-gray-400 focus:bg-white focus:border-ah-500 focus:ring-2 focus:ring-ah-500/20 outline-none transition"
+          placeholder="Search clubs, businesses, projects…"
+        />
+      </div>
+    </div>
+
+    <!-- DESKTOP global search -->
     <div class="flex-1 mx-2 hidden md:flex justify-start min-w-0">
       <div
         class="relative w-full max-w-lg"
@@ -612,29 +632,25 @@ body.onboarding-mode {
       </div>
     </div>
 
-    <!-- RIGHT: mobile search trigger + login CTA -->
+    <!-- RIGHT cluster -->
     <div class="ml-auto flex items-center gap-2">
-      <!-- mobile / small-screen search button -->
-      <button
-        id="mobile-search-btn"
-        class="md:hidden h-9 w-9 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 active:bg-gray-100 shadow-sm"
-        aria-label="Search"
-      >
-        <i class="fa-solid fa-magnifying-glass text-[18px]"></i>
-      </button>
-
-      <!-- login button (all breakpoints) -->
+      <!-- Desktop login button -->
       <button
         id="loginBtn"
-        class="h-9 px-3 flex items-center justify-center rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-neutral-900 transition"
+        class="hidden md:flex h-9 px-3 items-center justify-center rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-neutral-900 transition"
       >
         Log in
       </button>
+
+      <!-- Mobile avatar placeholder -->
+      <div class="md:hidden h-9 w-9 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 text-[18px]">
+        <i class="fa-solid fa-user"></i>
+      </div>
     </div>
 
   </div> <!-- end header row -->
 
-  <!-- Mobile inline search + full menu -->
+  <!-- Optional mobile dropdown search panel (kept in DOM for now) -->
   <div id="mobile-search" class="md:hidden hidden border-t border-gray-200 bg-white">
     <div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-2">
       <div
@@ -647,7 +663,6 @@ body.onboarding-mode {
       >
         <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[14px]"></i>
 
-        <!-- mobile scope pill -->
         <span id="m-scope-pill" class="hidden absolute left-8 top-1/2 -translate-y-1/2"></span>
 
         <input
@@ -657,7 +672,6 @@ body.onboarding-mode {
           placeholder="Search clubs, businesses, projects…"
         />
 
-        <!-- Mobile dropdown (same structure) -->
         <div id="m-search-menu" class="search-menu hidden">
           <div class="rounded-xl border border-gray-200 bg-white shadow-2xl overflow-hidden">
             <div class="flex items-center gap-1 p-2 border-b border-gray-100">
@@ -680,6 +694,7 @@ body.onboarding-mode {
     </div>
   </div>
 </div>
+
 
       <!-- ====== ONBOARDING STEP 1 (Account Basics) ====== -->
       <div id="view-onboarding-account" class="hidden min-h-screen bg-white flex flex-col">
