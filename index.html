@@ -4281,18 +4281,22 @@ document.addEventListener('DOMContentLoaded', function(){
     const startBtn = document.getElementById('ah-start-onboarding');
     const signinLink = document.getElementById('ah-go-signin');
 
-    // If you already have a function to open onboarding, call it here.
-    // Replace the CustomEvent with your real entry point (e.g., openOnboarding()).
+    // When clicking "Sign up with email", go straight into the normal onboarding flow
     startBtn?.addEventListener('click', () => {
       hideSplash();
-      // Hand off to onboarding
+      try {
+        if (typeof enterOnboarding === 'function') {
+          enterOnboarding();
+          return;
+        }
+      } catch {}
+      // Fallback: legacy CustomEvent if your code listens for it
       window.dispatchEvent(new CustomEvent('ah:start-onboarding'));
     });
 
     // Sign-in is just a placeholder for now (no logic required yet)
     signinLink?.addEventListener('click', () => {
       hideSplash();
-      // TODO: Wire this up later (e.g., openSignIn())
       window.dispatchEvent(new CustomEvent('ah:open-signin'));
     });
   })();
