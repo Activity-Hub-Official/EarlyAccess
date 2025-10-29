@@ -4199,5 +4199,104 @@ document.addEventListener('DOMContentLoaded', function(){
   </div>
 </div>>
 
+
+<!-- Mobile Pre-Onboarding Splash -->
+<section
+  id="ah-preonboarding-splash"
+  class="fixed inset-0 z-50 md:hidden bg-white dark:bg-neutral-900 flex flex-col"
+  role="dialog" aria-modal="true" aria-labelledby="ah-splash-title"
+  hidden
+>
+  <div class="w-full max-w-sm mx-auto flex-1 flex flex-col items-center justify-center px-6">
+    <!-- Logo -->
+    <div class="w-24 h-24 mb-5">
+      <img
+        src="https://i.imgur.com/7dO0mhL.png"
+        alt="Activity Hub"
+        class="w-full h-full object-contain"
+        loading="lazy"
+      />
+    </div>
+
+    <!-- Tagline -->
+    <h1 id="ah-splash-title" class="text-xl font-semibold text-center">
+      Discover clubs, events, and projects on campus
+    </h1>
+    <p class="mt-2 text-sm text-center text-neutral-600 dark:text-neutral-300">
+      Your campus life, organized in one place.
+    </p>
+
+    <!-- Primary action -->
+    <button
+      id="ah-start-onboarding"
+      type="button"
+      class="mt-6 w-full rounded-xl px-4 py-3 text-base font-medium bg-blue-600 text-white active:scale-[0.99] transition"
+    >
+      Sign up with email
+    </button>
+
+    <!-- Secondary text link -->
+    <button
+      id="ah-go-signin"
+      type="button"
+      class="mt-4 text-sm underline text-blue-700 dark:text-blue-400"
+    >
+      Already have an account? <span class="font-medium">Sign in here.</span>
+    </button>
+  </div>
+
+  <!-- Optional small footer area if you ever want to add ToS/Privacy links -->
+  <div class="pb-6 text-center text-xs text-neutral-500 dark:text-neutral-400">
+    <!-- e.g., <a href="/terms" class="underline">Terms</a> · <a href="/privacy" class="underline">Privacy</a> -->
+  </div>
+</section>
+
+
+<script>
+  (function () {
+    const splash = document.getElementById('ah-preonboarding-splash');
+    if (!splash) return;
+
+    const isMobile = () => window.innerWidth < 768;
+
+    // Only show on mobile and only once unless you clear localStorage
+    const seenKey = 'ah_seen_preonboarding_splash';
+    const shouldShow = isMobile() && !localStorage.getItem(seenKey);
+
+    const showSplash = () => { splash.hidden = false; document.body.style.overflow = 'hidden'; };
+    const hideSplash = () => { splash.hidden = true; document.body.style.overflow = ''; localStorage.setItem(seenKey, '1'); };
+
+    if (shouldShow) showSplash();
+
+    // Re-check on resize (e.g., device rotation)
+    window.addEventListener('resize', () => {
+      if (!localStorage.getItem(seenKey) && isMobile()) {
+        showSplash();
+      } else if (!isMobile()) {
+        hideSplash();
+      }
+    });
+
+    // Hook up actions
+    const startBtn = document.getElementById('ah-start-onboarding');
+    const signinLink = document.getElementById('ah-go-signin');
+
+    // If you already have a function to open onboarding, call it here.
+    // Replace the CustomEvent with your real entry point (e.g., openOnboarding()).
+    startBtn?.addEventListener('click', () => {
+      hideSplash();
+      // Hand off to onboarding
+      window.dispatchEvent(new CustomEvent('ah:start-onboarding'));
+    });
+
+    // Sign-in is just a placeholder for now (no logic required yet)
+    signinLink?.addEventListener('click', () => {
+      hideSplash();
+      // TODO: Wire this up later (e.g., openSignIn())
+      window.dispatchEvent(new CustomEvent('ah:open-signin'));
+    });
+  })();
+</script>
+
 </body>
 </html>
