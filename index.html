@@ -14,8 +14,28 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   
-<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.basic.min.js"></script>
-<script src="wordpos-browser.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.basic.min.js">
+    // Simple view switcher: hide all #view-* and show the requested one
+    function ahShowView(viewId){
+      try{
+        var nodes = document.querySelectorAll('[id^="view-"]');
+        nodes.forEach(function(n){ n.classList.add('hidden'); });
+        var tgt = document.getElementById(viewId);
+        if (tgt){ tgt.classList.remove('hidden'); window.scrollTo({top:0, behavior:'smooth'}); }
+      }catch(e){}
+    }
+</script>
+<script src="wordpos-browser.js">
+    // Simple view switcher: hide all #view-* and show the requested one
+    function ahShowView(viewId){
+      try{
+        var nodes = document.querySelectorAll('[id^="view-"]');
+        nodes.forEach(function(n){ n.classList.add('hidden'); });
+        var tgt = document.getElementById(viewId);
+        if (tgt){ tgt.classList.remove('hidden'); window.scrollTo({top:0, behavior:'smooth'}); }
+      }catch(e){}
+    }
+</script>
 
 <script>
 // --- DuckDuckGo favicon helpers (GLOBAL). Must load before renderDetail ---
@@ -98,9 +118,29 @@
     return href ? { platform, href, icon: window.faviconFor(platform, href) } : null;
   };
 })();
+
+    // Simple view switcher: hide all #view-* and show the requested one
+    function ahShowView(viewId){
+      try{
+        var nodes = document.querySelectorAll('[id^="view-"]');
+        nodes.forEach(function(n){ n.classList.add('hidden'); });
+        var tgt = document.getElementById(viewId);
+        if (tgt){ tgt.classList.remove('hidden'); window.scrollTo({top:0, behavior:'smooth'}); }
+      }catch(e){}
+    }
 </script>
 
-<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.tailwindcss.com">
+    // Simple view switcher: hide all #view-* and show the requested one
+    function ahShowView(viewId){
+      try{
+        var nodes = document.querySelectorAll('[id^="view-"]');
+        nodes.forEach(function(n){ n.classList.add('hidden'); });
+        var tgt = document.getElementById(viewId);
+        if (tgt){ tgt.classList.remove('hidden'); window.scrollTo({top:0, behavior:'smooth'}); }
+      }catch(e){}
+    }
+</script>
 <script>
 // --- Prevent pinch/tap zoom (fallback for browsers that ignore viewport flags) ---
 ['gesturestart','gesturechange','gestureend'].forEach(evt => {
@@ -117,6 +157,16 @@ document.addEventListener('touchend', function(e){
   if (now - __lastTouchEnd <= 350) { e.preventDefault(); }
   __lastTouchEnd = now;
 }, { passive: false });
+
+    // Simple view switcher: hide all #view-* and show the requested one
+    function ahShowView(viewId){
+      try{
+        var nodes = document.querySelectorAll('[id^="view-"]');
+        nodes.forEach(function(n){ n.classList.add('hidden'); });
+        var tgt = document.getElementById(viewId);
+        if (tgt){ tgt.classList.remove('hidden'); window.scrollTo({top:0, behavior:'smooth'}); }
+      }catch(e){}
+    }
 </script>
   <script>
     tailwind.config = {
@@ -130,7 +180,17 @@ document.addEventListener('touchend', function(e){
         }
       }
     }
-  </script>
+  
+    // Simple view switcher: hide all #view-* and show the requested one
+    function ahShowView(viewId){
+      try{
+        var nodes = document.querySelectorAll('[id^="view-"]');
+        nodes.forEach(function(n){ n.classList.add('hidden'); });
+        var tgt = document.getElementById(viewId);
+        if (tgt){ tgt.classList.remove('hidden'); window.scrollTo({top:0, behavior:'smooth'}); }
+      }catch(e){}
+    }
+</script>
   <style>
     .ah-grad{background-image:linear-gradient(135deg,#2563eb 0%,#14b8a6 100%)}
     .ah-chip[data-selected="true"]{background:#111827;color:#fff;border-color:#111827}
@@ -3125,7 +3185,17 @@ async function routeFromURL(){
 
     window.addEventListener('popstate', routeFromURL);
     loadData();
-  </script>
+  
+    // Simple view switcher: hide all #view-* and show the requested one
+    function ahShowView(viewId){
+      try{
+        var nodes = document.querySelectorAll('[id^="view-"]');
+        nodes.forEach(function(n){ n.classList.add('hidden'); });
+        var tgt = document.getElementById(viewId);
+        if (tgt){ tgt.classList.remove('hidden'); window.scrollTo({top:0, behavior:'smooth'}); }
+      }catch(e){}
+    }
+</script>
 
 <!-- Claim Modal -->
 <div id="claim-modal" class="fixed inset-0 z-50 hidden">
@@ -3211,6 +3281,16 @@ function wireClaimButton(current){
   btn.dataset.id = (current && (current.id||current.slug)) || '';
   btn.onclick = ()=> openClaimModal({ type: btn.dataset.type || 'listing', id: btn.dataset.id || '' });
 }
+
+    // Simple view switcher: hide all #view-* and show the requested one
+    function ahShowView(viewId){
+      try{
+        var nodes = document.querySelectorAll('[id^="view-"]');
+        nodes.forEach(function(n){ n.classList.add('hidden'); });
+        var tgt = document.getElementById(viewId);
+        if (tgt){ tgt.classList.remove('hidden'); window.scrollTo({top:0, behavior:'smooth'}); }
+      }catch(e){}
+    }
 </script>
 
 <script>
@@ -3251,6 +3331,16 @@ function wireClaimButton(current){
     obs.observe(modal, { attributes: true, attributeFilter: ['class', 'style', 'open'] });
   }
 })();
+
+    // Simple view switcher: hide all #view-* and show the requested one
+    function ahShowView(viewId){
+      try{
+        var nodes = document.querySelectorAll('[id^="view-"]');
+        nodes.forEach(function(n){ n.classList.add('hidden'); });
+        var tgt = document.getElementById(viewId);
+        if (tgt){ tgt.classList.remove('hidden'); window.scrollTo({top:0, behavior:'smooth'}); }
+      }catch(e){}
+    }
 </script>
 <script>
 document.addEventListener('click', (e) => {
@@ -3258,6 +3348,16 @@ document.addEventListener('click', (e) => {
   if (!t) return;
   navigateToFacet(t.dataset.facet, t.dataset.value, t.dataset.type, t.dataset.exclude);
 });
+
+    // Simple view switcher: hide all #view-* and show the requested one
+    function ahShowView(viewId){
+      try{
+        var nodes = document.querySelectorAll('[id^="view-"]');
+        nodes.forEach(function(n){ n.classList.add('hidden'); });
+        var tgt = document.getElementById(viewId);
+        if (tgt){ tgt.classList.remove('hidden'); window.scrollTo({top:0, behavior:'smooth'}); }
+      }catch(e){}
+    }
 </script>
 
 <script>
@@ -3285,6 +3385,16 @@ document.addEventListener('click', (e) => {
     });
   });
 })();
+
+    // Simple view switcher: hide all #view-* and show the requested one
+    function ahShowView(viewId){
+      try{
+        var nodes = document.querySelectorAll('[id^="view-"]');
+        nodes.forEach(function(n){ n.classList.add('hidden'); });
+        var tgt = document.getElementById(viewId);
+        if (tgt){ tgt.classList.remove('hidden'); window.scrollTo({top:0, behavior:'smooth'}); }
+      }catch(e){}
+    }
 </script>
 
 <script>
@@ -3328,6 +3438,16 @@ document.addEventListener('click', (e) => {
 
     })();
     
+
+    // Simple view switcher: hide all #view-* and show the requested one
+    function ahShowView(viewId){
+      try{
+        var nodes = document.querySelectorAll('[id^="view-"]');
+        nodes.forEach(function(n){ n.classList.add('hidden'); });
+        var tgt = document.getElementById(viewId);
+        if (tgt){ tgt.classList.remove('hidden'); window.scrollTo({top:0, behavior:'smooth'}); }
+      }catch(e){}
+    }
 </script>
 <script>
 document.addEventListener('click', function(e){
@@ -3346,6 +3466,16 @@ document.addEventListener('click', function(e){
     location.href = u.toString();
   }
 });
+
+    // Simple view switcher: hide all #view-* and show the requested one
+    function ahShowView(viewId){
+      try{
+        var nodes = document.querySelectorAll('[id^="view-"]');
+        nodes.forEach(function(n){ n.classList.add('hidden'); });
+        var tgt = document.getElementById(viewId);
+        if (tgt){ tgt.classList.remove('hidden'); window.scrollTo({top:0, behavior:'smooth'}); }
+      }catch(e){}
+    }
 </script>
 
 
@@ -3383,6 +3513,16 @@ document.addEventListener('click', function(e){
   };
   document.addEventListener('DOMContentLoaded', ()=>applyThemePillEmojis());
 })();
+
+    // Simple view switcher: hide all #view-* and show the requested one
+    function ahShowView(viewId){
+      try{
+        var nodes = document.querySelectorAll('[id^="view-"]');
+        nodes.forEach(function(n){ n.classList.add('hidden'); });
+        var tgt = document.getElementById(viewId);
+        if (tgt){ tgt.classList.remove('hidden'); window.scrollTo({top:0, behavior:'smooth'}); }
+      }catch(e){}
+    }
 </script>
 
 
@@ -3409,6 +3549,16 @@ document.addEventListener('click', function(e){
   };
   document.addEventListener('DOMContentLoaded', ()=>{ try{ updateNavCurrent(window.VIEW_MODE || 'home'); }catch(e){} });
 })();
+
+    // Simple view switcher: hide all #view-* and show the requested one
+    function ahShowView(viewId){
+      try{
+        var nodes = document.querySelectorAll('[id^="view-"]');
+        nodes.forEach(function(n){ n.classList.add('hidden'); });
+        var tgt = document.getElementById(viewId);
+        if (tgt){ tgt.classList.remove('hidden'); window.scrollTo({top:0, behavior:'smooth'}); }
+      }catch(e){}
+    }
 </script>
 
 
@@ -3682,6 +3832,16 @@ document.addEventListener('click', function(e){
     navigate(view);
   });
 })();
+
+    // Simple view switcher: hide all #view-* and show the requested one
+    function ahShowView(viewId){
+      try{
+        var nodes = document.querySelectorAll('[id^="view-"]');
+        nodes.forEach(function(n){ n.classList.add('hidden'); });
+        var tgt = document.getElementById(viewId);
+        if (tgt){ tgt.classList.remove('hidden'); window.scrollTo({top:0, behavior:'smooth'}); }
+      }catch(e){}
+    }
 </script>
 
 
@@ -3725,6 +3885,16 @@ function setActiveBottomBar(view) {
     else a.removeAttribute('aria-current');
   });
 }
+
+    // Simple view switcher: hide all #view-* and show the requested one
+    function ahShowView(viewId){
+      try{
+        var nodes = document.querySelectorAll('[id^="view-"]');
+        nodes.forEach(function(n){ n.classList.add('hidden'); });
+        var tgt = document.getElementById(viewId);
+        if (tgt){ tgt.classList.remove('hidden'); window.scrollTo({top:0, behavior:'smooth'}); }
+      }catch(e){}
+    }
 </script>
 
 
@@ -3775,6 +3945,16 @@ function setActiveBottomBar(view) {
     }
   }, { passive:false });
 })();
+
+    // Simple view switcher: hide all #view-* and show the requested one
+    function ahShowView(viewId){
+      try{
+        var nodes = document.querySelectorAll('[id^="view-"]');
+        nodes.forEach(function(n){ n.classList.add('hidden'); });
+        var tgt = document.getElementById(viewId);
+        if (tgt){ tgt.classList.remove('hidden'); window.scrollTo({top:0, behavior:'smooth'}); }
+      }catch(e){}
+    }
 </script>
 
 
@@ -3787,6 +3967,16 @@ document.addEventListener('DOMContentLoaded', function(){
     if (typeof setActiveBottomBar === 'function') setActiveBottomBar(view);
   }catch(e){ /* noop */ }
 });
+
+    // Simple view switcher: hide all #view-* and show the requested one
+    function ahShowView(viewId){
+      try{
+        var nodes = document.querySelectorAll('[id^="view-"]');
+        nodes.forEach(function(n){ n.classList.add('hidden'); });
+        var tgt = document.getElementById(viewId);
+        if (tgt){ tgt.classList.remove('hidden'); window.scrollTo({top:0, behavior:'smooth'}); }
+      }catch(e){}
+    }
 </script>
 
 
@@ -3871,6 +4061,16 @@ document.addEventListener('DOMContentLoaded', function(){
     if(t) setTimeout(loadAndRender, 0);
   }, { passive: true });
 })();
+
+    // Simple view switcher: hide all #view-* and show the requested one
+    function ahShowView(viewId){
+      try{
+        var nodes = document.querySelectorAll('[id^="view-"]');
+        nodes.forEach(function(n){ n.classList.add('hidden'); });
+        var tgt = document.getElementById(viewId);
+        if (tgt){ tgt.classList.remove('hidden'); window.scrollTo({top:0, behavior:'smooth'}); }
+      }catch(e){}
+    }
 </script>
 
 
@@ -3919,6 +4119,16 @@ document.addEventListener('DOMContentLoaded', function(){
     }, true); // capture to run before app may stop propagation
   });
 })();
+
+    // Simple view switcher: hide all #view-* and show the requested one
+    function ahShowView(viewId){
+      try{
+        var nodes = document.querySelectorAll('[id^="view-"]');
+        nodes.forEach(function(n){ n.classList.add('hidden'); });
+        var tgt = document.getElementById(viewId);
+        if (tgt){ tgt.classList.remove('hidden'); window.scrollTo({top:0, behavior:'smooth'}); }
+      }catch(e){}
+    }
 </script>
 
 
@@ -3950,6 +4160,16 @@ document.addEventListener('DOMContentLoaded', function(){
   setTimeout(schedule, 150);
   setTimeout(schedule, 600);
 })();
+
+    // Simple view switcher: hide all #view-* and show the requested one
+    function ahShowView(viewId){
+      try{
+        var nodes = document.querySelectorAll('[id^="view-"]');
+        nodes.forEach(function(n){ n.classList.add('hidden'); });
+        var tgt = document.getElementById(viewId);
+        if (tgt){ tgt.classList.remove('hidden'); window.scrollTo({top:0, behavior:'smooth'}); }
+      }catch(e){}
+    }
 </script>
 
 
@@ -4018,6 +4238,16 @@ document.addEventListener('DOMContentLoaded', function(){
   if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', initAll); } else { initAll(); }
   // If detail view re-renders dynamically elsewhere, call initAll() after content swap.
 })();
+
+    // Simple view switcher: hide all #view-* and show the requested one
+    function ahShowView(viewId){
+      try{
+        var nodes = document.querySelectorAll('[id^="view-"]');
+        nodes.forEach(function(n){ n.classList.add('hidden'); });
+        var tgt = document.getElementById(viewId);
+        if (tgt){ tgt.classList.remove('hidden'); window.scrollTo({top:0, behavior:'smooth'}); }
+      }catch(e){}
+    }
 </script>
 
 
@@ -4182,6 +4412,16 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
 })();
+
+    // Simple view switcher: hide all #view-* and show the requested one
+    function ahShowView(viewId){
+      try{
+        var nodes = document.querySelectorAll('[id^="view-"]');
+        nodes.forEach(function(n){ n.classList.add('hidden'); });
+        var tgt = document.getElementById(viewId);
+        if (tgt){ tgt.classList.remove('hidden'); window.scrollTo({top:0, behavior:'smooth'}); }
+      }catch(e){}
+    }
 </script>
 
 <!-- Onboarding loading overlay -->
@@ -4300,6 +4540,16 @@ document.addEventListener('DOMContentLoaded', function(){
       window.dispatchEvent(new CustomEvent('ah:open-signin'));
     });
   })();
+
+    // Simple view switcher: hide all #view-* and show the requested one
+    function ahShowView(viewId){
+      try{
+        var nodes = document.querySelectorAll('[id^="view-"]');
+        nodes.forEach(function(n){ n.classList.add('hidden'); });
+        var tgt = document.getElementById(viewId);
+        if (tgt){ tgt.classList.remove('hidden'); window.scrollTo({top:0, behavior:'smooth'}); }
+      }catch(e){}
+    }
 </script>
 
 </body>
