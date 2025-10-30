@@ -4419,5 +4419,29 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
+
+<script>
+// Delegated click handler: route "Sign in" link on Welcome to the Sign In step.
+document.addEventListener('click', function(e){
+  const el = e.target.closest && e.target.closest('a,button');
+  if (!el) return;
+  const text = (el.textContent || '').trim();
+  // Must contain 'sign in' but ignore clicks inside the actual sign-in step/form.
+  const inSigninForm = !!(el.closest && el.closest('#ob-step-signin, #ob-signin-form'));
+  if (/\bsign\s*in\b/i.test(text) && !inSigninForm) {
+    e.preventDefault();
+    if (typeof showOnboardingStepInternal === 'function') {
+      showOnboardingStepInternal('signin');
+    } else {
+      document.body.classList.add('onboarding-mode');
+      document.querySelectorAll('section[id^="ob-step-"]').forEach(x => x.classList.add('hidden'));
+      const target = document.getElementById('ob-step-signin');
+      if (target) target.classList.remove('hidden');
+      window.scrollTo({top:0, behavior:'instant'});
+    }
+  }
+}, { passive: false });
+</script>
+
 </body>
 </html>
