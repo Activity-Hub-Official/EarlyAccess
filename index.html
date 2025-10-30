@@ -457,7 +457,51 @@ body.onboarding-mode {
   padding-bottom: 0 !important;
 }
 </style>
-<style>@media (prefers-reduced-motion: reduce){.animate-spin,.animate-ping{animation:none!important}}</style></head>
+<style>@media (prefers-reduced-motion: reduce){.animate-spin,.animate-ping{animation:none!important}}</style><style>
+/* --- Create dropdown (light themed) --- */
+.create-menu-wrap { position: relative; display: none; }
+/* show on desktop only; tweak 1024px to your breakpoint */
+@media (min-width: 1024px) {
+  .create-menu-wrap { display: inline-block; }
+}
+.create-btn {
+  display: inline-flex; align-items: center; gap: .5rem;
+  padding: .5rem .9rem; border-radius: .6rem;
+  border: 1px solid rgba(0,0,0,.08);
+  background: #ffffff;
+  color: #111827;
+  font-weight: 600; line-height: 1;
+  box-shadow: 0 1px 2px rgba(0,0,0,.06);
+  cursor: pointer;
+}
+.create-btn:hover { background: #f9fafb; }
+.create-btn:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+.create-btn .chev { width: 16px; height: 16px; opacity: .7; }
+.create-menu {
+  position: absolute; top: calc(100% + 8px); right: 0;
+  min-width: 220px;
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: .75rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
+  padding: .4rem;
+  display: none;
+  z-index: 1000;
+}
+.create-menu.open { display: block; }
+.create-menu a[role="menuitem"] {
+  display: block;
+  padding: .65rem .8rem;
+  border-radius: .55rem;
+  color: #111827;
+  text-decoration: none;
+  font-weight: 500;
+}
+.create-menu a[role="menuitem"]:hover { background: #f3f4f6; }
+.create-menu a[role="menuitem"]:focus-visible {
+  outline: 2px solid #2563eb; outline-offset: 2px;
+}
+</style></head>
 <body class="has-bottom-bar min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
   <div class="flex w-full">
     <!-- ====== SIDEBAR ====== -->
@@ -624,7 +668,29 @@ body.onboarding-mode {
       </button>
 
       <!-- login button (all breakpoints) -->
-      <button
+      <!-- Create menu (desktop only) -->
+<div class="create-menu-wrap">
+  <button id="createMenuBtn"
+          class="create-btn"
+          aria-haspopup="true"
+          aria-expanded="false">
+    Create
+    <svg aria-hidden="true" viewBox="0 0 24 24" class="chev">
+      <path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </button>
+
+  <div id="createMenu"
+       class="create-menu"
+       role="menu"
+       aria-labelledby="createMenuBtn">
+    <a role="menuitem" tabindex="-1" href="#/create/organization" data-create="organization">Organization Page</a>
+    <a role="menuitem" tabindex="-1" href="#/create/business"     data-create="business">Business Page</a>
+    <a role="menuitem" tabindex="-1" href="#/create/project"      data-create="project">Project Page</a>
+    <a role="menuitem" tabindex="-1" href="#/create/event"        data-create="event">Event</a>
+  </div>
+</div>
+<button
         id="loginBtn"
         class="h-9 px-3 flex items-center justify-center rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-neutral-900 transition"
       >
@@ -4234,5 +4300,67 @@ document.addEventListener('DOMContentLoaded', function(){
   </div>
 </div>>
 
+<script>
+(function(){
+  const btn  = document.getElementById('createMenuBtn');
+  const menu = document.getElementById('createMenu');
+
+  if(!btn || !menu) return;
+
+  let items = Array.from(menu.querySelectorAll('[role="menuitem"]'));
+
+  function openMenu(){
+    menu.classList.add('open');
+    btn.setAttribute('aria-expanded','true');
+    if (items[0]) items[0].focus();
+    document.addEventListener('click', onDocClick, true);
+    document.addEventListener('keydown', onKeyDown, true);
+  }
+
+  function closeMenu(){
+    menu.classList.remove('open');
+    btn.setAttribute('aria-expanded','false');
+    document.removeEventListener('click', onDocClick, true);
+    document.removeEventListener('keydown', onKeyDown, true);
+  }
+
+  function onDocClick(e){
+    if (!menu.contains(e.target) && !btn.contains(e.target)) closeMenu();
+  }
+
+  function onKeyDown(e){
+    const idx = items.indexOf(document.activeElement);
+    if (e.key === 'Escape'){ closeMenu(); btn.focus(); }
+    if (e.key === 'ArrowDown'){
+      e.preventDefault();
+      const next = items[idx + 1] || items[0];
+      next && next.focus();
+    }
+    if (e.key === 'ArrowUp'){
+      e.preventDefault();
+      const prev = items[idx - 1] || items[items.length - 1];
+      prev && prev.focus();
+    }
+    if ((e.key === 'Enter' || e.key === ' ') && document.activeElement?.getAttribute('role') === 'menuitem'){
+      // No routing logic requested; just close.
+      closeMenu();
+    }
+  }
+
+  btn.addEventListener('click', (e)=>{
+    e.preventDefault();
+    const isOpen = menu.classList.contains('open');
+    isOpen ? closeMenu() : openMenu();
+  });
+
+  items.forEach(a=>{
+    a.addEventListener('click', (e)=>{
+      // Prevent navigation for now (no wiring); close menu.
+      e.preventDefault();
+      closeMenu();
+    });
+  });
+})();
+</script>
 </body>
 </html>
