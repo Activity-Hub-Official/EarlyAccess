@@ -683,51 +683,7 @@ body.onboarding-mode {
 
       
       <!-- ====== ONBOARDING STEP 0 (Welcome) ====== -->
-      <div id="view-onboarding-welcome"
-      <!-- ====== ONBOARDING STEP (Sign In) ====== -->
-      <div id="view-onboarding-signin" class="hidden min-h-screen bg-white flex flex-col">
-        <div class="p-6 flex-1 flex flex-col max-w-md w-full mx-auto">
-          <div class="text-center mt-8 mb-6">
-            <img
-              src="https://i.imgur.com/7dO0mhL.png"
-              alt="Activity Hub"
-              width="72" height="72"
-              class="w-18 h-18 rounded-2xl object-cover mx-auto shadow pointer-events-none select-none"
-              loading="lazy"
-            />
-            <h1 class="text-2xl font-semibold text-gray-900 mt-4">Sign in</h1>
-            <p class="text-sm text-gray-500 mt-1">Use your email and password to continue.</p>
-          </div>
-
-          <form id="signin-form" class="space-y-4" onsubmit="event.preventDefault(); signInWithEmailPassword();">
-            <div>
-              <label class="block text-sm font-medium text-gray-700" for="signin-email">Email</label>
-              <input id="signin-email" type="email" required
-                class="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
-                placeholder="you@stjohns.edu" autocomplete="username">
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700" for="signin-password">Password</label>
-              <input id="signin-password" type="password" required
-                class="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
-                placeholder="••••••••" autocomplete="current-password">
-            </div>
-            <button type="submit"
-              class="w-full inline-flex items-center justify-center rounded-lg bg-ah-600 text-white font-medium px-5 py-3 shadow hover:bg-ah-700 active:bg-ah-800 active:scale-[.99] transition">
-              Sign in
-            </button>
-          </form>
-
-          <p id="signin-error" class="text-sm text-red-600 mt-4 hidden">Invalid email or password. Please try again.</p>
-
-          <div class="text-center mt-6">
-            <button type="button" class="text-sm text-ah-600 hover:underline" onclick="nextOnboardingStep('account')">
-              Create a new account
-            </button>
-          </div>
-        </div>
-      </div>
- class="hidden min-h-screen bg-white flex flex-col">
+      <div id="view-onboarding-welcome" class="hidden min-h-screen bg-white flex flex-col">
         <div class="p-6 flex-1 flex flex-col items-center justify-center text-center" data-onboarding-scroll="true">
           <div class="mb-6">
             <!-- Brand Logo -->
@@ -754,7 +710,7 @@ body.onboarding-mode {
           </button>
 
           <p class="text-[12px] text-gray-400 mt-6">
-            Already have an account? <a href="#" class="text-ah-600 hover:underline" onclick="showOnboardingStepInternal('signin')">Sign in</a>
+            Already have an account? <a href="#" class="text-ah-600 hover:underline">Sign in</a>
           </p>
         </div>
       </div>
@@ -2925,13 +2881,13 @@ async function updateDidYouMeanBar(q, scope){
 }
 
     const ONBOARDING_STEP_MAP = {
-      signin: 'view-onboarding-signin',
       welcome: 'view-onboarding-welcome',
       account: 'view-onboarding-account',
       school: 'view-onboarding-school-email',
       academics: 'view-onboarding-academics',
-      interests: 'view-onboarding-interests'
-    };
+      interests: 'view-onboarding-interests',
+  signin:   'ob-step-signin'
+};
 
     function showOnboardingStepInternal(stepKey){
       const bodyEl = document.body;
@@ -4280,88 +4236,157 @@ document.addEventListener('DOMContentLoaded', function(){
 </div>>
 
 
+<!-- Onboarding: Sign In -->
+<section id="ob-step-signin" class="hidden">
+  <div class="mx-auto max-w-md px-4 py-8">
+    <h2 class="text-2xl font-semibold mb-2">Sign in</h2>
+    <p class="text-gray-600 mb-6">Welcome back! Enter your email and password.</p>
+
+    <form id="ob-signin-form" class="space-y-4" novalidate>
+      <div>
+        <label for="ob-signin-email" class="block text-sm font-medium text-gray-700">Email</label>
+        <input id="ob-signin-email" type="email" required
+               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500">
+      </div>
+
+      <div>
+        <label for="ob-signin-password" class="block text-sm font-medium text-gray-700">Password</label>
+        <input id="ob-signin-password" type="password" required
+               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500">
+      </div>
+
+      <p id="ob-signin-error" class="hidden text-sm text-red-600"></p>
+
+      <button id="ob-signin-submit" type="submit"
+              class="w-full rounded-lg bg-ah-600 hover:bg-ah-700 text-white font-medium py-2.5 disabled:opacity-60 disabled:cursor-not-allowed">
+        Sign in
+      </button>
+
+      <button id="ob-signin-back" type="button"
+              class="w-full rounded-lg border border-gray-300 text-gray-800 font-medium py-2.5 mt-2">
+        Back
+      </button>
+    </form>
+  </div>
+</section>
+
+
 <script>
-  // Simple client-side sign-in using Sheet2API source.
-  async function signInWithEmailPassword() {
-    const emailEl = document.getElementById('signin-email');
-    const passEl  = document.getElementById('signin-password');
-    const errEl   = document.getElementById('signin-error');
-
-    const email = (emailEl?.value || '').trim().toLowerCase();
-    const password = (passEl?.value || '').trim();
-
-    if (!email || !password) {
-      errEl.textContent = 'Please enter both email and password.';
-      errEl.classList.remove('hidden');
-      return;
-    }
-
-    try {
-      // Fetch legacy accounts
-      const res = await fetch('https://sheet2api.com/v1/6ZHKuaw2RnaO/legacy-accounts', { method: 'GET' });
-      if (!res.ok) throw new Error('Network error');
-      const rows = await res.json(); // Expecting an array of records
-
-      // Find a match (email case-insensitive; password exact match)
-      const match = (rows || []).find(r => {
-        const rowEmail = String(r.Email || r.email || '').trim().toLowerCase();
-        const rowPass  = String(r.Password || r.password || '').trim();
-        return rowEmail === email && rowPass === password;
-      });
-
-      if (match) {
-        // Store a simple session; in production, replace with secure token-based auth.
-        const session = {
-          isAuthenticated: true,
-          email: match.Email || match.email,
-          name: match.Name || match.name || '',
-          profileImage: match['Profile Image URL'] || match.profileImage || '',
-          universityEmail: match['University Email'] || match.universityEmail || '',
-          school: match.School || match.school || ''
-        };
-        try {
-          localStorage.setItem('ah_session', JSON.stringify(session));
-        } catch (e) {}
-
-        // Exit onboarding and go to home view if present
-        if (typeof hideOnboardingAndGoHome === 'function') {
-          hideOnboardingAndGoHome();
-        } else if (typeof showView === 'function') {
-          // Try a few common home view ids
-          const candidates = ['view-home', 'view-feed', 'view-dashboard'];
-          const home = candidates.find(id => document.getElementById(id));
-          if (home) {
-            showView(home);
-          } else {
-            // Fallback: hide onboarding wrapper
-            const onboardingViews = document.querySelectorAll('[id^="view-onboarding-"]');
-            onboardingViews.forEach(v => v.classList.add('hidden'));
-            document.documentElement.scrollTop = 0;
-          }
-        }
+document.addEventListener('DOMContentLoaded', () => {
+  const signinLink = document.getElementById('ob-welcome-signin');
+  if (signinLink) {
+    signinLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (typeof showOnboardingStepInternal === 'function') {
+        showOnboardingStepInternal('signin');
       } else {
-        errEl.textContent = 'Invalid email or password. Please try again.';
-        errEl.classList.remove('hidden');
+        document.body.classList.add('onboarding-mode');
+        document.querySelectorAll('section[id^="ob-step-"]').forEach(el => el.classList.add('hidden'));
+        const el = document.getElementById('ob-step-signin');
+        if (el) el.classList.remove('hidden');
+        window.scrollTo({top:0, behavior:'instant'});
       }
-    } catch (e) {
-      console.error(e);
-      errEl.textContent = 'Unable to sign in right now. Please check your connection and try again.';
-      errEl.classList.remove('hidden');
+    });
+  }
+});
+</script>
+
+
+<script>
+(function(){
+  const API_URL = 'https://sheet2api.com/v1/6ZHKuaw2RnaO/legacy-accounts';
+
+  const form   = document.getElementById('ob-signin-form');
+  const emailI = document.getElementById('ob-signin-email');
+  const passI  = document.getElementById('ob-signin-password');
+  const btn    = document.getElementById('ob-signin-submit');
+  const back   = document.getElementById('ob-signin-back');
+  const errEl  = document.getElementById('ob-signin-error');
+
+  if (!form) return;
+
+  back?.addEventListener('click', () => {
+    if (typeof showOnboardingStepInternal === 'function') {
+      showOnboardingStepInternal('welcome');
+    } else {
+      document.querySelectorAll('section[id^="ob-step-"]').forEach(el => el.classList.add('hidden'));
+      const el = document.getElementById('ob-step-welcome');
+      if (el) el.classList.remove('hidden');
     }
+  });
+
+  async function verifyCredentials(email, password){
+    const res = await fetch(API_URL, { method:'GET' });
+    if (!res.ok) throw new Error('Network error');
+    const rows = await res.json();
+    const target = rows.find(r => String(r.Email || '').toLowerCase() === String(email).toLowerCase());
+    if (!target) return { ok:false, reason: 'No account found for that email.' };
+    if (String(target.Password || '') != String(password)) {
+      return { ok:false, reason: 'Incorrect password. Please try again.' };
+    }
+    return { ok:true, user: target };
   }
 
-  // Helpers expected by this patch
-  window.showOnboardingStepInternal = window.showOnboardingStepInternal || function(step) {
-    try {
-      const map = window.ONBOARDING_STEP_MAP || {};
-      const targetId = map[step] || step;
-      const all = document.querySelectorAll('[id^="view-onboarding-"]');
-      all.forEach(v => v.classList.add('hidden'));
-      const el = document.getElementById(targetId);
-      if (el) el.classList.remove('hidden');
-      document.documentElement.scrollTop = 0;
-    } catch (e) { console.error(e); }
-  };
+  function setBusy(isBusy){
+    if (!btn) return;
+    btn.disabled = isBusy;
+    btn.textContent = isBusy ? 'Signing in…' : 'Sign in';
+  }
+
+  function showError(msg){
+    if (!errEl) return;
+    errEl.textContent = msg || 'Something went wrong. Please try again.';
+    errEl.classList.remove('hidden');
+  }
+
+  function clearError(){ errEl?.classList.add('hidden'); }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearError();
+
+    const email = (emailI?.value || '').trim();
+    const pwd   = passI?.value || '';
+
+    if (!email || !pwd){ showError('Please enter your email and password.'); return; }
+
+    try{
+      setBusy(true);
+      const result = await verifyCredentials(email, pwd);
+      if (!result.ok){
+        showError(result.reason);
+        return;
+      }
+
+      const u = result.user || {};
+      const user = {
+        name:  u.Name || '',
+        email: u.Email || '',
+        uni:   u['University Email'] || '',
+        major: u.Major || '',
+        year:  u.Year || '',
+        avatar: u['Profile Image URL'] || ''
+      };
+      try {
+        localStorage.setItem('ah_user', JSON.stringify(user));
+        localStorage.setItem('ah_is_authenticated', '1');
+      } catch {}
+
+      document.body.classList.remove('onboarding-mode');
+      document.body.classList.add('has-bottom-bar');
+
+      document.querySelectorAll('section[id^="ob-step-"]').forEach(el => el.classList.add('hidden'));
+
+      if (typeof showMainDirectoryView === 'function') {
+        showMainDirectoryView();
+      }
+    } catch (err){
+      showError('Unable to sign in right now. Please try again.');
+    } finally{
+      setBusy(false);
+    }
+  });
+})();
 </script>
 
 </body>
