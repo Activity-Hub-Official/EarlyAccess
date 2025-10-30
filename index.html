@@ -457,7 +457,13 @@ body.onboarding-mode {
   padding-bottom: 0 !important;
 }
 </style>
-<style>@media (prefers-reduced-motion: reduce){.animate-spin,.animate-ping{animation:none!important}}</style></head>
+<style>@media (prefers-reduced-motion: reduce){.animate-spin,.animate-ping{animation:none!important}}</style>
+<style>
+section[id^="ob-step-"] { scroll-margin-top: 0; }
+#ob-step-signin { padding-top: 16px; }
+</style>
+
+</head>
 <body class="has-bottom-bar min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
   <div class="flex w-full">
     <!-- ====== SIDEBAR ====== -->
@@ -2885,9 +2891,8 @@ async function updateDidYouMeanBar(q, scope){
       account: 'view-onboarding-account',
       school: 'view-onboarding-school-email',
       academics: 'view-onboarding-academics',
-      interests: 'view-onboarding-interests',
-  signin:   'ob-step-signin'
-};
+      interests: 'view-onboarding-interests'
+    };
 
     function showOnboardingStepInternal(stepKey){
       const bodyEl = document.body;
@@ -4236,7 +4241,7 @@ document.addEventListener('DOMContentLoaded', function(){
 </div>>
 
 
-<!-- Onboarding: Sign In -->
+<!-- Onboarding: Sign In (safe, standalone) -->
 <section id="ob-step-signin" class="hidden">
   <div class="mx-auto max-w-md px-4 py-8">
     <h2 class="text-2xl font-semibold mb-2">Sign in</h2>
@@ -4272,176 +4277,72 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const signinLink = document.getElementById('ob-welcome-signin');
-  if (signinLink) {
-    signinLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (typeof showOnboardingStepInternal === 'function') {
-        showOnboardingStepInternal('signin');
-      } else {
-        document.body.classList.add('onboarding-mode');
-        document.querySelectorAll('section[id^="ob-step-"]').forEach(el => el.classList.add('hidden'));
-        const el = document.getElementById('ob-step-signin');
-        if (el) el.classList.remove('hidden');
-        window.scrollTo({top:0, behavior:'instant'});
-      }
-    });
-  }
-});
-</script>
-
-
-<script>
-(function(){
-  const API_URL = 'https://sheet2api.com/v1/6ZHKuaw2RnaO/legacy-accounts';
-
-  const form   = document.getElementById('ob-signin-form');
-  const emailI = document.getElementById('ob-signin-email');
-  const passI  = document.getElementById('ob-signin-password');
-  const btn    = document.getElementById('ob-signin-submit');
-  const back   = document.getElementById('ob-signin-back');
-  const errEl  = document.getElementById('ob-signin-error');
-
-  if (!form) return;
-
-  back?.addEventListener('click', () => {
-    if (typeof showOnboardingStepInternal === 'function') {
-      showOnboardingStepInternal('welcome');
-    } else {
-      document.querySelectorAll('section[id^="ob-step-"]').forEach(el => el.classList.add('hidden'));
-      const el = document.getElementById('ob-step-welcome');
-      if (el) el.classList.remove('hidden');
-    }
-  });
-
-  async function verifyCredentials(email, password){
-    const res = await fetch(API_URL, { method:'GET' });
-    if (!res.ok) throw new Error('Network error');
-    const rows = await res.json();
-    const target = rows.find(r => String(r.Email || '').toLowerCase() === String(email).toLowerCase());
-    if (!target) return { ok:false, reason: 'No account found for that email.' };
-    if (String(target.Password || '') != String(password)) {
-      return { ok:false, reason: 'Incorrect password. Please try again.' };
-    }
-    return { ok:true, user: target };
-  }
-
-  function setBusy(isBusy){
-    if (!btn) return;
-    btn.disabled = isBusy;
-    btn.textContent = isBusy ? 'Signing in…' : 'Sign in';
-  }
-
-  function showError(msg){
-    if (!errEl) return;
-    errEl.textContent = msg || 'Something went wrong. Please try again.';
-    errEl.classList.remove('hidden');
-  }
-
-  function clearError(){ errEl?.classList.add('hidden'); }
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    clearError();
-
-    const email = (emailI?.value || '').trim();
-    const pwd   = passI?.value || '';
-
-    if (!email || !pwd){ showError('Please enter your email and password.'); return; }
-
-    try{
-      setBusy(true);
-      const result = await verifyCredentials(email, pwd);
-      if (!result.ok){
-        showError(result.reason);
-        return;
-      }
-
-      const u = result.user || {};
-      const user = {
-        name:  u.Name || '',
-        email: u.Email || '',
-        uni:   u['University Email'] || '',
-        major: u.Major || '',
-        year:  u.Year || '',
-        avatar: u['Profile Image URL'] || ''
-      };
-      try {
-        localStorage.setItem('ah_user', JSON.stringify(user));
-        localStorage.setItem('ah_is_authenticated', '1');
-      } catch {}
-
-      document.body.classList.remove('onboarding-mode');
-      document.body.classList.add('has-bottom-bar');
-
-      document.querySelectorAll('section[id^="ob-step-"]').forEach(el => el.classList.add('hidden'));
-
-      if (typeof showMainDirectoryView === 'function') {
-        showMainDirectoryView();
-      }
-    } catch (err){
-      showError('Unable to sign in right now. Please try again.');
-    } finally{
-      setBusy(false);
-    }
-  });
-})();
-</script>
-
-
-<script>
-// Robust binder for the Welcome "Sign in" link when no fixed ID is present.
-document.addEventListener('DOMContentLoaded', () => {
+function AH_finalizeLoginAndShowHome() {
   try {
-    const host = document.getElementById('ob-step-welcome') || document;
-    const candidates = Array.from(host.querySelectorAll('a, button'));
-    const target = candidates.find(el => /\bsign\s*in\b/i.test((el.textContent || '').trim()));
-    if (target) {
-      if (!target.id) target.id = 'ob-welcome-signin';
-      target.addEventListener('click', (e) => {
-        // If this is a plain link, avoid navigation
-        e.preventDefault();
-        if (typeof showOnboardingStepInternal === 'function') {
-          showOnboardingStepInternal('signin');
-        } else {
-          document.body.classList.add('onboarding-mode');
-          document.querySelectorAll('section[id^="ob-step-"]').forEach(el => el.classList.add('hidden'));
-          const el = document.getElementById('ob-step-signin');
-          if (el) el.classList.remove('hidden');
-          window.scrollTo({top:0, behavior:'instant'});
-        }
-      }, { once: false });
-    }
-  } catch (e) {
-    // no-op
-  }
-});
+    localStorage.setItem('ah_is_authenticated','1');
+    document.body.classList.remove('onboarding-mode');
+    document.querySelectorAll('section[id^="ob-step-"]').forEach(el => el.classList.add('hidden'));
+    document.body.classList.add('has-bottom-bar');
+    if (typeof showDirectory === 'function') { showDirectory(); }
+    else if (typeof routeFromURL === 'function') { routeFromURL(); }
+    window.scrollTo(0,0); document.documentElement.scrollTop = 0; document.body.scrollTop = 0;
+  } catch (e) {}
+}
+function AH_showStepSignIn() {
+  document.body.classList.add('onboarding-mode');
+  document.querySelectorAll('section[id^="ob-step-"]').forEach(el => el.classList.add('hidden'));
+  var s = document.getElementById('ob-step-signin'); if (s) s.classList.remove('hidden');
+  setTimeout(function(){ var e=document.getElementById('ob-signin-email'); if(e) e.focus(); }, 0);
+  window.scrollTo(0,0); document.documentElement.scrollTop = 0; document.body.scrollTop = 0;
+}
 </script>
 
 
 <script>
-// Delegated click handler: route "Sign in" link on Welcome to the Sign In step.
-document.addEventListener('click', function(e){
-  const el = e.target.closest && e.target.closest('a,button');
-  if (!el) return;
-  const text = (el.textContent || '').trim();
-  // Must contain 'sign in' but ignore clicks inside the actual sign-in step/form.
-  const inSigninForm = !!(el.closest && el.closest('#ob-step-signin, #ob-signin-form'));
-  if (/\bsign\s*in\b/i.test(text) && !inSigninForm) {
-    e.preventDefault();
-    if (typeof showOnboardingStepInternal === 'function') {
-      showOnboardingStepInternal('signin');
-    } else {
-      document.body.classList.add('onboarding-mode');
-      document.querySelectorAll('section[id^="ob-step-"]').forEach(x => x.classList.add('hidden'));
-      const target = document.getElementById('ob-step-signin');
-      if (target) target.classList.remove('hidden');
-      window.scrollTo({top:0, behavior:'instant'});
-    }
-  }
-}, { passive: false });
+document.addEventListener('DOMContentLoaded', function(){
+  try { if (localStorage.getItem('ah_is_authenticated') === '1') { AH_finalizeLoginAndShowHome(); return; } } catch {}
+  document.addEventListener('click', function(e){
+    var el = e.target.closest && e.target.closest('a,button'); if (!el) return;
+    var txt = (el.textContent || '').trim();
+    var inSignin = !!(el.closest && el.closest('#ob-step-signin, #ob-signin-form'));
+    if (/\bsign\s*in\b/i.test(txt) && !inSignin) { e.preventDefault(); AH_showStepSignIn(); }
+  }, { passive: false });
+});
 </script>
+
+
+<script>(function(){
+  const API_URL = 'https://sheet2api.com/v1/6ZHKuaw2RnaO/legacy-accounts';
+  function qs(id){ return document.getElementById(id); }
+  document.addEventListener('DOMContentLoaded', function(){
+    const form = qs('ob-signin-form'); if (!form) return;
+    const emailI=qs('ob-signin-email'), passI=qs('ob-signin-password'), btn=qs('ob-signin-submit'), back=qs('ob-signin-back'), errEl=qs('ob-signin-error');
+    function setBusy(b){ if(!btn) return; btn.disabled=b; btn.textContent=b?'Signing in…':'Sign in'; }
+    function showError(msg){ if(!errEl) return; errEl.textContent=msg||'Unable to sign in. Please try again.'; errEl.classList.remove('hidden'); }
+    function clearError(){ if(errEl) errEl.classList.add('hidden'); }
+    back && back.addEventListener('click', function(){
+      const welcome=document.getElementById('ob-step-welcome');
+      document.querySelectorAll('section[id^="ob-step-"]').forEach(el=>el.classList.add('hidden'));
+      if(welcome){ welcome.classList.remove('hidden'); } else { document.body.classList.remove('onboarding-mode'); }
+      window.scrollTo(0,0);
+    });
+    async function verify(email,password){
+      const res=await fetch(API_URL,{method:'GET'}); if(!res.ok) throw new Error('Network error');
+      const rows=await res.json(); const u=rows.find(r=>String(r.Email||'').toLowerCase()===String(email).toLowerCase());
+      if(!u) return {ok:false,reason:'No account found for that email.'};
+      if(String(u.Password||'')!==String(password)) return {ok:false,reason:'Incorrect password. Please try again.'};
+      return {ok:true,user:u};
+    }
+    form.addEventListener('submit', async function(e){ e.preventDefault(); clearError();
+      const email=(emailI&&emailI.value||'').trim(); const pwd=(passI&&passI.value||''); if(!email||!pwd){ showError('Please enter your email and password.'); return; }
+      try{ setBusy(true); const r=await verify(email,pwd); if(!r.ok){ showError(r.reason); return; }
+        const u=r.user||{}; const session={name:u.Name||'',email:u.Email||'',uni:u['University Email']||'',major:u.Major||'',year:u.Year||'',avatar:u['Profile Image URL']||''};
+        try{ localStorage.setItem('ah_user', JSON.stringify(session)); }catch{}
+        AH_finalizeLoginAndShowHome();
+      }catch(err){ showError('Unable to sign in right now. Please try again.'); } finally { setBusy(false); }
+    });
+  });
+})();</script>
 
 </body>
 </html>
