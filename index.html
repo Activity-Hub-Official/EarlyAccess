@@ -4389,5 +4389,35 @@ document.addEventListener('DOMContentLoaded', () => {
 })();
 </script>
 
+
+<script>
+// Robust binder for the Welcome "Sign in" link when no fixed ID is present.
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    const host = document.getElementById('ob-step-welcome') || document;
+    const candidates = Array.from(host.querySelectorAll('a, button'));
+    const target = candidates.find(el => /\bsign\s*in\b/i.test((el.textContent || '').trim()));
+    if (target) {
+      if (!target.id) target.id = 'ob-welcome-signin';
+      target.addEventListener('click', (e) => {
+        // If this is a plain link, avoid navigation
+        e.preventDefault();
+        if (typeof showOnboardingStepInternal === 'function') {
+          showOnboardingStepInternal('signin');
+        } else {
+          document.body.classList.add('onboarding-mode');
+          document.querySelectorAll('section[id^="ob-step-"]').forEach(el => el.classList.add('hidden'));
+          const el = document.getElementById('ob-step-signin');
+          if (el) el.classList.remove('hidden');
+          window.scrollTo({top:0, behavior:'instant'});
+        }
+      }, { once: false });
+    }
+  } catch (e) {
+    // no-op
+  }
+});
+</script>
+
 </body>
 </html>
