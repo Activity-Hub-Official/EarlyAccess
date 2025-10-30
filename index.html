@@ -501,7 +501,56 @@ body.onboarding-mode {
 .create-menu a[role="menuitem"]:focus-visible {
   outline: 2px solid #2563eb; outline-offset: 2px;
 }
-</style></head>
+</style><style>
+/* --- Create menu icon chips --- */
+.icon-chip{display:inline-grid;place-items:center;border-radius:0.75rem;width:1.75rem;height:1.75rem;margin-right:0.5rem;}
+.icon-org{background:rgba(59,130,246,0.12);color:#2563eb;}     /* blue-600 on blue-100 */
+.icon-biz{background:rgba(16,185,129,0.12);color:#059669;}     /* emerald-600 on emerald-100 */
+.icon-proj{background:rgba(168,85,247,0.12);color:#7e22ce;}    /* purple-700 on purple-100 */
+.icon-evt{background:rgba(234,88,12,0.12);color:#c2410c;}      /* orange-700 on orange-100 */
+.icon-chip i{font-size:0.9rem;line-height:1;}
+</style>
+<style>
+/* --- Create menu: two-line layout --- */
+.create-menu-item{display:flex;align-items:center;gap:0.75rem;padding:0.5rem 0.625rem;border-radius:0.75rem;}
+.create-menu-item:hover{background:rgba(0,0,0,0.04);}
+.create-menu-text{display:flex;flex-direction:column;line-height:1.1;}
+.create-menu-title{font-weight:600;font-size:0.95rem;color:#0f172a;}
+.create-menu-desc{font-size:0.82rem;color:#475569;margin-top:0.15rem;}
+/* soften icon chips just a touch */
+.icon-chip{border-radius:0.9rem;width:2rem;height:2rem;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.05);}
+</style>
+<style>
+/* --- Create menu hardening --- */
+#createMenu{min-width: 18rem;}
+#createMenu .create-menu-item{gap:0.75rem;padding:0.6rem 0.7rem;border-radius:0.75rem;}
+#createMenu .icon-chip{width:2rem;height:2rem;border-radius:6px !important;box-shadow:inset 0 0 0 1px rgba(0,0,0,.05);}
+#createMenu .create-menu-title{font-weight:600;font-size:0.95rem;color:#0f172a;}
+#createMenu .create-menu-desc{font-size:0.82rem;color:#475569;margin-top:0.15rem;}
+</style>
+<style>
+/* --- Create menu layout fix --- */
+#createMenu .create-menu-item{display:flex !important;flex-direction:row !important;align-items:center !important;gap:0.75rem !important;padding:0.6rem 0.7rem;border-radius:0.75rem;}
+#createMenu .icon-chip{display:inline-grid;place-items:center;width:1.9rem;height:1.9rem;border-radius:6px !important!important; /* soft square */ box-shadow:inset 0 0 0 1px rgba(0,0,0,.06);}
+#createMenu .icon-chip i{font-size:0.95rem;line-height:1;}
+#createMenu .create-menu-text{display:flex;flex-direction:column;line-height:1.15;}
+</style>
+<style>
+/* --- Create menu separator --- */
+#createMenu .create-menu-sep{height:1px;background:rgba(15,23,42,0.08);margin:0.35rem 0;}
+</style>
+<style>
+/* --- Create button height matches Login (h-9) --- */
+.create-menu-wrap .create-btn{
+  display:flex; align-items:center; justify-content:center; gap:0.5rem;
+  height:2.25rem;            /* Tailwind h-9 = 36px */
+  padding:0 0.75rem;         /* px-3 */
+  border-radius:0.75rem;     /* rounded-xl vibe */
+  line-height:1;             /* prevents extra vertical growth */
+}
+.create-menu-wrap .create-btn .chev{ width:18px; height:18px; }
+</style>
+</head>
 <body class="has-bottom-bar min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
   <div class="flex w-full">
     <!-- ====== SIDEBAR ====== -->
@@ -684,10 +733,10 @@ body.onboarding-mode {
        class="create-menu"
        role="menu"
        aria-labelledby="createMenuBtn">
-    <a role="menuitem" tabindex="-1" href="#/create/organization" data-create="organization">Organization Page</a>
-    <a role="menuitem" tabindex="-1" href="#/create/business"     data-create="business">Business Page</a>
-    <a role="menuitem" tabindex="-1" href="#/create/project"      data-create="project">Project Page</a>
-    <a role="menuitem" tabindex="-1" href="#/create/event"        data-create="event">Event</a>
+    <a role="menuitem" tabindex="-1" href="#/create/organization" data-create="organization" class="create-menu-item"><span class="icon-chip icon-org"><i class="fa-solid fa-building-columns"></i></span><span class="create-menu-text"><span class="create-menu-title">Organization Page</span><span class="create-menu-desc">Clubs, orgs, campus groups</span></span></a>
+    <a role="menuitem" tabindex="-1" href="#/create/business"     data-create="business" class="create-menu-item"><span class="icon-chip icon-biz"><i class="fa-solid fa-briefcase"></i></span><span class="create-menu-text"><span class="create-menu-title">Business Page</span><span class="create-menu-desc">Student‑run brands & services</span></span></a>
+    <a role="menuitem" tabindex="-1" href="#/create/project"      data-create="project" class="create-menu-item"><span class="icon-chip icon-proj"><i class="fa-solid fa-diagram-project"></i></span><span class="create-menu-text"><span class="create-menu-title">Project Page</span><span class="create-menu-desc">Side projects, research, startups</span></span></a>
+    <div class="create-menu-sep" role="separator" aria-hidden="true"></div><a role="menuitem" tabindex="-1" href="#/create/event"        data-create="event" class="create-menu-item"><span class="icon-chip icon-evt"><i class="fa-solid fa-calendar-days"></i></span><span class="create-menu-text"><span class="create-menu-title">Event</span><span class="create-menu-desc">One‑time meetup, workshop, etc.</span></span></a>
   </div>
 </div>
 <button
