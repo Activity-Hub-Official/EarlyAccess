@@ -2,21 +2,17 @@
 
 <html lang="en">
 <head>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-  <title>Activity Hub – Explore (v25)</title>
-
-  <!-- App & site icons -->
-  <link rel="apple-touch-icon" sizes="180x180" href="https://i.imgur.com/7dO0mhL.png">
-  <link rel="icon" type="image/png" href="https://i.imgur.com/SeNBgAx.png">
-  <link rel="shortcut icon" href="https://i.imgur.com/SeNBgAx.png">
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" name="viewport"/>
+<title>Activity Hub – Explore (v25)</title>
+<!-- App & site icons -->
+<link href="https://i.imgur.com/7dO0mhL.png" rel="apple-touch-icon" sizes="180x180"/>
+<link href="https://i.imgur.com/SeNBgAx.png" rel="icon" type="image/png"/>
+<link href="https://i.imgur.com/SeNBgAx.png" rel="shortcut icon"/>
+<link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.basic.min.js"></script>
 <script src="wordpos-browser.js"></script>
-
 <script>
 // --- DuckDuckGo favicon helpers (GLOBAL). Must load before renderDetail ---
 (function(){
@@ -99,7 +95,6 @@
   };
 })();
 </script>
-
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 // --- Prevent pinch/tap zoom (fallback for browsers that ignore viewport flags) ---
@@ -118,7 +113,7 @@ document.addEventListener('touchend', function(e){
   __lastTouchEnd = now;
 }, { passive: false });
 </script>
-  <script>
+<script>
     tailwind.config = {
       theme: {
         extend: {
@@ -131,7 +126,7 @@ document.addEventListener('touchend', function(e){
       }
     }
   </script>
-  <style>
+<style>
     .ah-grad{background-image:linear-gradient(135deg,#2563eb 0%,#14b8a6 100%)}
     .ah-chip[data-selected="true"]{background:#111827;color:#fff;border-color:#111827}
     .no-scrollbar::-webkit-scrollbar{display:none}.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
@@ -313,7 +308,6 @@ input, textarea, select { font-size: 16px; }
 
   #shareModal .share-chip__label { font-size: 13px; color:#111827; }
 </style>
-
 <style id="ah-logo-fix">
 /* Ensure the sidebar badge image fills the container perfectly and stays sharp */
 .ah-grad{ overflow: hidden; padding: 0 !important; }
@@ -330,8 +324,6 @@ input, textarea, select { font-size: 16px; }
 /* Optionally allow a slightly larger badge in the sidebar */
 .sidebar .ah-brand-badge{ width: 40px; height: 40px; }
 </style>
-
-
 <style>
   /* --- injected: rounded selector for active bottom bar item */
   
@@ -339,8 +331,6 @@ input, textarea, select { font-size: 16px; }
   /* Improve icon/text contrast when active */
   
 </style>
-
-
 <style id="bb-active-style-v3">
 /* Bottom bar minimal active styling */
 #bottom-bar a[data-route]{
@@ -364,8 +354,6 @@ input, textarea, select { font-size: 16px; }
 #bottom-bar a[data-route]::before,
 #bottom-bar a[data-route]::after{ content:none !important; display:none !important; }
 </style>
-
-
 <style id="no-hscroll-detail-fix">
 /* Apply only when body has .no-hscroll (we set this when ?org= is present) */
 body.no-hscroll, body.no-hscroll html {
@@ -399,9 +387,6 @@ body.no-hscroll #detailRoot {
 /* Bottom bar: ensure it doesn't exceed viewport width */
 #bottom-bar{ left: 0; right: 0; width: 100% !important; }
 </style>
-
-
-
 <style id="bottom-bar-padding-fix">
 :root{ --bbh: 64px; } /* default; will be updated by JS */
 body.has-bottom-bar,
@@ -422,8 +407,6 @@ body.has-bottom-bar main{
 /* Ensure bottom bar itself doesn't create horizontal overflow */
 #bottom-bar{ left: 0; right: 0; width: 100%; }
 </style>
-
-
 <style>
 .about-block{position:relative;--about-lines:6;--about-line-height:1.5;--about-gap:10px;margin-top:8px;}
 .about-text{margin:0;line-height:var(--about-line-height);overflow:hidden;transition:max-height 180ms ease;}
@@ -437,13 +420,10 @@ body.has-bottom-bar main{
 .about-block.is-expanded .about-fade{display:none;}
 @media (max-width:640px){.about-block{--about-lines:5;}}
 </style>
-
-
 <style id="ai-review-typing-style">
 .ai-cursor{display:inline-block;width:1px;height:1em;background:currentColor;animation:blink 1s steps(2,end) infinite;vertical-align:-.2em;margin-left:2px;opacity:.9}
 @keyframes blink{0%{opacity:1}50%{opacity:0}100%{opacity:1}}
 </style>
-
 <style id="onboarding-chrome-visibility">
 /* Hide top & bottom chrome during onboarding */
 body.onboarding-mode #appTopBar,
@@ -502,917 +482,745 @@ body.onboarding-mode {
   outline: 2px solid #2563eb; outline-offset: 2px;
 }
 </style><style>
-/* --- Create menu icon chips --- */
-.icon-chip{display:inline-grid;place-items:center;border-radius:0.75rem;width:1.75rem;height:1.75rem;margin-right:0.5rem;}
-.icon-org{background:rgba(59,130,246,0.12);color:#2563eb;}     /* blue-600 on blue-100 */
-.icon-biz{background:rgba(16,185,129,0.12);color:#059669;}     /* emerald-600 on emerald-100 */
-.icon-proj{background:rgba(168,85,247,0.12);color:#7e22ce;}    /* purple-700 on purple-100 */
-.icon-evt{background:rgba(234,88,12,0.12);color:#c2410c;}      /* orange-700 on orange-100 */
-.icon-chip i{font-size:0.9rem;line-height:1;}
-</style>
-<style>
-/* --- Create menu: two-line layout --- */
-.create-menu-item{display:flex;align-items:center;gap:0.75rem;padding:0.5rem 0.625rem;border-radius:0.75rem;}
-.create-menu-item:hover{background:rgba(0,0,0,0.04);}
-.create-menu-text{display:flex;flex-direction:column;line-height:1.1;}
-.create-menu-title{font-weight:600;font-size:0.95rem;color:#0f172a;}
-.create-menu-desc{font-size:0.82rem;color:#475569;margin-top:0.15rem;}
-/* soften icon chips just a touch */
-.icon-chip{border-radius:0.9rem;width:2rem;height:2rem;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.05);}
-</style>
-<style>
-/* --- Create menu hardening --- */
+/* --- Create menu consolidated styles --- */
 #createMenu{min-width: 18rem;}
-#createMenu .create-menu-item{gap:0.75rem;padding:0.6rem 0.7rem;border-radius:0.75rem;}
-#createMenu .icon-chip{width:2rem;height:2rem;border-radius:6px !important;box-shadow:inset 0 0 0 1px rgba(0,0,0,.05);}
-#createMenu .create-menu-title{font-weight:600;font-size:0.95rem;color:#0f172a;}
-#createMenu .create-menu-desc{font-size:0.82rem;color:#475569;margin-top:0.15rem;}
-</style>
-<style>
-/* --- Create menu layout fix --- */
-#createMenu .create-menu-item{display:flex !important;flex-direction:row !important;align-items:center !important;gap:0.75rem !important;padding:0.6rem 0.7rem;border-radius:0.75rem;}
-#createMenu .icon-chip{display:inline-grid;place-items:center;width:1.9rem;height:1.9rem;border-radius:6px !important!important; /* soft square */ box-shadow:inset 0 0 0 1px rgba(0,0,0,.06);}
+#createMenu .create-menu-item{display:flex;flex-direction:row;align-items:center;gap:0.75rem;padding:0.6rem 0.7rem;border-radius:0.75rem;}
+#createMenu .create-menu-item:hover{background:rgba(0,0,0,0.04);}
+#createMenu .icon-chip{display:inline-grid;place-items:center;width:1.9rem;height:1.9rem;border-radius:6px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06);}
 #createMenu .icon-chip i{font-size:0.95rem;line-height:1;}
 #createMenu .create-menu-text{display:flex;flex-direction:column;line-height:1.15;}
-</style>
-<style>
-/* --- Create menu separator --- */
+#createMenu .create-menu-title{font-weight:600;font-size:0.95rem;color:#0f172a;}
+#createMenu .create-menu-desc{font-size:0.82rem;color:#475569;margin-top:0.15rem;}
 #createMenu .create-menu-sep{height:1px;background:rgba(15,23,42,0.08);margin:0.35rem 0;}
 </style>
 <style>
 /* --- Create button height matches Login (h-9) --- */
 .create-menu-wrap .create-btn{
   display:flex; align-items:center; justify-content:center; gap:0.5rem;
-  height:2.25rem;            /* Tailwind h-9 = 36px */
-  padding:0 0.75rem;         /* px-3 */
-  border-radius:0.75rem;     /* rounded-xl vibe */
-  line-height:1;             /* prevents extra vertical growth */
+  height:2.25rem; padding:0 0.75rem; border-radius:0.75rem; line-height:1;
 }
 .create-menu-wrap .create-btn .chev{ width:18px; height:18px; }
 </style>
+<style>
+/* --- AUTH MODAL full-page layout --- */
+#authModal{position:fixed; inset:0; z-index:60; display:none;}
+#authModal[data-open="true"]{display:block;}
+#authModal .backdrop{position:absolute; inset:0; background:rgba(15,23,42,.55);}
+#authModal .panel-wrap{position:absolute; inset:0; display:grid; place-items:center; overflow:auto; padding:0;}
+#authModal .panel{width:100vw; max-width:100vw; height:100vh; max-height:100vh; background:#fff; border-radius:0; box-shadow:0 20px 50px rgba(2,6,23,.25);}
+.auth-grid{display:grid; grid-template-columns:1fr; height:100vh;}
+@media (min-width: 1024px){
+  .auth-grid{grid-template-columns:1.1fr 0.9fr;}
+  .auth-art{display:block;}
+}
+.auth-art{display:none; background: radial-gradient(1200px 600px at -10% -10%, #e0e7ff 0%, rgba(224,231,255,0) 50%), radial-gradient(800px 500px at 120% 120%, #cffafe 0%, rgba(207,250,254,0) 55%), linear-gradient(135deg,#e0e7ff 0%,#f0f9ff 45%,#ecfeff 100%); padding:48px;}
+.auth-art .hero{height:100%; border-radius:16px; background:linear-gradient(135deg,#dbeafe,#ede9fe); display:grid; place-items:center;}
+.auth-art h2{font-size:28px; line-height:1.2; color:#0f172a; letter-spacing:.2px;}
+.auth-art p{margin-top:8px; color:#334155;}
+.auth-form{height:100%; display:flex; flex-direction:column; justify-content:center; padding:32px 28px;}
+@media (min-width: 640px){ .auth-form{padding:48px 56px;} }
+.tabbar{display:flex; gap:24px; align-items:center; margin-bottom:16px;}
+.tabbar button{background:none; border:0; font-weight:700; color:#475569; padding:6px 2px; position:relative;}
+.tabbar button[aria-selected="true"]{color:#0f172a;}
+.tabbar button[aria-selected="true"]::after{content:""; position:absolute; left:0; right:0; bottom:-4px; height:4px; border-radius:999px; background:linear-gradient(90deg,#6366f1,#22d3ee);}
+.social-btn{display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:999px; border:1px solid #e5e7eb; background:#f8fafc; font-weight:600; color:#0f172a;}
+.social-stack{display:grid; gap:10px;}
+.field{display:grid; gap:6px;}
+.label{font-size:.88rem; color:#334155; font-weight:600;}
+.input{border:1px solid #e5e7eb; border-radius:12px; padding:10px 12px; outline:0;}
+.input:focus{border-color:#6366f1; box-shadow:0 0 0 3px rgba(99,102,241,.18);}
+.auth-actions{display:grid; gap:10px; margin-top:12px;}
+.auth-primary{height:44px; border-radius:12px; background:#3b82f6; color:#fff; font-weight:700; display:flex; align-items:center; justify-content:center;}
+.auth-primary:hover{background:#2563eb;}
+.auth-footer{margin-top:10px; font-size:.9rem; color:#475569;}
+.auth-close{position:absolute; top:14px; right:14px; width:40px; height:40px; display:grid; place-items:center; border-radius:999px; background:rgba(255,255,255,.85); border:1px solid rgba(15,23,42,.08);}
+</style>
+<style>
+/* --- Auth modal animations: smooth drop-in + fade --- */
+@keyframes ahBackdropIn { from { opacity: 0 } to { opacity: 1 } }
+@keyframes ahBackdropOut { from { opacity: 1 } to { opacity: 0 } }
+@keyframes ahPanelIn { from { transform: translateY(-24px) scale(.995); opacity: 0 } to { transform: translateY(0) scale(1); opacity: 1 } }
+@keyframes ahPanelOut{ from { transform: translateY(0) scale(1); opacity: 1 } to { transform: translateY(-12px) scale(.997); opacity: 0 } }
+#authModal .backdrop{opacity:0;}
+#authModal .panel{opacity:0; transform: translateY(-16px);}
+#authModal[data-open="true"][data-state="open"]    .backdrop{animation: ahBackdropIn .28s ease forwards;}
+#authModal[data-open="true"][data-state="closing"] .backdrop{animation: ahBackdropOut .20s ease forwards;}
+#authModal[data-open="true"][data-state="open"]    .panel{animation: ahPanelIn .32s cubic-bezier(.2,.6,.2,1) forwards;}
+#authModal[data-open="true"][data-state="closing"] .panel{animation: ahPanelOut .22s ease forwards;}
+@media (prefers-reduced-motion: reduce){
+  #authModal .backdrop, #authModal .panel{animation: none !important; transition: none !important;}
+}
+</style>
+<style>
+/* === AUTH MODAL: enforce left design + right form on desktop === */
+#authModal .panel{width:100vw!important;max-width:100vw!important;height:100vh!important;max-height:100vh!important;border-radius:0!important;}
+#authModal .auth-grid{display:grid;height:100vh;grid-template-columns:1fr;}
+@media (min-width:1024px){
+  #authModal .auth-grid{grid-template-columns:1.05fr 0.95fr !important;}
+  #authModal .auth-art{display:block !important;}
+}
+#authModal .auth-art{
+  background:
+    radial-gradient(700px 400px at -10% -10%, rgba(99,102,241,.18), rgba(99,102,241,0)),
+    radial-gradient(500px 300px at 120% 120%, rgba(34,211,238,.18), rgba(34,211,238,0)),
+    linear-gradient(135deg,#eef2ff,#ecfeff);
+  padding:48px;
+}
+#authModal .auth-form{display:flex;flex-direction:column;justify-content:center;padding:40px 48px;}
+</style>
 </head>
 <body class="has-bottom-bar min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
-  <div class="flex w-full">
-    <!-- ====== SIDEBAR ====== -->
-    <aside class="hidden lg:flex lg:w-64 xl:w-72 lg:shrink-0 lg:sticky lg:top-0 lg:self-start lg:h-[100dvh] lg:overflow-y-auto border-r border-gray-200 sidebar-grad flex-col">
-      <div class="flex items-center gap-3 p-4">
-        <div class="w-9 h-9 grid place-items-center rounded-xl ah-grad text-white font-bold ah-brand-badge"><img src="https://i.imgur.com/7dO0mhL.png" alt="Activity Hub" class="w-6 h-6 object-contain pointer-events-none" loading="lazy"/ class="w-full h-full object-cover pointer-events-none" loading="lazy" srcset="https://i.imgur.com/7dO0mhL.png 1x, https://i.imgur.com/7dO0mhL.png 2x" sizes="40px"></div>
-        <span class="font-semibold text-gray-800">Activity Hub</span>
-      </div>
-      <nav class="px-2 py-3 space-y-1 text-sm">
-        <a href="?view=home" data-route="home" class="flex items-center gap-3 px-3 py-2 rounded-lg nav-active" aria-current="page"><i class="fa-solid fa-house text-[18px]"></i> Home</a>
-        <div class="h-px bg-gray-100 my-2"></div>
-        <a href="?view=orgs" data-route="orgs" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-users text-[18px]"></i> Organizations</a>
-        <a href="?view=businesses" data-route="businesses" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-briefcase text-[18px]"></i> Businesses</a>
-        <a href="?view=projects" data-route="projects" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-diagram-project text-[18px]"></i> Projects</a>
-        <a href="?view=events" data-route="events" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 items-center gap-2"><i class="fa-solid fa-calendar-days text-[18px]"></i> Events<span class="ml-2 inline-flex items-center gap-1 h-5 px-2 text-[11px] font-semibold rounded-full bg-gradient-to-r from-emerald-100 to-emerald-200 text-emerald-900 border border-emerald-200 ring-1 ring-emerald-300/40 shadow-[inset_0_1px_0_rgba(255,255,255,.7)] transition hover:from-emerald-200 hover:to-emerald-300 hover:ring-emerald-400/60">✨ Closed beta</span></a>
-        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" aria-current="page"><i class="fa-solid fa-graduation-cap text-[18px]"></i> Schools</a>
-      </nav>
-      <div class="mt-auto p-4">
-        <div class="rounded-xl border border-gray-200 p-4 shadow-card">
-          <div class="text-sm text-gray-700 font-medium">1 profile view</div>
-          <div class="text-xs text-gray-500">in the past 90 days</div>
-        </div>
-        <button id="getAppBtn" class="w-full mt-3 flex items-center gap-2 rounded-xl border border-gray-200/70 bg-white px-4 py-3 text-[15px] font-medium text-gray-800 hover:bg-gray-50 active:scale-[.99]"><i class="fa-solid fa-qrcode text-[18px]"></i><span>Get the app</span></button>
-      </div>
-    </aside>
-
-    <!-- Mobile sidebar drawer -->
-    <div id="sidebar-drawer" class="lg:hidden fixed inset-0 z-40 hidden" aria-hidden="true">
-      <button id="drawer-overlay" class="absolute inset-0 bg-black/40 opacity-0 transition-opacity"></button>
-      <aside id="drawer-panel" class="absolute left-0 top-0 h-full w-72 max-w-[85vw] bg-white border-r border-gray-200 shadow-xl -translate-x-full transition-transform duration-300">
-        <div class="flex items-center justify-between p-4">
-          <div class="flex items-center gap-3">
-            <div class="w-9 h-9 grid place-items-center rounded-xl ah-grad text-white font-bold"><img src="https://i.imgur.com/7dO0mhL.png" alt="Activity Hub" class="w-6 h-6 object-contain pointer-events-none" loading="lazy"/ class="w-full h-full object-cover pointer-events-none" loading="lazy"></div>
-            <span class="font-semibold text-gray-800">Activity Hub</span>
-          </div>
-          <button id="close-drawer" class="p-2 rounded-md hover:bg-gray-100" aria-label="Close sidebar"><i class="fa-solid fa-xmark text-[18px]"></i></button>
-        </div>
-        <nav class="px-2 pb-3 space-y-1 text-sm">
-          <a href="?view=home" data-route="explore" class="flex items-center gap-3 px-3 py-2 rounded-lg nav-active"><i class="fa-solid fa-compass text-[18px]"></i> Home</a>
-          <div class="h-px bg-gray-100 my-2"></div>
-          <a href="?view=orgs" data-route="orgs" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-users text-[18px]"></i> Organizations</a>
-          <a href="?view=businesses" data-route="businesses" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-briefcase text-[18px]"></i> Businesses</a>
-          <a href="?view=projects" data-route="projects" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-diagram-project text-[18px]"></i> Projects</a>
-          <a href="?view=events" data-route="events" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50"><i class="fa-solid fa-calendar-days text-[18px]"></i> Events</a>
-          <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" aria-current="page"><i class="fa-solid fa-graduation-cap text-[18px]"></i> Schools</a>
-        </nav>
-        <div class="mt-auto p-4 border-t border-gray-100">
-          <div class="rounded-xl border border-gray-200 p-4 shadow-card mb-3">
-            <div class="text-sm text-gray-700 font-medium">1 profile view</div>
-            <div class="text-xs text-gray-500">in the past 90 days</div>
-          </div>
-          <button class="w-full rounded-lg border border-gray-200 py-2 text-sm hover:bg-gray-50"><i class="fa-brands fa-google-play mr-2"></i> Get the app</button>
-        </div>
-      </aside>
-    </div>
-
-    <!-- ====== MAIN ====== -->
-    <main class="flex-1 min-h-screen min-w-0">
-      <!-- Top bar -->
-      <div id="appTopBar" class="sticky top-0 z-30 bg-white/80 topbar border-b border-gray-200">
-  <!-- Desktop / tablet header row -->
-  <div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 h-14 flex items-center gap-3">
-
-    <!-- LEFT: menu button + app logo (mobile) + current view (desktop) -->
-    <div class="flex items-center gap-3">
-      <!-- sidebar toggle (mobile / md) -->
-      <button id="open-sidebar-btn" class="p-2 rounded-md border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 hover:text-gray-900 md:hidden" aria-label="Open sidebar">
-        <i class="fa-solid fa-bars text-[20px]"></i>
-      </button>
-
-      <!-- Brand logo (mobile only) -->
-      <div class="w-8 h-8 rounded-xl overflow-hidden shadow-sm md:hidden">
-        <img
-          src="https://i.imgur.com/7dO0mhL.png"
-          alt="Activity Hub"
-          class="w-full h-full object-cover pointer-events-none select-none"
-          loading="lazy"
-        />
-      </div>
-
-      <!-- Current view label (desktop only) -->
-      <div id="nav-current-view" class="hidden lg:flex items-center gap-2 text-lg font-semibold text-gray-800 whitespace-nowrap">
-        <i class="fa-solid fa-house text-ah-600"></i>
-        <span id="nav-current-label">Home</span>
-      </div>
-    </div>
-
-    <!-- MIDDLE: global search (desktop only) -->
-    <div class="flex-1 mx-2 hidden md:flex justify-start min-w-0">
-      <div
-        class="relative w-full max-w-lg"
-        id="searchbox"
-        role="combobox"
-        aria-haspopup="listbox"
-        aria-owns="search-menu"
-        aria-expanded="false"
-      >
-        <!-- magnifying glass icon -->
-        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[14px]"></i>
-
-        <!-- dynamic scope pill -->
-        <span id="scope-pill" class="hidden absolute left-8 top-1/2 -translate-y-1/2"></span>
-
-        <!-- search input -->
-        <input
-          id="global-search"
-          type="search"
-          aria-autocomplete="list"
-          aria-controls="search-menu"
-          class="w-full rounded-full bg-gray-50 border border-gray-300 pl-8 pr-10 py-1.5 text-[13px] text-gray-900 placeholder-gray-400 focus:bg-white focus:border-ah-500 focus:ring-2 focus:ring-ah-500/20 outline-none transition search-soft"
-          placeholder="Search clubs, businesses, projects…"
-        />
-
-        <!-- clear search button -->
-        <button
-          id="clear-search"
-          class="hidden absolute right-8 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-[12px]"
-          aria-label="Clear"
-        >
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-
-        <!-- keyboard hint "/" -->
-        <span class="pointer-events-none flex items-center justify-center absolute right-2 top-1/2 -translate-y-1/2 h-5 min-w-[20px] rounded border border-gray-300 bg-white px-1 text-[10px] font-medium leading-none tracking-wider text-gray-500 shadow-sm">/</span>
-
-        <!-- dropdown menu -->
-        <div id="search-menu" class="search-menu hidden">
-          <div class="rounded-xl border border-gray-200 bg-white shadow-2xl overflow-hidden">
-            <!-- scope tabs -->
-            <div class="flex items-center gap-1 p-2 border-b border-gray-100">
-              <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="all">All</button>
-              <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="orgs"><i class="fa-solid fa-users mr-1.5"></i> Orgs</button>
-              <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="biz"><i class="fa-solid fa-briefcase mr-1.5"></i> Businesses</button>
-              <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="projects"><i class="fa-solid fa-diagram-project mr-1.5"></i> Projects</button>
-
-              <div class="ml-auto text-[11px] text-gray-500 pr-2">↑/↓ to navigate • Enter to open</div>
-            </div>
-
-            <!-- populated by JS -->
-            <div id="search-results" role="listbox" class="max-h-[60vh] overflow-auto py-2"></div>
-
-            <!-- footer -->
-            <div id="search-footer" class="flex items-center justify-between px-3 py-2 border-t border-gray-100 text-xs text-gray-500">
-              <div>
+<div class="flex w-full">
+<!-- ====== SIDEBAR ====== -->
+<aside class="hidden lg:flex lg:w-64 xl:w-72 lg:shrink-0 lg:sticky lg:top-0 lg:self-start lg:h-[100dvh] lg:overflow-y-auto border-r border-gray-200 sidebar-grad flex-col">
+<div class="flex items-center gap-3 p-4">
+<div class="w-9 h-9 grid place-items-center rounded-xl ah-grad text-white font-bold ah-brand-badge"><img alt="Activity Hub" class="w-full h-full object-cover pointer-events-none" loading="lazy" sizes="40px" src="https://i.imgur.com/7dO0mhL.png" srcset="https://i.imgur.com/7dO0mhL.png 1x, https://i.imgur.com/7dO0mhL.png 2x"/></div>
+<span class="font-semibold text-gray-800">Activity Hub</span>
+</div>
+<nav class="px-2 py-3 space-y-1 text-sm">
+<a aria-current="page" class="flex items-center gap-3 px-3 py-2 rounded-lg nav-active" data-route="home" href="?view=home"><i class="fa-solid fa-house text-[18px]"></i> Home</a>
+<div class="h-px bg-gray-100 my-2"></div>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" data-route="orgs" href="?view=orgs"><i class="fa-solid fa-users text-[18px]"></i> Organizations</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" data-route="businesses" href="?view=businesses"><i class="fa-solid fa-briefcase text-[18px]"></i> Businesses</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" data-route="projects" href="?view=projects"><i class="fa-solid fa-diagram-project text-[18px]"></i> Projects</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 items-center gap-2" data-route="events" href="?view=events"><i class="fa-solid fa-calendar-days text-[18px]"></i> Events<span class="ml-2 inline-flex items-center gap-1 h-5 px-2 text-[11px] font-semibold rounded-full bg-gradient-to-r from-emerald-100 to-emerald-200 text-emerald-900 border border-emerald-200 ring-1 ring-emerald-300/40 shadow-[inset_0_1px_0_rgba(255,255,255,.7)] transition hover:from-emerald-200 hover:to-emerald-300 hover:ring-emerald-400/60">✨ Closed beta</span></a>
+<a aria-current="page" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" href="#"><i class="fa-solid fa-graduation-cap text-[18px]"></i> Schools</a>
+</nav>
+<div class="mt-auto p-4">
+<div class="rounded-xl border border-gray-200 p-4 shadow-card">
+<div class="text-sm text-gray-700 font-medium">1 profile view</div>
+<div class="text-xs text-gray-500">in the past 90 days</div>
+</div>
+<button class="w-full mt-3 flex items-center gap-2 rounded-xl border border-gray-200/70 bg-white px-4 py-3 text-[15px] font-medium text-gray-800 hover:bg-gray-50 active:scale-[.99]" id="getAppBtn"><i class="fa-solid fa-qrcode text-[18px]"></i><span>Get the app</span></button>
+</div>
+</aside>
+<!-- Mobile sidebar drawer -->
+<div aria-hidden="true" class="lg:hidden fixed inset-0 z-40 hidden" id="sidebar-drawer">
+<button class="absolute inset-0 bg-black/40 opacity-0 transition-opacity" id="drawer-overlay"></button>
+<aside class="absolute left-0 top-0 h-full w-72 max-w-[85vw] bg-white border-r border-gray-200 shadow-xl -translate-x-full transition-transform duration-300" id="drawer-panel">
+<div class="flex items-center justify-between p-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 grid place-items-center rounded-xl ah-grad text-white font-bold"><img alt="Activity Hub" class="w-full h-full object-cover pointer-events-none" loading="lazy" src="https://i.imgur.com/7dO0mhL.png"/></div>
+<span class="font-semibold text-gray-800">Activity Hub</span>
+</div>
+<button aria-label="Close sidebar" class="p-2 rounded-md hover:bg-gray-100" id="close-drawer"><i class="fa-solid fa-xmark text-[18px]"></i></button>
+</div>
+<nav class="px-2 pb-3 space-y-1 text-sm">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg nav-active" data-route="explore" href="?view=home"><i class="fa-solid fa-compass text-[18px]"></i> Home</a>
+<div class="h-px bg-gray-100 my-2"></div>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" data-route="orgs" href="?view=orgs"><i class="fa-solid fa-users text-[18px]"></i> Organizations</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" data-route="businesses" href="?view=businesses"><i class="fa-solid fa-briefcase text-[18px]"></i> Businesses</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" data-route="projects" href="?view=projects"><i class="fa-solid fa-diagram-project text-[18px]"></i> Projects</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" data-route="events" href="?view=events"><i class="fa-solid fa-calendar-days text-[18px]"></i> Events</a>
+<a aria-current="page" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" href="#"><i class="fa-solid fa-graduation-cap text-[18px]"></i> Schools</a>
+</nav>
+<div class="mt-auto p-4 border-t border-gray-100">
+<div class="rounded-xl border border-gray-200 p-4 shadow-card mb-3">
+<div class="text-sm text-gray-700 font-medium">1 profile view</div>
+<div class="text-xs text-gray-500">in the past 90 days</div>
+</div>
+<button class="w-full rounded-lg border border-gray-200 py-2 text-sm hover:bg-gray-50"><i class="fa-brands fa-google-play mr-2"></i> Get the app</button>
+</div>
+</aside>
+</div>
+<!-- ====== MAIN ====== -->
+<main class="flex-1 min-h-screen min-w-0">
+<!-- Top bar -->
+<div class="sticky top-0 z-30 bg-white/80 topbar border-b border-gray-200" id="appTopBar">
+<!-- Desktop / tablet header row -->
+<div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 h-14 flex items-center gap-3">
+<!-- LEFT: menu button + app logo (mobile) + current view (desktop) -->
+<div class="flex items-center gap-3">
+<!-- sidebar toggle (mobile / md) -->
+<button aria-label="Open sidebar" class="p-2 rounded-md border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 hover:text-gray-900 md:hidden" id="open-sidebar-btn">
+<i class="fa-solid fa-bars text-[20px]"></i>
+</button>
+<!-- Brand logo (mobile only) -->
+<div class="w-8 h-8 rounded-xl overflow-hidden shadow-sm md:hidden">
+<img alt="Activity Hub" class="w-full h-full object-cover pointer-events-none select-none" loading="lazy" src="https://i.imgur.com/7dO0mhL.png"/>
+</div>
+<!-- Current view label (desktop only) -->
+<div class="hidden lg:flex items-center gap-2 text-lg font-semibold text-gray-800 whitespace-nowrap" id="nav-current-view">
+<i class="fa-solid fa-house text-ah-600"></i>
+<span id="nav-current-label">Home</span>
+</div>
+</div>
+<!-- MIDDLE: global search (desktop only) -->
+<div class="flex-1 mx-2 hidden md:flex justify-start min-w-0">
+<div aria-expanded="false" aria-haspopup="listbox" aria-owns="search-menu" class="relative w-full max-w-lg" id="searchbox" role="combobox">
+<!-- magnifying glass icon -->
+<i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[14px]"></i>
+<!-- dynamic scope pill -->
+<span class="hidden absolute left-8 top-1/2 -translate-y-1/2" id="scope-pill"></span>
+<!-- search input -->
+<input aria-autocomplete="list" aria-controls="search-menu" class="w-full rounded-full bg-gray-50 border border-gray-300 pl-8 pr-10 py-1.5 text-[13px] text-gray-900 placeholder-gray-400 focus:bg-white focus:border-ah-500 focus:ring-2 focus:ring-ah-500/20 outline-none transition search-soft" id="global-search" placeholder="Search clubs, businesses, projects…" type="search"/>
+<!-- clear search button -->
+<button aria-label="Clear" class="hidden absolute right-8 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-[12px]" id="clear-search">
+<i class="fa-solid fa-xmark"></i>
+</button>
+<!-- keyboard hint "/" -->
+<span class="pointer-events-none flex items-center justify-center absolute right-2 top-1/2 -translate-y-1/2 h-5 min-w-[20px] rounded border border-gray-300 bg-white px-1 text-[10px] font-medium leading-none tracking-wider text-gray-500 shadow-sm">/</span>
+<!-- dropdown menu -->
+<div class="search-menu hidden" id="search-menu">
+<div class="rounded-xl border border-gray-200 bg-white shadow-2xl overflow-hidden">
+<!-- scope tabs -->
+<div class="flex items-center gap-1 p-2 border-b border-gray-100">
+<button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="all">All</button>
+<button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="orgs"><i class="fa-solid fa-users mr-1.5"></i> Orgs</button>
+<button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="biz"><i class="fa-solid fa-briefcase mr-1.5"></i> Businesses</button>
+<button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="projects"><i class="fa-solid fa-diagram-project mr-1.5"></i> Projects</button>
+<div class="ml-auto text-[11px] text-gray-500 pr-2">↑/↓ to navigate • Enter to open</div>
+</div>
+<!-- populated by JS -->
+<div class="max-h-[60vh] overflow-auto py-2" id="search-results" role="listbox"></div>
+<!-- footer -->
+<div class="flex items-center justify-between px-3 py-2 border-t border-gray-100 text-xs text-gray-500" id="search-footer">
+<div>
                 Press <span class="search-badge">Esc</span> to close •
                 <span class="search-badge">Enter</span> to open
               </div>
-              <button id="search-clear-recents" class="text-gray-500 hover:text-gray-700 hidden">Clear recent</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- RIGHT: mobile search trigger + login CTA -->
-    <div class="ml-auto flex items-center gap-2">
-      <!-- mobile / small-screen search button -->
-      <button
-        id="mobile-search-btn"
-        class="md:hidden h-9 w-9 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 active:bg-gray-100 shadow-sm"
-        aria-label="Search"
-      >
-        <i class="fa-solid fa-magnifying-glass text-[18px]"></i>
-      </button>
-
-      <!-- login button (all breakpoints) -->
-      <!-- Create menu (desktop only) -->
-<div class="create-menu-wrap">
-  <button id="createMenuBtn"
-          class="create-btn"
-          aria-haspopup="true"
-          aria-expanded="false">
-    Create
-    <svg aria-hidden="true" viewBox="0 0 24 24" class="chev">
-      <path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-    </svg>
-  </button>
-
-  <div id="createMenu"
-       class="create-menu"
-       role="menu"
-       aria-labelledby="createMenuBtn">
-    <a role="menuitem" tabindex="-1" href="#/create/organization" data-create="organization" class="create-menu-item"><span class="icon-chip icon-org"><i class="fa-solid fa-building-columns"></i></span><span class="create-menu-text"><span class="create-menu-title">Organization Page</span><span class="create-menu-desc">Clubs, orgs, campus groups</span></span></a>
-    <a role="menuitem" tabindex="-1" href="#/create/business"     data-create="business" class="create-menu-item"><span class="icon-chip icon-biz"><i class="fa-solid fa-briefcase"></i></span><span class="create-menu-text"><span class="create-menu-title">Business Page</span><span class="create-menu-desc">Student‑run brands & services</span></span></a>
-    <a role="menuitem" tabindex="-1" href="#/create/project"      data-create="project" class="create-menu-item"><span class="icon-chip icon-proj"><i class="fa-solid fa-diagram-project"></i></span><span class="create-menu-text"><span class="create-menu-title">Project Page</span><span class="create-menu-desc">Side projects, research, startups</span></span></a>
-    <div class="create-menu-sep" role="separator" aria-hidden="true"></div><a role="menuitem" tabindex="-1" href="#/create/event"        data-create="event" class="create-menu-item"><span class="icon-chip icon-evt"><i class="fa-solid fa-calendar-days"></i></span><span class="create-menu-text"><span class="create-menu-title">Event</span><span class="create-menu-desc">One‑time meetup, workshop, etc.</span></span></a>
-  </div>
+<button class="text-gray-500 hover:text-gray-700 hidden" id="search-clear-recents">Clear recent</button>
 </div>
-<button
-        id="loginBtn"
-        class="h-9 px-3 flex items-center justify-center rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-neutral-900 transition"
-      >
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT: mobile search trigger + login CTA -->
+<div class="ml-auto flex items-center gap-2">
+<!-- mobile / small-screen search button -->
+<button aria-label="Search" class="md:hidden h-9 w-9 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 active:bg-gray-100 shadow-sm" id="mobile-search-btn">
+<i class="fa-solid fa-magnifying-glass text-[18px]"></i>
+</button>
+<!-- login button (all breakpoints) -->
+<!-- Create menu (desktop only) -->
+<div class="create-menu-wrap">
+<button aria-expanded="false" aria-haspopup="true" class="create-btn" id="createMenuBtn">
+    Create
+    <svg aria-hidden="true" class="chev" viewbox="0 0 24 24">
+<path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+</button>
+<div aria-labelledby="createMenuBtn" class="create-menu" id="createMenu" role="menu">
+<a class="create-menu-item" data-create="organization" href="#/create/organization" role="menuitem" tabindex="-1"><span class="icon-chip icon-org"><i class="fa-solid fa-building-columns"></i></span><span class="create-menu-text"><span class="create-menu-title">Organization Page</span><span class="create-menu-desc">Clubs, orgs, campus groups</span></span></a>
+<a class="create-menu-item" data-create="business" href="#/create/business" role="menuitem" tabindex="-1"><span class="icon-chip icon-biz"><i class="fa-solid fa-briefcase"></i></span><span class="create-menu-text"><span class="create-menu-title">Business Page</span><span class="create-menu-desc">Student‑run brands &amp; services</span></span></a>
+<a class="create-menu-item" data-create="project" href="#/create/project" role="menuitem" tabindex="-1"><span class="icon-chip icon-proj"><i class="fa-solid fa-diagram-project"></i></span><span class="create-menu-text"><span class="create-menu-title">Project Page</span><span class="create-menu-desc">Side projects, research, startups</span></span></a>
+<a class="create-menu-item" data-create="event" href="#/create/event" role="menuitem" tabindex="-1"><span class="icon-chip icon-evt"><i class="fa-solid fa-calendar-days"></i></span><span class="create-menu-text"><span class="create-menu-title">Event</span><span class="create-menu-desc">One‑time meetup, workshop, etc.</span></span></a>
+</div>
+</div>
+<button class="h-9 px-3 flex items-center justify-center rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-neutral-900 transition" id="loginBtn">
         Log in
       </button>
-    </div>
-
-  </div> <!-- end header row -->
-
-  <!-- Mobile inline search + full menu -->
-  <div id="mobile-search" class="md:hidden hidden border-t border-gray-200 bg-white">
-    <div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-2">
-      <div
-        id="m-searchbox"
-        class="relative"
-        role="combobox"
-        aria-haspopup="listbox"
-        aria-owns="m-search-menu"
-        aria-expanded="false"
-      >
-        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[14px]"></i>
-
-        <!-- mobile scope pill -->
-        <span id="m-scope-pill" class="hidden absolute left-8 top-1/2 -translate-y-1/2"></span>
-
-        <input
-          id="mobile-global-search"
-          type="search"
-          class="w-full rounded-full bg-gray-50 border border-gray-300 pl-8 pr-3 py-2 text-[14px] text-gray-900 placeholder-gray-400 focus:bg-white focus:border-ah-500 focus:ring-2 focus:ring-ah-500/20 outline-none transition search-soft"
-          placeholder="Search clubs, businesses, projects…"
-        />
-
-        <!-- Mobile dropdown (same structure) -->
-        <div id="m-search-menu" class="search-menu hidden">
-          <div class="rounded-xl border border-gray-200 bg-white shadow-2xl overflow-hidden">
-            <div class="flex items-center gap-1 p-2 border-b border-gray-100">
-              <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="all">All</button>
-              <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="orgs"><i class="fa-solid fa-users mr-1.5"></i> Orgs</button>
-              <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="biz"><i class="fa-solid fa-briefcase mr-1.5"></i> Businesses</button>
-              <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="projects"><i class="fa-solid fa-diagram-project mr-1.5"></i> Projects</button>
-              <div class="ml-auto text-[11px] text-gray-500 pr-2">Tap a result • Enter to open</div>
-            </div>
-
-            <div id="m-search-results" role="listbox" class="max-h-[70vh] overflow-auto py-2"></div>
-
-            <div id="m-search-footer" class="flex items-center justify-between px-3 py-2 border-t border-gray-100 text-xs text-gray-500">
-              <div>Tap outside to close</div>
-              <button id="m-search-clear-recents" class="text-gray-500 hover:text-gray-700 hidden">Clear recent</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
-
-      
-      <!-- ====== ONBOARDING STEP 0 (Welcome) ====== -->
-      <div id="view-onboarding-welcome" class="hidden min-h-screen bg-white flex flex-col">
-        <div class="p-6 flex-1 flex flex-col items-center justify-center text-center" data-onboarding-scroll="true">
-          <div class="mb-6">
-            <!-- Brand Logo -->
-            <img
-              src="https://i.imgur.com/7dO0mhL.png"
-              alt="Activity Hub"
-              width="96" height="96"
-              class="w-24 h-24 rounded-2xl object-cover shadow pointer-events-none select-none"
-              loading="lazy"
-            />
-          </div>
-          <h1 class="text-2xl font-semibold text-gray-900">Welcome to Activity Hub</h1>
-          <p class="text-sm text-gray-500 mt-2 max-w-sm">
+</div> <!-- end header row -->
+<!-- Mobile inline search + full menu -->
+<div class="md:hidden hidden border-t border-gray-200 bg-white" id="mobile-search">
+<div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-2">
+<div aria-expanded="false" aria-haspopup="listbox" aria-owns="m-search-menu" class="relative" id="m-searchbox" role="combobox">
+<i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[14px]"></i>
+<!-- mobile scope pill -->
+<span class="hidden absolute left-8 top-1/2 -translate-y-1/2" id="m-scope-pill"></span>
+<input class="w-full rounded-full bg-gray-50 border border-gray-300 pl-8 pr-3 py-2 text-[14px] text-gray-900 placeholder-gray-400 focus:bg-white focus:border-ah-500 focus:ring-2 focus:ring-ah-500/20 outline-none transition search-soft" id="mobile-global-search" placeholder="Search clubs, businesses, projects…" type="search"/>
+<!-- Mobile dropdown (same structure) -->
+<div class="search-menu hidden" id="m-search-menu">
+<div class="rounded-xl border border-gray-200 bg-white shadow-2xl overflow-hidden">
+<div class="flex items-center gap-1 p-2 border-b border-gray-100">
+<button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="all">All</button>
+<button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="orgs"><i class="fa-solid fa-users mr-1.5"></i> Orgs</button>
+<button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="biz"><i class="fa-solid fa-briefcase mr-1.5"></i> Businesses</button>
+<button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="projects"><i class="fa-solid fa-diagram-project mr-1.5"></i> Projects</button>
+<div class="ml-auto text-[11px] text-gray-500 pr-2">Tap a result • Enter to open</div>
+</div>
+<div class="max-h-[70vh] overflow-auto py-2" id="m-search-results" role="listbox"></div>
+<div class="flex items-center justify-between px-3 py-2 border-t border-gray-100 text-xs text-gray-500" id="m-search-footer">
+<div>Tap outside to close</div>
+<button class="text-gray-500 hover:text-gray-700 hidden" id="m-search-clear-recents">Clear recent</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- ====== ONBOARDING STEP 0 (Welcome) ====== -->
+<div class="hidden min-h-screen bg-white flex flex-col" id="view-onboarding-welcome">
+<div class="p-6 flex-1 flex flex-col items-center justify-center text-center" data-onboarding-scroll="true">
+<div class="mb-6">
+<!-- Brand Logo -->
+<img alt="Activity Hub" class="w-24 h-24 rounded-2xl object-cover shadow pointer-events-none select-none" height="96" loading="lazy" src="https://i.imgur.com/7dO0mhL.png" width="96"/>
+</div>
+<h1 class="text-2xl font-semibold text-gray-900">Welcome to Activity Hub</h1>
+<p class="text-sm text-gray-500 mt-2 max-w-sm">
             Discover clubs, events, student businesses, and projects at St. John’s — all in one place.
           </p>
-
-          <button
-            type="button"
-            class="mt-8 inline-flex items-center justify-center rounded-lg bg-ah-600 text-white font-medium px-5 py-3 shadow hover:bg-ah-700 active:bg-ah-800 active:scale-[.99] transition"
-            onclick="nextOnboardingStep('account')"
-            aria-label="Continue with email"
-          >
+<button aria-label="Continue with email" class="mt-8 inline-flex items-center justify-center rounded-lg bg-ah-600 text-white font-medium px-5 py-3 shadow hover:bg-ah-700 active:bg-ah-800 active:scale-[.99] transition" onclick="nextOnboardingStep('account')" type="button">
             Continue with email
           </button>
-
-          <p class="text-[12px] text-gray-400 mt-6">
-            Already have an account? <a href="#" class="text-ah-600 hover:underline">Sign in</a>
-          </p>
-        </div>
-      </div>
-
-      <!-- ====== ONBOARDING STEP 1 (Account Basics) ====== -->
-      <div id="view-onboarding-account" class="hidden min-h-screen bg-white flex flex-col">
-        <div class="p-6 flex-1 flex flex-col" data-onboarding-scroll="true">
-          <div class="text-center mb-8">
-            <div class="mx-auto w-12 h-12 rounded-xl bg-ah-600 text-white flex items-center justify-center text-xl font-semibold shadow">
+<p class="text-[12px] text-gray-400 mt-6">
+            Already have an account? <a class="text-ah-600 hover:underline" href="#">Sign in</a>
+</p>
+</div>
+</div>
+<!-- ====== ONBOARDING STEP 1 (Account Basics) ====== -->
+<div class="hidden min-h-screen bg-white flex flex-col" id="view-onboarding-account">
+<div class="p-6 flex-1 flex flex-col" data-onboarding-scroll="true">
+<div class="text-center mb-8">
+<div class="mx-auto w-12 h-12 rounded-xl bg-ah-600 text-white flex items-center justify-center text-xl font-semibold shadow">
               AH
             </div>
-            <h1 class="mt-4 text-2xl font-semibold text-gray-900">Create your account</h1>
-            <p class="text-sm text-gray-500">We’ll set up your profile so you can join orgs and RSVP faster.</p>
-          </div>
-
-          <form class="space-y-4 max-w-sm w-full mx-auto">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Full name</label>
-              <input
-                id="ob-fullname"
-                type="text"
-                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
-                placeholder="Your name"
-              />
-            </div>
-
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-              <input
-                id="ob-email"
-                type="email"
-                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
-                placeholder="you@example.com"
-              />
-            </div>
-
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-              <input
-                id="ob-password"
-                type="password"
-                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
-                placeholder="••••••••"
-              />
-              <p class="text-[12px] text-gray-400 mt-1">No worries, this is just a demo ✌️</p>
-            </div>
-
-            <button
-              type="button"
-              class="w-full mt-6 bg-ah-600 text-white rounded-lg font-medium shadow hover:bg-ah-700 active:bg-ah-800 transition active:scale-[.99]"
-              onclick="nextOnboardingStep('school')"
-            >
+<h1 class="mt-4 text-2xl font-semibold text-gray-900">Create your account</h1>
+<p class="text-sm text-gray-500">We’ll set up your profile so you can join orgs and RSVP faster.</p>
+</div>
+<form class="space-y-4 max-w-sm w-full mx-auto">
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1">Full name</label>
+<input class="w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500" id="ob-fullname" placeholder="Your name" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+<input class="w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500" id="ob-email" placeholder="you@example.com" type="email"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+<input class="w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500" id="ob-password" placeholder="••••••••" type="password"/>
+<p class="text-[12px] text-gray-400 mt-1">No worries, this is just a demo ✌️</p>
+</div>
+<button class="w-full mt-6 bg-ah-600 text-white rounded-lg font-medium shadow hover:bg-ah-700 active:bg-ah-800 transition active:scale-[.99]" onclick="nextOnboardingStep('school')" type="button">
               Continue
             </button>
-          </form>
-
-          <div class="text-center text-[12px] text-gray-400 mt-6 max-w-sm mx-auto">
+</form>
+<div class="text-center text-[12px] text-gray-400 mt-6 max-w-sm mx-auto">
             By continuing you agree to nothing, because this is just a demo ✌️
           </div>
-        </div>
-      </div>
-
-      <!-- ====== ONBOARDING STEP 2 (School Email) ====== -->
-      <div id="view-onboarding-school-email" class="hidden min-h-screen bg-white flex flex-col">
-        <div class="p-6 flex-1 flex flex-col pb-0" data-onboarding-scroll="true" data-onboarding-scroll="true">
-          <div class="text-center mb-6 max-w-sm mx-auto">
-            <h1 class="text-2xl font-semibold text-gray-900 mb-1">Verify your school</h1>
-            <p class="text-sm text-gray-500">
+</div>
+</div>
+<!-- ====== ONBOARDING STEP 2 (School Email) ====== -->
+<div class="hidden min-h-screen bg-white flex flex-col" id="view-onboarding-school-email">
+<div class="p-6 flex-1 flex flex-col pb-0" data-onboarding-scroll="true">
+<div class="text-center mb-6 max-w-sm mx-auto">
+<h1 class="text-2xl font-semibold text-gray-900 mb-1">Verify your school</h1>
+<p class="text-sm text-gray-500">
               Use your university email so we can match you with St. John’s University and show you the right clubs and events.
             </p>
-          </div>
-
-          <div class="space-y-4 max-w-sm w-full mx-auto">
+</div>
+<div class="space-y-4 max-w-sm w-full mx-auto">
 <div>
-    <label class="block text-sm font-medium text-gray-700 mb-1">University email</label>
-    <input
-      id="ob-school-email"
-      type="email"
-      placeholder="name@stjohns.edu"
-      class="w-full rounded-lg border border-gray-300 ...outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
-    />
-  </div>
-
-  <div id="school-detect-wrapper" class="hidden">
-    <label class="block text-sm font-medium text-gray-700 mb-1">Matched school</label>
-    <div class="flex items-start gap-3 rounded-lg border border-ah-200 bg-ah-50 p-3">
-      <div class="w-10 h-10 rounded-md bg-ah-600 text-white flex items-center justify-center text-[10px] font-semibold leading-none">
+<label class="block text-sm font-medium text-gray-700 mb-1">University email</label>
+<input class="w-full rounded-lg border border-gray-300 ...outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500" id="ob-school-email" placeholder="name@stjohns.edu" type="email"/>
+</div>
+<div class="hidden" id="school-detect-wrapper">
+<label class="block text-sm font-medium text-gray-700 mb-1">Matched school</label>
+<div class="flex items-start gap-3 rounded-lg border border-ah-200 bg-ah-50 p-3">
+<div class="w-10 h-10 rounded-md bg-ah-600 text-white flex items-center justify-center text-[10px] font-semibold leading-none">
         SJU
       </div>
-      <div class="flex-1">
-        <div id="detected-school-name" class="text-sm font-medium text-ah-900">
+<div class="flex-1">
+<div class="text-sm font-medium text-ah-900" id="detected-school-name">
           St. John’s University — Queens
         </div>
-        <div class="text-[12px] text-ah-600 leading-tight">
+<div class="text-[12px] text-ah-600 leading-tight">
           Based on your email domain
         </div>
-      </div>
-      <div id="detected-domain" class="text-[12px] text-ah-600 leading-tight">
+</div>
+<div class="text-[12px] text-ah-600 leading-tight" id="detected-domain">
         stjohns.edu
       </div>
-    </div>
-  </div>
-
-  <div class="text-[12px] text-gray-500">
+</div>
+</div>
+<div class="text-[12px] text-gray-500">
     We’ll use this to connect you with the right campus automatically.
   </div>
 </div>
 <div class="mt-8 flex gap-3 max-w-sm w-full mx-auto" data-onboarding-nav="true">
-            <button
-              type="button"
-              class="flex-1 rounded-lg border border-gray-300 bg-white text-gray-700 font-medium py-3 active:scale-[.99]"
-              onclick="prevOnboardingStep('account')"
-            >
+<button class="flex-1 rounded-lg border border-gray-300 bg-white text-gray-700 font-medium py-3 active:scale-[.99]" onclick="prevOnboardingStep('account')" type="button">
               Back
             </button>
-
-            <button
-              type="button"
-              class="flex-1 rounded-lg bg-ah-600 text-white font-medium py-3 active:scale-[.99] disabled:opacity-50 disabled:cursor-not-allowed"
-              id="ob-school-continue" onclick="nextOnboardingStep('academics')" disabled
-            >
+<button class="flex-1 rounded-lg bg-ah-600 text-white font-medium py-3 active:scale-[.99] disabled:opacity-50 disabled:cursor-not-allowed" disabled="" id="ob-school-continue" onclick="nextOnboardingStep('academics')" type="button">
               Continue
             </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- ====== ONBOARDING STEP 3 (Academics) ====== -->
-      <div id="view-onboarding-academics" class="hidden min-h-screen bg-white flex flex-col">
-        <div class="p-6 flex-1 flex flex-col pb-0" data-onboarding-scroll="true">
-          <div class="text-center mb-6 max-w-sm mx-auto">
-            <h1 class="text-2xl font-semibold text-gray-900 mb-1">Your program</h1>
-            <p class="text-sm text-gray-500">
+</div>
+</div>
+</div>
+<!-- ====== ONBOARDING STEP 3 (Academics) ====== -->
+<div class="hidden min-h-screen bg-white flex flex-col" id="view-onboarding-academics">
+<div class="p-6 flex-1 flex flex-col pb-0" data-onboarding-scroll="true">
+<div class="text-center mb-6 max-w-sm mx-auto">
+<h1 class="text-2xl font-semibold text-gray-900 mb-1">Your program</h1>
+<p class="text-sm text-gray-500">
               This helps student orgs and career events find you.
             </p>
-          </div>
-
-          <div class="space-y-4 max-w-sm w-full mx-auto">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Year</label>
-              <select
-                id="ob-year"
-                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-base bg-white focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
-              >
-                <option value="">Select year…</option>
-                <option>Freshman</option>
-                <option>Sophomore</option>
-                <option>Junior</option>
-                <option>Senior</option>
-                <option>Graduate</option>
-                <option>Other</option>
-              </select>
-            </div>
-
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Major</label>
-              <select
-                id="ob-major"
-                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-base bg-white focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500"
-              >
-                <option value="">Select major…</option>
-                <option>Accounting</option>
-                <option>Finance</option>
-                <option>Computer Science</option>
-                <option>Cybersecurity</option>
-                <option>Marketing</option>
-                <option>Biology</option>
-                <option>Psychology</option>
-                <option>Undecided / Other</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="mt-8 flex gap-3 max-w-sm w-full mx-auto" data-onboarding-nav="true">
-            <button
-              type="button"
-              class="flex-1 rounded-lg border border-gray-300 bg-white text-gray-700 font-medium py-3 active:scale-[.99]"
-              onclick="prevOnboardingStep('school')"
-            >
+</div>
+<div class="space-y-4 max-w-sm w-full mx-auto">
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1">Year</label>
+<select class="w-full rounded-lg border border-gray-300 px-3 py-2 text-base bg-white focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500" id="ob-year">
+<option value="">Select year…</option>
+<option>Freshman</option>
+<option>Sophomore</option>
+<option>Junior</option>
+<option>Senior</option>
+<option>Graduate</option>
+<option>Other</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1">Major</label>
+<select class="w-full rounded-lg border border-gray-300 px-3 py-2 text-base bg-white focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500" id="ob-major">
+<option value="">Select major…</option>
+<option>Accounting</option>
+<option>Finance</option>
+<option>Computer Science</option>
+<option>Cybersecurity</option>
+<option>Marketing</option>
+<option>Biology</option>
+<option>Psychology</option>
+<option>Undecided / Other</option>
+</select>
+</div>
+</div>
+<div class="mt-8 flex gap-3 max-w-sm w-full mx-auto" data-onboarding-nav="true">
+<button class="flex-1 rounded-lg border border-gray-300 bg-white text-gray-700 font-medium py-3 active:scale-[.99]" onclick="prevOnboardingStep('school')" type="button">
               Back
             </button>
-
-            <button
-              type="button"
-              class="flex-1 rounded-lg bg-ah-600 text-white font-medium py-3 active:scale-[.99]"
-              onclick="nextOnboardingStep('interests')"
-            >
+<button class="flex-1 rounded-lg bg-ah-600 text-white font-medium py-3 active:scale-[.99]" onclick="nextOnboardingStep('interests')" type="button">
               Continue
             </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- ====== ONBOARDING STEP 4 (Interests) ====== -->
-      <div id="view-onboarding-interests" class="hidden min-h-screen bg-white flex flex-col">
-        <div class="flex-1 p-6 flex flex-col pb-0" data-onboarding-scroll="true">
-          <div class="text-center mb-6">
-            <h1 class="text-2xl font-semibold text-gray-900 mb-1">What are you into?</h1>
-            <p class="text-sm text-gray-500">We’ll personalize clubs and events</p>
-          </div>
-
-          <div id="interest-grid" class="grid grid-cols-2 gap-3 max-w-sm mx-auto w-full">
-            <!-- cards injected via JS -->
-          </div>
-
-          <div class="mt-8 flex gap-3 max-w-sm w-full mx-auto" data-onboarding-nav="true">
-            <button
-              type="button"
-              class="flex-1 rounded-lg border border-gray-300 bg-white text-gray-700 font-medium py-3 active:scale-[.99]"
-              onclick="prevOnboardingStep('academics')"
-            >
+</div>
+</div>
+</div>
+<!-- ====== ONBOARDING STEP 4 (Interests) ====== -->
+<div class="hidden min-h-screen bg-white flex flex-col" id="view-onboarding-interests">
+<div class="flex-1 p-6 flex flex-col pb-0" data-onboarding-scroll="true">
+<div class="text-center mb-6">
+<h1 class="text-2xl font-semibold text-gray-900 mb-1">What are you into?</h1>
+<p class="text-sm text-gray-500">We’ll personalize clubs and events</p>
+</div>
+<div class="grid grid-cols-2 gap-3 max-w-sm mx-auto w-full" id="interest-grid">
+<!-- cards injected via JS -->
+</div>
+<div class="mt-8 flex gap-3 max-w-sm w-full mx-auto" data-onboarding-nav="true">
+<button class="flex-1 rounded-lg border border-gray-300 bg-white text-gray-700 font-medium py-3 active:scale-[.99]" onclick="prevOnboardingStep('academics')" type="button">
               Back
             </button>
-
-            <button
-              id="ob-finish"
-              type="button"
-              class="flex-1 bg-ah-600 text-white rounded-lg font-medium py-3 shadow hover:bg-ah-700 active:bg-ah-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled
-              onclick="finishOnboarding()"
-            >
+<button class="flex-1 bg-ah-600 text-white rounded-lg font-medium py-3 shadow hover:bg-ah-700 active:bg-ah-800 transition disabled:opacity-50 disabled:cursor-not-allowed" disabled="" id="ob-finish" onclick="finishOnboarding()" type="button">
               Finish
             </button>
-          </div>
-        </div>
-      </div>
-      <!-- ====== DIRECTORY (Explore / Category / Events) ====== -->
-      <div id="view-directory" class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-
-        <!-- Events-only banner -->
-        <div id="events-banner" class="hidden rounded-xl border border-amber-200 bg-amber-50 text-amber-900 p-4">
-          <div class="flex items-start gap-3">
-            <div class="mt-0.5">
-              <i class="fa-solid fa-triangle-exclamation text-[18px]"></i>
-            </div>
-            <p class="text-sm leading-6">
-              <strong>Heads Up</strong> — These events are automatically generated from public scheduling data and may not always reflect a club’s most current plans.
+</div>
+</div>
+</div>
+<!-- ====== DIRECTORY (Explore / Category / Events) ====== -->
+<div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6" id="view-directory">
+<!-- Events-only banner -->
+<div class="hidden rounded-xl border border-amber-200 bg-amber-50 text-amber-900 p-4" id="events-banner">
+<div class="flex items-start gap-3">
+<div class="mt-0.5">
+<i class="fa-solid fa-triangle-exclamation text-[18px]"></i>
+</div>
+<p class="text-sm leading-6">
+<strong>Heads Up</strong> — These events are automatically generated from public scheduling data and may not always reflect a club’s most current plans.
               Clubs will soon be able to manage their own pages directly on Activity Hub, which will make listings more accurate over time.
               In the meantime, we recommend checking the organization’s social media or contacting them directly if an email is provided.
             </p>
-          </div>
-        </div>
-
-        <!-- Only on Explore -->
-        <div id="explore-bars" class="space-y-6">
-          <div class="soft-card p-4 flex items-start gap-3">
-            <div class="w-9 h-9 rounded-md ah-grad text-white grid place-items-center text-xs font-bold">SJU</div>
-            <div class="flex-1 min-w-0">
-              <div class="font-semibold">St. John's University — Queens</div>
-              <div class="text-sm text-gray-500">Access campus resources and verified orgs</div>
-            </div>
-          </div>
-          <div class="soft-card p-4 flex items-center gap-3">
-            <div class="w-9 h-9 grid place-items-center rounded-full bg-white border border-ah-100">
-              <i class="fa-solid fa-circle-check text-ah-700 text-[18px]"></i>
-            </div>
-            <div class="flex-1 text-sm text-ah-900">Claim your club’s page and get a verified badge.</div>
-            <button class="px-3 py-1.5 rounded-md bg-white border border-ah-200 text-sm font-medium hover:bg-ah-100">Claim now</button>
-          </div>
-        </div>
-
-        <!-- Browse -->
-        <section>
-          <div class="flex items-center justify-between mb-3"><h2 class="text-lg font-semibold">Browse</h2></div>
-          <div id="browse-chips" class="flex gap-2 items-center -mx-4 px-4 md:mx-0 md:px-0 overflow-x-auto md:overflow-x-visible no-scrollbar pb-1 flex-nowrap md:flex-wrap max-w-full">
-            <button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0" data-selected="true">All</button>
-            <button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Academic</button>
-            <button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Professional Development</button>
-            <button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Service / Volunteering</button>
-            <button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Sports &amp; Athletics</button>
-            <button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Religious / Spiritual</button>
-            <button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Cultural / Identity-Based</button>
-            <button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Arts &amp; Media</button>
-            <button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Political / Activism</button>
-          </div>
-        </section>
-
-        <!-- Sections -->
-        <section id="section-orgs">
-          <div class="flex items-center justify-between mb-3">
-            <div class="mt-2 flex items-center justify-between w-full pr-2"><h2 id="title-orgs" class="text-lg font-semibold">Top organizations</h2><a href="?sort=popular&view=orgs" data-route="orgs" class="text-sm font-medium text-blue-600 hover:underline see-all-link seeall-if-home">See all</a></div>
-            <div id="sort-orgs-wrap" class="relative hidden">
-              <button id="sort-orgs-btn" class="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-gray-200 bg-white hover:bg-gray-50">
-                <i class="fa-solid fa-arrow-up-wide-short"></i><span id="sort-orgs-label">Popular</span>
-              </button>
-              <div id="sort-orgs-menu" class="menu hidden bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden">
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="relevance">Relevance</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="az">A → Z</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="za">Z → A</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="popular">Popular</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="verified">Verified first</button>
-              </div>
-            </div>
-          </div>
-          <div id="orgs-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
-          <div id="orgs-empty" class="hidden text-sm text-gray-500">No organizations match the current filter.</div>
-        </section>
-
-        <section id="section-biz">
-          <div class="flex items-center justify-between mb-3 mt-2">
-            <div class="mt-2 flex items-center justify-between w-full pr-2"><h2 id="title-biz" class="text-lg font-semibold">Top businesses</h2><a href="?sort=popular&view=businesses" data-route="businesses" class="text-sm font-medium text-blue-600 hover:underline see-all-link seeall-if-home">See all</a></div>
-            <div id="sort-biz-wrap" class="relative hidden">
-              <button id="sort-biz-btn" class="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-gray-200 bg-white hover:bg-gray-50">
-                <i class="fa-solid fa-arrow-up-wide-short"></i><span id="sort-biz-label">Popular</span>
-              </button>
-              <div id="sort-biz-menu" class="menu hidden bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden">
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="relevance">Relevance</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="az">A → Z</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="za">Z → A</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="popular">Popular</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="verified">Verified first</button>
-              </div>
-            </div>
-          </div>
-          <div id="biz-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
-          <div id="biz-empty" class="hidden text-sm text-gray-500">No businesses found in the data.</div>
-        </section>
-
-        <section id="section-projects">
-          <div class="flex items-center justify-between mb-3 mt-2">
-            <div class="mt-2 flex items-center justify-between w-full pr-2"><h2 id="title-projects" class="text-lg font-semibold">Top projects</h2><a href="?sort=popular&view=projects" data-route="projects" class="text-sm font-medium text-blue-600 hover:underline see-all-link seeall-if-home">See all</a></div>
-            <div id="sort-projects-wrap" class="relative hidden">
-              <button id="sort-projects-btn" class="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-gray-200 bg-white hover:bg-gray-50">
-                <i class="fa-solid fa-arrow-up-wide-short"></i><span id="sort-projects-label">Popular</span>
-              </button>
-              <div id="sort-projects-menu" class="menu hidden bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden">
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="relevance">Relevance</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="az">A → Z</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="za">Z → A</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="popular">Popular</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="verified">Verified first</button>
-              </div>
-            </div>
-          </div>
-          <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
-          <div id="projects-empty" class="hidden text-sm text-gray-500">No projects found in the data.</div>
-        </section>
-
-        <!-- EVENTS (visible only in Events view) -->
-        <section id="section-events" class="hidden">
-          <div class="flex items-center justify-between mb-3">
-            <h2 id="title-events" class="text-lg font-semibold">Events</h2>
-          </div>
-          <div id="events-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
-          <div id="events-empty" class="hidden text-sm text-gray-500">No events to show.</div>
-        </section>
-      </div>
-
-      <!-- ====== SEARCH RESULTS VIEW ====== -->
-      <div id="view-search" class="hidden">
-  <div id="didyoumean-bar" class="hidden"></div>
-        <div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-          <div class="mt-2 flex items-center justify-between w-full pr-2">
-            <div>
-              <h1 id="srch-title" class="text-xl font-semibold"></h1>
-              <div class="mt-2 flex gap-2">
-                <button class="srch-scope px-3 py-1.5 text-sm rounded-full border border-gray-200 bg-white" data-scope="all">All</button>
-                <button class="srch-scope px-3 py-1.5 text-sm rounded-full border border-gray-200 bg-white" data-scope="orgs"><i class="fa-solid fa-users mr-1.5"></i>Orgs</button>
-                <button class="srch-scope px-3 py-1.5 text-sm rounded-full border border-gray-200 bg-white" data-scope="businesses"><i class="fa-solid fa-briefcase mr-1.5"></i>Businesses</button>
-                <button class="srch-scope px-3 py-1.5 text-sm rounded-full border border-gray-200 bg-white" data-scope="projects"><i class="fa-solid fa-diagram-project mr-1.5"></i>Projects</button>
-              </div>
-            </div>
-
-            <div class="relative">
-              <button id="srch-sort-btn" class="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-gray-200 bg-white hover:bg-gray-50">
-                <i class="fa-solid fa-arrow-up-wide-short"></i><span id="srch-sort-label">Relevance</span>
-              </button>
-              <div id="srch-sort-menu" class="menu hidden bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden">
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="relevance">Relevance</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="az">A → Z</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="za">Z → A</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="popular">Popular</button>
-                <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="verified">Verified first</button>
-              </div>
-            </div>
-          </div>
-
-          <section id="rs-orgs">
-            <h2 class="text-lg font-semibold mb-3" id="rs-orgs-title">Organizations</h2>
-            <div id="rs-orgs-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
-            <div id="rs-orgs-empty" class="hidden text-sm text-gray-500">No organizations match.</div>
-          </section>
-
-          <section id="rs-biz">
-            <h2 class="text-lg font-semibold mb-3" id="rs-biz-title">Businesses</h2>
-            <div id="rs-biz-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
-            <div id="rs-biz-empty" class="hidden text-sm text-gray-500">No businesses match.</div>
-          </section>
-
-          <section id="rs-projects">
-            <h2 class="text-lg font-semibold mb-3" id="rs-projects-title">Projects</h2>
-            <div id="rs-projects-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
-            <div id="rs-projects-empty" class="hidden text-sm text-gray-500">No projects match.</div>
-          </section>
-
-          <section id="rs-alt-wrapper" class="hidden pt-8 border-t border-gray-200">
-            <h2 class="text-lg font-semibold mb-1" id="rs-alt-heading">Related results</h2>
-            <p class="text-sm text-gray-500 mb-4" id="rs-alt-desc"></p>
-
-            <section id="rs-alt-orgs" class="mb-6">
-              <h3 class="text-base font-semibold mb-3" id="rs-alt-orgs-title">Organizations</h3>
-              <div id="rs-alt-orgs-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
-              <div id="rs-alt-orgs-empty" class="hidden text-sm text-gray-500">No organizations match.</div>
-            </section>
-
-            <section id="rs-alt-biz" class="mb-6">
-              <h3 class="text-base font-semibold mb-3" id="rs-alt-biz-title">Businesses</h3>
-              <div id="rs-alt-biz-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
-              <div id="rs-alt-biz-empty" class="hidden text-sm text-gray-500">No businesses match.</div>
-            </section>
-
-            <section id="rs-alt-projects" class="mb-2">
-              <h3 class="text-base font-semibold mb-3" id="rs-alt-projects-title">Projects</h3>
-              <div id="rs-alt-projects-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
-              <div id="rs-alt-projects-empty" class="hidden text-sm text-gray-500">No projects match.</div>
-            </section>
-          </section>
-
-        </div>
-      </div>
-
-      <!-- ====== FULLPAGE DETAIL VIEW ====== -->
-      <div id="view-detail" class="hidden">
-        <div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-6">
-          <nav class="mb-4 text-sm">
-            <a href="./" id="back" class="inline-flex items-center gap-1 text-ah-700 hover:underline">
-              <i class="fa-solid fa-arrow-left"></i> All listings
-            </a>
-          </nav>
-
-          <article class="rounded-xl border border-gray-200 bg-white shadow-card">
-            <div class="p-6 md:p-8">
-              <div class="flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-5">
-                <img id="d_logo" class="w-20 h-20 rounded-xl object-contain bg-white p-1 ring-1 ring-gray-200 hidden" alt="">
-                <div id="d_fallback" class="w-20 h-20 rounded-xl grid place-items-center text-white text-lg font-semibold ring-1 ring-gray-200"></div>
-
-                <div class="min-w-0 flex-1">
-                  <div class="flex flex-col md:flex-row items-center md:items-start justify-between gap-3 text-center md:text-left">
-                    <div class="min-w-0">
-                      <h1 id="d_name" class="text-2xl font-semibold tracking-tight"></h1>
-<p id="d_meta" class="mt-1 text-[13px] text-gray-500"></p>
-
-                      <div class="mt-2 flex flex-wrap gap-2 justify-start md:justify-start">
-                        <span id="d_theme"   class="hidden inline-flex items-center text-[11px] px-2.5 py-1 rounded-full bg-gray-100 border border-gray-200"></span>
-                        <span id="d_industry"class="hidden inline-flex items-center text-[11px] px-2.5 py-1 rounded-full bg-gray-100 border border-gray-200"></span>
-                        
-                      </div>
-                    </div>
-                    <div class="flex items-center justify-start gap-2">
-
-                      <button id="claimBtn" class="shrink-0 inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 text-sm hover:bg-gray-50" aria-label="Claim this listing" data-type="listing" data-id="">
-
-                        <i class="fa-regular fa-circle-check"></i><span>Claim this <span id="claimTypeLabel">listing</span></span>
-
-                      </button>
-
-                      <button id="shareBtn" class="shrink-0 inline-flex items-center gap-2 h-9 px-3 rounded-lg border border-gray-200 text-sm hover:bg-gray-50">
-                      <i class="fa-solid fa-share-nodes"></i><span class="inline">Share</span>
-                    </button>
-
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              
-              <div class="mt-6 pt-4 border-t border-gray-200">
-                <!-- Tabs -->
-                <nav class="flex items-center gap-2 mb-4" role="tablist" aria-label="Listing sections">
-                  <button class="tab-btn inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold border border-gray-200 bg-gray-50 text-gray-800"
-                          role="tab" aria-selected="true" data-tab="overview">
-                    <i class="fa-solid fa-circle-info text-gray-500"></i> Overview
-                  </button>
-                  <button class="tab-btn inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold border border-transparent text-gray-600 hover:bg-gray-50"
-                          role="tab" aria-selected="false" data-tab="events">
-                    <i class="fa-solid fa-calendar-days text-gray-500"></i> Events
-                  </button>
-                  <button class="tab-btn inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold border border-transparent text-gray-600 hover:bg-gray-50"
-                          role="tab" aria-selected="false" data-tab="ai">
-                    <i class="fa-solid fa-robot text-gray-500"></i>AI Review</button>
-                </nav>
-
-                <!-- Panels -->
-                
-<div id="panel-overview">
-  <div class="space-y-6">
-    <section class="py-6">
-      <h2 class="text-lg font-semibold mb-2">About</h2>
-      
-  <div class="about-block" data-max-lines="6">
-    <p id="d_desc" class="about-text text-[15px] leading-7 text-gray-700"></p>
-    <div class="about-fade" aria-hidden="true"></div>
-    <button type="button" class="about-toggle" aria-expanded="false" aria-controls="d_desc">…see more</button>
-  </div>
-
-    </section>
-    
-<section class="py-6" id="overview-contact-inline">
-      <h2 class="text-lg font-semibold mb-2">Contact Info</h2>
-      <div class="text-sm text-gray-700">this is a test</div>
-    </section>
-<section class="py-6">
-      <h2 class="text-lg font-semibold mb-2">Links</h2>
-      <div id="d_links" class="flex flex-wrap gap-2"></div>
-    </section>
-  </div>
 </div>
-
-<div id="panel-events" class="hidden">
-                  <div class="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-center text-gray-600">
+</div>
+<!-- Only on Explore -->
+<div class="space-y-6" id="explore-bars">
+<div class="soft-card p-4 flex items-start gap-3">
+<div class="w-9 h-9 rounded-md ah-grad text-white grid place-items-center text-xs font-bold">SJU</div>
+<div class="flex-1 min-w-0">
+<div class="font-semibold">St. John's University — Queens</div>
+<div class="text-sm text-gray-500">Access campus resources and verified orgs</div>
+</div>
+</div>
+<div class="soft-card p-4 flex items-center gap-3">
+<div class="w-9 h-9 grid place-items-center rounded-full bg-white border border-ah-100">
+<i class="fa-solid fa-circle-check text-ah-700 text-[18px]"></i>
+</div>
+<div class="flex-1 text-sm text-ah-900">Claim your club’s page and get a verified badge.</div>
+<button class="px-3 py-1.5 rounded-md bg-white border border-ah-200 text-sm font-medium hover:bg-ah-100">Claim now</button>
+</div>
+</div>
+<!-- Browse -->
+<section>
+<div class="flex items-center justify-between mb-3"><h2 class="text-lg font-semibold">Browse</h2></div>
+<div class="flex gap-2 items-center -mx-4 px-4 md:mx-0 md:px-0 overflow-x-auto md:overflow-x-visible no-scrollbar pb-1 flex-nowrap md:flex-wrap max-w-full" id="browse-chips">
+<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0" data-selected="true">All</button>
+<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Academic</button>
+<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Professional Development</button>
+<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Service / Volunteering</button>
+<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Sports &amp; Athletics</button>
+<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Religious / Spiritual</button>
+<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Cultural / Identity-Based</button>
+<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Arts &amp; Media</button>
+<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Political / Activism</button>
+</div>
+</section>
+<!-- Sections -->
+<section id="section-orgs">
+<div class="flex items-center justify-between mb-3">
+<div class="mt-2 flex items-center justify-between w-full pr-2"><h2 class="text-lg font-semibold" id="title-orgs">Top organizations</h2><a class="text-sm font-medium text-blue-600 hover:underline see-all-link seeall-if-home" data-route="orgs" href="?sort=popular&amp;view=orgs">See all</a></div>
+<div class="relative hidden" id="sort-orgs-wrap">
+<button class="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-gray-200 bg-white hover:bg-gray-50" id="sort-orgs-btn">
+<i class="fa-solid fa-arrow-up-wide-short"></i><span id="sort-orgs-label">Popular</span>
+</button>
+<div class="menu hidden bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden" id="sort-orgs-menu">
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="relevance">Relevance</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="az">A → Z</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="za">Z → A</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="popular">Popular</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="verified">Verified first</button>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="orgs-grid"></div>
+<div class="hidden text-sm text-gray-500" id="orgs-empty">No organizations match the current filter.</div>
+</section>
+<section id="section-biz">
+<div class="flex items-center justify-between mb-3 mt-2">
+<div class="mt-2 flex items-center justify-between w-full pr-2"><h2 class="text-lg font-semibold" id="title-biz">Top businesses</h2><a class="text-sm font-medium text-blue-600 hover:underline see-all-link seeall-if-home" data-route="businesses" href="?sort=popular&amp;view=businesses">See all</a></div>
+<div class="relative hidden" id="sort-biz-wrap">
+<button class="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-gray-200 bg-white hover:bg-gray-50" id="sort-biz-btn">
+<i class="fa-solid fa-arrow-up-wide-short"></i><span id="sort-biz-label">Popular</span>
+</button>
+<div class="menu hidden bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden" id="sort-biz-menu">
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="relevance">Relevance</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="az">A → Z</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="za">Z → A</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="popular">Popular</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="verified">Verified first</button>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="biz-grid"></div>
+<div class="hidden text-sm text-gray-500" id="biz-empty">No businesses found in the data.</div>
+</section>
+<section id="section-projects">
+<div class="flex items-center justify-between mb-3 mt-2">
+<div class="mt-2 flex items-center justify-between w-full pr-2"><h2 class="text-lg font-semibold" id="title-projects">Top projects</h2><a class="text-sm font-medium text-blue-600 hover:underline see-all-link seeall-if-home" data-route="projects" href="?sort=popular&amp;view=projects">See all</a></div>
+<div class="relative hidden" id="sort-projects-wrap">
+<button class="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-gray-200 bg-white hover:bg-gray-50" id="sort-projects-btn">
+<i class="fa-solid fa-arrow-up-wide-short"></i><span id="sort-projects-label">Popular</span>
+</button>
+<div class="menu hidden bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden" id="sort-projects-menu">
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="relevance">Relevance</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="az">A → Z</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="za">Z → A</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="popular">Popular</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="verified">Verified first</button>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="projects-grid"></div>
+<div class="hidden text-sm text-gray-500" id="projects-empty">No projects found in the data.</div>
+</section>
+<!-- EVENTS (visible only in Events view) -->
+<section class="hidden" id="section-events">
+<div class="flex items-center justify-between mb-3">
+<h2 class="text-lg font-semibold" id="title-events">Events</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="events-grid"></div>
+<div class="hidden text-sm text-gray-500" id="events-empty">No events to show.</div>
+</section>
+</div>
+<!-- ====== SEARCH RESULTS VIEW ====== -->
+<div class="hidden" id="view-search">
+<div class="hidden" id="didyoumean-bar"></div>
+<div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+<div class="mt-2 flex items-center justify-between w-full pr-2">
+<div>
+<h1 class="text-xl font-semibold" id="srch-title"></h1>
+<div class="mt-2 flex gap-2">
+<button class="srch-scope px-3 py-1.5 text-sm rounded-full border border-gray-200 bg-white" data-scope="all">All</button>
+<button class="srch-scope px-3 py-1.5 text-sm rounded-full border border-gray-200 bg-white" data-scope="orgs"><i class="fa-solid fa-users mr-1.5"></i>Orgs</button>
+<button class="srch-scope px-3 py-1.5 text-sm rounded-full border border-gray-200 bg-white" data-scope="businesses"><i class="fa-solid fa-briefcase mr-1.5"></i>Businesses</button>
+<button class="srch-scope px-3 py-1.5 text-sm rounded-full border border-gray-200 bg-white" data-scope="projects"><i class="fa-solid fa-diagram-project mr-1.5"></i>Projects</button>
+</div>
+</div>
+<div class="relative">
+<button class="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-gray-200 bg-white hover:bg-gray-50" id="srch-sort-btn">
+<i class="fa-solid fa-arrow-up-wide-short"></i><span id="srch-sort-label">Relevance</span>
+</button>
+<div class="menu hidden bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden" id="srch-sort-menu">
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="relevance">Relevance</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="az">A → Z</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="za">Z → A</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="popular">Popular</button>
+<button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="verified">Verified first</button>
+</div>
+</div>
+</div>
+<section id="rs-orgs">
+<h2 class="text-lg font-semibold mb-3" id="rs-orgs-title">Organizations</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="rs-orgs-grid"></div>
+<div class="hidden text-sm text-gray-500" id="rs-orgs-empty">No organizations match.</div>
+</section>
+<section id="rs-biz">
+<h2 class="text-lg font-semibold mb-3" id="rs-biz-title">Businesses</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="rs-biz-grid"></div>
+<div class="hidden text-sm text-gray-500" id="rs-biz-empty">No businesses match.</div>
+</section>
+<section id="rs-projects">
+<h2 class="text-lg font-semibold mb-3" id="rs-projects-title">Projects</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="rs-projects-grid"></div>
+<div class="hidden text-sm text-gray-500" id="rs-projects-empty">No projects match.</div>
+</section>
+<section class="hidden pt-8 border-t border-gray-200" id="rs-alt-wrapper">
+<h2 class="text-lg font-semibold mb-1" id="rs-alt-heading">Related results</h2>
+<p class="text-sm text-gray-500 mb-4" id="rs-alt-desc"></p>
+<section class="mb-6" id="rs-alt-orgs">
+<h3 class="text-base font-semibold mb-3" id="rs-alt-orgs-title">Organizations</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="rs-alt-orgs-grid"></div>
+<div class="hidden text-sm text-gray-500" id="rs-alt-orgs-empty">No organizations match.</div>
+</section>
+<section class="mb-6" id="rs-alt-biz">
+<h3 class="text-base font-semibold mb-3" id="rs-alt-biz-title">Businesses</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="rs-alt-biz-grid"></div>
+<div class="hidden text-sm text-gray-500" id="rs-alt-biz-empty">No businesses match.</div>
+</section>
+<section class="mb-2" id="rs-alt-projects">
+<h3 class="text-base font-semibold mb-3" id="rs-alt-projects-title">Projects</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="rs-alt-projects-grid"></div>
+<div class="hidden text-sm text-gray-500" id="rs-alt-projects-empty">No projects match.</div>
+</section>
+</section>
+</div>
+</div>
+<!-- ====== FULLPAGE DETAIL VIEW ====== -->
+<div class="hidden" id="view-detail">
+<div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-6">
+<nav class="mb-4 text-sm">
+<a class="inline-flex items-center gap-1 text-ah-700 hover:underline" href="./" id="back">
+<i class="fa-solid fa-arrow-left"></i> All listings
+            </a>
+</nav>
+<article class="rounded-xl border border-gray-200 bg-white shadow-card">
+<div class="p-6 md:p-8">
+<div class="flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-5">
+<img alt="" class="w-20 h-20 rounded-xl object-contain bg-white p-1 ring-1 ring-gray-200 hidden" id="d_logo"/>
+<div class="w-20 h-20 rounded-xl grid place-items-center text-white text-lg font-semibold ring-1 ring-gray-200" id="d_fallback"></div>
+<div class="min-w-0 flex-1">
+<div class="flex flex-col md:flex-row items-center md:items-start justify-between gap-3 text-center md:text-left">
+<div class="min-w-0">
+<h1 class="text-2xl font-semibold tracking-tight" id="d_name"></h1>
+<p class="mt-1 text-[13px] text-gray-500" id="d_meta"></p>
+<div class="mt-2 flex flex-wrap gap-2 justify-start md:justify-start">
+<span class="hidden inline-flex items-center text-[11px] px-2.5 py-1 rounded-full bg-gray-100 border border-gray-200" id="d_theme"></span>
+<span class="hidden inline-flex items-center text-[11px] px-2.5 py-1 rounded-full bg-gray-100 border border-gray-200" id="d_industry"></span>
+</div>
+</div>
+<div class="flex items-center justify-start gap-2">
+<button aria-label="Claim this listing" class="shrink-0 inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 text-sm hover:bg-gray-50" data-id="" data-type="listing" id="claimBtn">
+<i class="fa-regular fa-circle-check"></i><span>Claim this <span id="claimTypeLabel">listing</span></span>
+</button>
+<button class="shrink-0 inline-flex items-center gap-2 h-9 px-3 rounded-lg border border-gray-200 text-sm hover:bg-gray-50" id="shareBtn">
+<i class="fa-solid fa-share-nodes"></i><span class="inline">Share</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-6 pt-4 border-t border-gray-200">
+<!-- Tabs -->
+<nav aria-label="Listing sections" class="flex items-center gap-2 mb-4" role="tablist">
+<button aria-selected="true" class="tab-btn inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold border border-gray-200 bg-gray-50 text-gray-800" data-tab="overview" role="tab">
+<i class="fa-solid fa-circle-info text-gray-500"></i> Overview
+                  </button>
+<button aria-selected="false" class="tab-btn inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold border border-transparent text-gray-600 hover:bg-gray-50" data-tab="events" role="tab">
+<i class="fa-solid fa-calendar-days text-gray-500"></i> Events
+                  </button>
+<button aria-selected="false" class="tab-btn inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold border border-transparent text-gray-600 hover:bg-gray-50" data-tab="ai" role="tab">
+<i class="fa-solid fa-robot text-gray-500"></i>AI Review</button>
+</nav>
+<!-- Panels -->
+<div id="panel-overview">
+<div class="space-y-6">
+<section class="py-6">
+<h2 class="text-lg font-semibold mb-2">About</h2>
+<div class="about-block" data-max-lines="6">
+<p class="about-text text-[15px] leading-7 text-gray-700" id="d_desc"></p>
+<div aria-hidden="true" class="about-fade"></div>
+<button aria-controls="d_desc" aria-expanded="false" class="about-toggle" type="button">…see more</button>
+</div>
+</section>
+<section class="py-6" id="overview-contact-inline">
+<h2 class="text-lg font-semibold mb-2">Contact Info</h2>
+<div class="text-sm text-gray-700">this is a test</div>
+</section>
+<section class="py-6">
+<h2 class="text-lg font-semibold mb-2">Links</h2>
+<div class="flex flex-wrap gap-2" id="d_links"></div>
+</section>
+</div>
+</div>
+<div class="hidden" id="panel-events">
+<div class="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-center text-gray-600">
                     Nothing here yet — check back soon.
                   </div>
-                </div>
-
-                <div id="panel-ai" class="hidden">
-  <div class="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-gray-800">
-    <div class="prose max-w-none">
-      <div id="ai-skeleton" class="animate-pulse space-y-4">
-        <div class="flex items-center gap-2">
-          <span class="inline-block w-2 h-2 rounded-full bg-gray-500 animate-bounce"></span>
-          <span class="text-base font-semibold text-gray-700 leading-snug">
+</div>
+<div class="hidden" id="panel-ai">
+<div class="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-gray-800">
+<div class="prose max-w-none">
+<div class="animate-pulse space-y-4" id="ai-skeleton">
+<div class="flex items-center gap-2">
+<span class="inline-block w-2 h-2 rounded-full bg-gray-500 animate-bounce"></span>
+<span class="text-base font-semibold text-gray-700 leading-snug">
             Generating…
           </span>
-        </div>
-        <div class="space-y-2">
-          <div class="h-3 w-full bg-gray-200 rounded"></div>
-          <div class="h-3 w-11/12 bg-gray-200 rounded"></div>
-          <div class="h-3 w-4/5 bg-gray-200 rounded"></div>
-        </div>
-      </div>
-
-      <div data-ai-review-body class="text-sm leading-6 text-gray-800 hidden"></div>
-    </div>
-  </div>
 </div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </article>
-        </div>
-      </div>
-    </main>
-  </div>
-
-  <!-- Share modal -->
-  <div id="shareModal" class="fixed inset-0 z-50 hidden">
-    <div class="absolute inset-0 bg-gray-900/60" data-close="share"></div>
-    <div class="relative grid place-items-center min-h-dvh p-4">
-      <div class="w-full max-w-md rounded-xl border border-gray-200 bg-white p-6 shadow-card">
-        <div class="mt-2 flex items-center justify-between w-full pr-2">
-          <h3 class="text-lg font-semibold">Share</h3>
-          <button class="h-9 w-9 grid place-items-center rounded-lg border border-gray-200 hover:bg-gray-50" data-close="share" aria-label="Close">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div><div id="shareRowWrap" class="mt-1">
+<div class="space-y-2">
+<div class="h-3 w-full bg-gray-200 rounded"></div>
+<div class="h-3 w-11/12 bg-gray-200 rounded"></div>
+<div class="h-3 w-4/5 bg-gray-200 rounded"></div>
+</div>
+</div>
+<div class="text-sm leading-6 text-gray-800 hidden" data-ai-review-body=""></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</article></div>
+</div>
+</main></div>
+<!-- Share modal -->
+<div class="fixed inset-0 z-50 hidden" id="shareModal">
+<div class="absolute inset-0 bg-gray-900/60" data-close="share"></div>
+<div class="relative grid place-items-center min-h-dvh p-4">
+<div class="w-full max-w-md rounded-xl border border-gray-200 bg-white p-6 shadow-card">
+<div class="mt-2 flex items-center justify-between w-full pr-2">
+<h3 class="text-lg font-semibold">Share</h3>
+<button aria-label="Close" class="h-9 w-9 grid place-items-center rounded-lg border border-gray-200 hover:bg-gray-50" data-close="share">
+<i class="fa-solid fa-xmark"></i>
+</button>
+</div><div class="mt-1" id="shareRowWrap">
 <div class="share-row">
-    <a id="shareWhatsApp" class="share-chip" href="#" aria-label="Share via WhatsApp" rel="noopener" target="_blank" aria-current="page">
-      <span class="share-chip__circle"><img alt="" src="https://i.imgur.com/qOttODu.png" class="share-chip__icon" /></span>
-      <span class="share-chip__label">WhatsApp</span>
-    </a>
-    <a id="shareX" class="share-chip" href="#" aria-label="Share on X (Twitter)" rel="noopener" target="_blank" aria-current="page">
-      <span class="share-chip__circle"><img alt="" src="https://i.imgur.com/PLQsGra.png" class="share-chip__icon" /></span>
-      <span class="share-chip__label">X</span>
-    </a>
-    <a id="shareEmail" class="share-chip" href="#" aria-label="Share via Email" rel="noopener" target="_blank" aria-current="page">
-      <span class="share-chip__circle"><img alt="" src="https://i.imgur.com/cBOGtrb.png" class="share-chip__icon" /></span>
-      <span class="share-chip__label">Email</span>
-    </a>
-    <a id="shareLinkedIn" class="share-chip" href="#" aria-label="Share via LinkedIn" rel="noopener" target="_blank" aria-current="page">
-      <span class="share-chip__circle"><img alt="" src="https://i.imgur.com/PEw6T9z.png" class="share-chip__icon" /></span>
-      <span class="share-chip__label">LinkedIn</span>
-    </a>
-  </div>
+<a aria-current="page" aria-label="Share via WhatsApp" class="share-chip" href="#" id="shareWhatsApp" rel="noopener" target="_blank">
+<span class="share-chip__circle"><img alt="" class="share-chip__icon" src="https://i.imgur.com/qOttODu.png"/></span>
+<span class="share-chip__label">WhatsApp</span>
+</a>
+<a aria-current="page" aria-label="Share on X (Twitter)" class="share-chip" href="#" id="shareX" rel="noopener" target="_blank">
+<span class="share-chip__circle"><img alt="" class="share-chip__icon" src="https://i.imgur.com/PLQsGra.png"/></span>
+<span class="share-chip__label">X</span>
+</a>
+<a aria-current="page" aria-label="Share via Email" class="share-chip" href="#" id="shareEmail" rel="noopener" target="_blank">
+<span class="share-chip__circle"><img alt="" class="share-chip__icon" src="https://i.imgur.com/cBOGtrb.png"/></span>
+<span class="share-chip__label">Email</span>
+</a>
+<a aria-current="page" aria-label="Share via LinkedIn" class="share-chip" href="#" id="shareLinkedIn" rel="noopener" target="_blank">
+<span class="share-chip__circle"><img alt="" class="share-chip__icon" src="https://i.imgur.com/PEw6T9z.png"/></span>
+<span class="share-chip__label">LinkedIn</span>
+</a>
 </div>
-        <div class="mt-4 flex items-center gap-2">
-          <input id="shareUrl" class="flex-1 h-11 rounded-lg border border-gray-200 px-3" readonly>
-          <button id="copyShare" class="h-11 px-4 rounded-lg bg-ah-600 text-white hover:bg-ah-700">Copy</button>
-        </div>
-        <div id="copied" class="mt-3 text-emerald-600 text-sm hidden">Copied!</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ====== JS ====== -->
-  <script>
+</div>
+<div class="mt-4 flex items-center gap-2">
+<input class="flex-1 h-11 rounded-lg border border-gray-200 px-3" id="shareUrl" readonly=""/>
+<button class="h-11 px-4 rounded-lg bg-ah-600 text-white hover:bg-ah-700" id="copyShare">Copy</button>
+</div>
+<div class="mt-3 text-emerald-600 text-sm hidden" id="copied">Copied!</div>
+</div>
+</div>
+</div>
+<!-- ====== JS ====== -->
+<script>
     const API_URL = "https://sheet2api.com/v1/ubMLioGAT8Gm/updated-listings";
     
     // ---- Logo fit mode toggle ----
@@ -3276,41 +3084,39 @@ async function routeFromURL(){
     window.addEventListener('popstate', routeFromURL);
     loadData();
   </script>
-
 <!-- Claim Modal -->
-<div id="claim-modal" class="fixed inset-0 z-50 hidden">
-  <div class="absolute inset-0 bg-black/30" data-dismiss></div>
-  <div class="mx-auto mt-20 w-[92vw] max-w-lg rounded-2xl bg-white shadow-card border border-gray-200">
-    <div class="flex items-center justify-between px-5 py-3 border-b border-gray-100">
-      <h2 class="text-lg font-semibold">
+<div class="fixed inset-0 z-50 hidden" id="claim-modal">
+<div class="absolute inset-0 bg-black/30" data-dismiss=""></div>
+<div class="mx-auto mt-20 w-[92vw] max-w-lg rounded-2xl bg-white shadow-card border border-gray-200">
+<div class="flex items-center justify-between px-5 py-3 border-b border-gray-100">
+<h2 class="text-lg font-semibold">
         Claim this <span id="claim-type-label">listing</span>
-      </h2>
-      <button class="p-2 rounded-lg hover:bg-gray-50" aria-label="Close" data-dismiss>
-        <i class="fa-regular fa-xmark"></i>
-      </button>
-    </div>
-    <form id="claim-form" class="p-5 space-y-4">
-      <input type="hidden" name="listing_id" id="claim-listing-id" />
-      <div>
-        <label class="block text-sm font-medium mb-1" for="claim-name">Your name</label>
-        <input id="claim-name" name="name" type="text" required class="w-full rounded-xl border border-gray-300 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500">
-      </div>
-      <div>
-        <label class="block text-sm font-medium mb-1" for="claim-email">Work/School email</label>
-        <input id="claim-email" name="email" type="email" required class="w-full rounded-xl border border-gray-300 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500">
-      </div>
-      <div>
-        <label class="block text-sm font-medium mb-1" for="claim-proof">Proof link (official site, email domain, etc.)</label>
-        <input id="claim-proof" name="proof" type="url" placeholder="https://example.edu/club-page" class="w-full rounded-xl border border-gray-300 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500">
-      </div>
-      <div class="flex items-center justify-end gap-2 pt-2">
-        <button type="button" class="px-4 py-2 rounded-xl border border-gray-200 hover:bg-gray-50" data-dismiss>Cancel</button>
-        <button type="submit" class="px-4 py-2 rounded-xl bg-sky-600 text-white hover:bg-sky-700">Submit claim</button>
-      </div>
-    </form>
-  </div>
+</h2>
+<button aria-label="Close" class="p-2 rounded-lg hover:bg-gray-50" data-dismiss="">
+<i class="fa-regular fa-xmark"></i>
+</button>
 </div>
-
+<form class="p-5 space-y-4" id="claim-form">
+<input id="claim-listing-id" name="listing_id" type="hidden"/>
+<div>
+<label class="block text-sm font-medium mb-1" for="claim-name">Your name</label>
+<input class="w-full rounded-xl border border-gray-300 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500" id="claim-name" name="name" required="" type="text">
+</input></div>
+<div>
+<label class="block text-sm font-medium mb-1" for="claim-email">Work/School email</label>
+<input class="w-full rounded-xl border border-gray-300 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500" id="claim-email" name="email" required="" type="email"/>
+</div>
+<div>
+<label class="block text-sm font-medium mb-1" for="claim-proof">Proof link (official site, email domain, etc.)</label>
+<input class="w-full rounded-xl border border-gray-300 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500" id="claim-proof" name="proof" placeholder="https://example.edu/club-page" type="url"/>
+</div>
+<div class="flex items-center justify-end gap-2 pt-2">
+<button class="px-4 py-2 rounded-xl border border-gray-200 hover:bg-gray-50" data-dismiss="" type="button">Cancel</button>
+<button class="px-4 py-2 rounded-xl bg-sky-600 text-white hover:bg-sky-700" type="submit">Submit claim</button>
+</div>
+</form>
+</div>
+</div>
 <script>
 function getListingTypeLabel(item){
   const t = ((item && (item.type||item.category||item.kind)) || '').toLowerCase();
@@ -3362,7 +3168,6 @@ function wireClaimButton(current){
   btn.onclick = ()=> openClaimModal({ type: btn.dataset.type || 'listing', id: btn.dataset.id || '' });
 }
 </script>
-
 <script>
 (function wireShareRowLinks(){
   const $ = s => document.querySelector(s);
@@ -3409,7 +3214,6 @@ document.addEventListener('click', (e) => {
   navigateToFacet(t.dataset.facet, t.dataset.value, t.dataset.type, t.dataset.exclude);
 });
 </script>
-
 <script>
 (function(){
   const root = document.getElementById('view-detail');
@@ -3436,7 +3240,6 @@ document.addEventListener('click', (e) => {
   });
 })();
 </script>
-
 <script>
     // Post-render hook: if a listing object `window.currentListing` exists, rebuild links.
     (function(){
@@ -3497,9 +3300,6 @@ document.addEventListener('click', function(e){
   }
 });
 </script>
-
-
-
 <script>
 // Tiny emoji mapper "library" — attach to window so we can reuse
 (function(){
@@ -3534,8 +3334,6 @@ document.addEventListener('click', function(e){
   document.addEventListener('DOMContentLoaded', ()=>applyThemePillEmojis());
 })();
 </script>
-
-
 <script>
 (function(){
   function labelForView(v){
@@ -3560,31 +3358,27 @@ document.addEventListener('click', function(e){
   document.addEventListener('DOMContentLoaded', ()=>{ try{ updateNavCurrent(window.VIEW_MODE || 'home'); }catch(e){} });
 })();
 </script>
-
-
 <!-- Get the app (QR) modal -->
-<div id="qrModal" class="fixed inset-0 z-[70] hidden">
-  <div id="qrOverlay" class="absolute inset-0 bg-black/40 backdrop-blur-[1px] opacity-0 transition-opacity duration-200"></div>
-  <div id="qrPanel" class="absolute left-1/2 top-1/2 w-[min(92vw,480px)] -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white shadow-2xl ring-1 ring-black/5 p-6 sm:p-7 transition-transform duration-200 scale-95">
-    <div class="flex items-start justify-between">
-      <h3 class="text-lg font-semibold text-gray-900">Scan to try the beta</h3>
-      <button type="button" id="qrClose" class="inline-flex h-9 w-9 items-center justify-start rounded-full hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
-        <i class="fa-solid fa-xmark text-[18px]"></i>
-      </button>
-    </div>
-    <p class="mt-1.5 text-[14px] text-gray-600">Point your phone’s camera at the QR code to open the Activity Hub beta app link.</p>
-    <div class="mt-5 grid place-items-center">
-      <img id="qrImg" class="h-[240px] w-[240px] rounded-xl ring-1 ring-gray-200" src="" alt="QR code for Activity Hub beta link" loading="lazy" decoding="async">
-    </div>
-    <div class="mt-5 flex items-center gap-2">
-      <input id="qrUrl" class="flex-1 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-[14px] text-gray-800" readonly>
-      <button id="qrCopy" class="rounded-lg bg-gray-900 px-3.5 py-2 text-[14px] font-medium text-white hover:bg-gray-800 active:translate-y-[1px]">Copy link</button>
-    </div>
-    <p id="qrCopied" class="mt-2 hidden text-sm text-green-600">Link copied ✓</p>
-  </div>
+<div class="fixed inset-0 z-[70] hidden" id="qrModal">
+<div class="absolute inset-0 bg-black/40 backdrop-blur-[1px] opacity-0 transition-opacity duration-200" id="qrOverlay"></div>
+<div class="absolute left-1/2 top-1/2 w-[min(92vw,480px)] -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white shadow-2xl ring-1 ring-black/5 p-6 sm:p-7 transition-transform duration-200 scale-95" id="qrPanel">
+<div class="flex items-start justify-between">
+<h3 class="text-lg font-semibold text-gray-900">Scan to try the beta</h3>
+<button class="inline-flex h-9 w-9 items-center justify-start rounded-full hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500" id="qrClose" type="button">
+<i class="fa-solid fa-xmark text-[18px]"></i>
+</button>
 </div>
-
-
+<p class="mt-1.5 text-[14px] text-gray-600">Point your phone’s camera at the QR code to open the Activity Hub beta app link.</p>
+<div class="mt-5 grid place-items-center">
+<img alt="QR code for Activity Hub beta link" class="h-[240px] w-[240px] rounded-xl ring-1 ring-gray-200" decoding="async" id="qrImg" loading="lazy" src=""/>
+</div>
+<div class="mt-5 flex items-center gap-2">
+<input class="flex-1 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-[14px] text-gray-800" id="qrUrl" readonly=""/>
+<button class="rounded-lg bg-gray-900 px-3.5 py-2 text-[14px] font-medium text-white hover:bg-gray-800 active:translate-y-[1px]" id="qrCopy">Copy link</button>
+</div>
+<p class="mt-2 hidden text-sm text-green-600" id="qrCopied">Link copied ✓</p>
+</div>
+</div>
 <script>
   const BETA_APP_URL = "https://example.com/activity-hub-beta";
   (function () {
@@ -3833,37 +3627,33 @@ document.addEventListener('click', function(e){
   });
 })();
 </script>
-
-
 <!-- Mobile Bottom Bar -->
-<nav id="bottom-bar" class="fixed inset-x-0 bottom-0 z-[45] md:hidden bg-white/95 backdrop-blur border-t border-gray-200 py-2">
-  <div class="h-16 flex items-center justify-around pt-[env(safe-area-inset-top)] pb-[calc(env(safe-area-inset-bottom))]">
-    <a href="?view=home"          data-route="home"         class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 aria-[current=page]:text-black min-h-[44px] px-4 py-2" aria-current="page">
-      <i class="fa-solid fa-house text-[18px]"></i>
-      <span>Home</span>
-    </a>
-    <a href="?view=orgs"          data-route="orgs"         class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 min-h-[44px] px-4 py-2">
-      <i class="fa-solid fa-users text-[18px]"></i>
-      <span>Organizations</span>
-    </a>
-    <a href="?view=businesses"    data-route="businesses"   class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 min-h-[44px] px-4 py-2">
-      <i class="fa-solid fa-briefcase text-[18px]"></i>
-      <span>Businesses</span>
-    </a>
-    <a href="?view=projects"      data-route="projects"     class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 min-h-[44px] px-4 py-2">
-      <i class="fa-solid fa-diagram-project text-[18px]"></i>
-      <span>Projects</span>
-    </a>
-    <a href="?view=events"        data-route="events"       class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 min-h-[44px] px-4 py-2">
-      <i class="fa-solid fa-calendar-days text-[18px]"></i>
-      <span>Events</span>
-    </a>
-    </div>
+<nav class="fixed inset-x-0 bottom-0 z-[45] md:hidden bg-white/95 backdrop-blur border-t border-gray-200 py-2" id="bottom-bar">
+<div class="h-16 flex items-center justify-around pt-[env(safe-area-inset-top)] pb-[calc(env(safe-area-inset-bottom))]">
+<a aria-current="page" class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 aria-[current=page]:text-black min-h-[44px] px-4 py-2" data-route="home" href="?view=home">
+<i class="fa-solid fa-house text-[18px]"></i>
+<span>Home</span>
+</a>
+<a class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 min-h-[44px] px-4 py-2" data-route="orgs" href="?view=orgs">
+<i class="fa-solid fa-users text-[18px]"></i>
+<span>Organizations</span>
+</a>
+<a class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 min-h-[44px] px-4 py-2" data-route="businesses" href="?view=businesses">
+<i class="fa-solid fa-briefcase text-[18px]"></i>
+<span>Businesses</span>
+</a>
+<a class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 min-h-[44px] px-4 py-2" data-route="projects" href="?view=projects">
+<i class="fa-solid fa-diagram-project text-[18px]"></i>
+<span>Projects</span>
+</a>
+<a class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 min-h-[44px] px-4 py-2" data-route="events" href="?view=events">
+<i class="fa-solid fa-calendar-days text-[18px]"></i>
+<span>Events</span>
+</a>
+</div>
 </nav>
 <!-- Spacer so content isn't hidden behind the bar -->
-<div id="bottom-bar-spacer" class=" h-[4.5rem] md:hidden"></div>
-
-
+<div class="h-[4.5rem] md:hidden" id="bottom-bar-spacer"></div>
 <script>
 // --- injected: keep bottom bar active state in sync
 function setActiveBottomBar(view) {
@@ -3876,8 +3666,6 @@ function setActiveBottomBar(view) {
   });
 }
 </script>
-
-
 <script>
 // --- injected: bottom bar SPA navigation (prevent full reload/flicker)
 (function(){
@@ -3926,8 +3714,6 @@ function setActiveBottomBar(view) {
   }, { passive:false });
 })();
 </script>
-
-
 <script>
 // --- injected: ensure bottom bar highlights current view on load
 document.addEventListener('DOMContentLoaded', function(){
@@ -3938,8 +3724,6 @@ document.addEventListener('DOMContentLoaded', function(){
   }catch(e){ /* noop */ }
 });
 </script>
-
-
 <script id="contact-email-populator">
 (function(){
   if (window.__contactEmailInit) return; window.__contactEmailInit = true;
@@ -4022,9 +3806,6 @@ document.addEventListener('DOMContentLoaded', function(){
   }, { passive: true });
 })();
 </script>
-
-
-
 <script id="no-hscroll-detail-script">
 (function(){
   function isDetail(){
@@ -4070,12 +3851,6 @@ document.addEventListener('DOMContentLoaded', function(){
   });
 })();
 </script>
-
-
-
-
-
-
 <script id="bottom-bar-padding-script">
 (function(){
   function setBBPadding(){
@@ -4101,8 +3876,6 @@ document.addEventListener('DOMContentLoaded', function(){
   setTimeout(schedule, 600);
 })();
 </script>
-
-
 <script>
 (function(){
   function px(n){return n+'px';}
@@ -4169,8 +3942,6 @@ document.addEventListener('DOMContentLoaded', function(){
   // If detail view re-renders dynamically elsewhere, call initAll() after content swap.
 })();
 </script>
-
-
 <script>
 (function(){
   if (window.__aiReviewPatched) return;
@@ -4333,21 +4104,20 @@ document.addEventListener('DOMContentLoaded', function(){
 
 })();
 </script>
-
 <!-- Onboarding loading overlay -->
-<div id="onboarding-loading-overlay" class="hidden fixed inset-0 z-[9999] text-white">
-  <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 via-fuchsia-500 to-pink-500"></div>
-  <div class="absolute inset-0 flex flex-col items-center justify-center text-white">
-    <div class="relative mb-5">
-      <div class="w-14 h-14 rounded-full border-4 border-white/20 border-t-white animate-spin"></div>
-      <div class="absolute inset-0 flex items-center justify-center">
-        <div class="w-4 h-4 rounded-full bg-white/90 animate-ping"></div>
-        <div class="w-2 h-2 rounded-full bg-white absolute"></div>
-      </div>
-    </div>
-    <div id="onboarding-loading-message" class="text-sm text-white/90 text-center px-8 leading-tight"></div>
-  </div>
-</div>>
+<div class="hidden fixed inset-0 z-[9999] text-white" id="onboarding-loading-overlay">
+<div class="absolute inset-0 bg-gradient-to-br from-indigo-600 via-fuchsia-500 to-pink-500"></div>
+<div class="absolute inset-0 flex flex-col items-center justify-center text-white">
+<div class="relative mb-5">
+<div class="w-14 h-14 rounded-full border-4 border-white/20 border-t-white animate-spin"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-4 h-4 rounded-full bg-white/90 animate-ping"></div>
+<div class="w-2 h-2 rounded-full bg-white absolute"></div>
+</div>
+</div>
+<div class="text-sm text-white/90 text-center px-8 leading-tight" id="onboarding-loading-message"></div>
+</div>
+</div>&gt;
 
 <script>
 (function(){
@@ -4410,6 +4180,432 @@ document.addEventListener('DOMContentLoaded', function(){
     });
   });
 })();
+</script>
+<!-- === AUTH MODAL === -->
+<div aria-hidden="true" aria-labelledby="authTitle" aria-modal="true" data-open="false" data-state="open" id="authModal" role="dialog">
+<div class="backdrop" data-close="true"></div>
+<div aria-live="polite" class="panel-wrap">
+<div class="panel auth-grid" role="document">
+<button aria-label="Close" class="auth-close" data-close="true">
+<i class="fa-solid fa-xmark"></i>
+</button>
+<div class="auth-art">
+<div class="hero">
+<div>
+<h2>Welcome to Activity Hub</h2>
+<p>Discover clubs, projects, and events across campus.</p>
+</div>
+</div>
+</div>
+<div class="auth-form">
+<div class="tabbar" role="tablist">
+<button aria-controls="panel-signup" aria-selected="false" id="tab-signup" role="tab">Sign up</button>
+<button aria-controls="panel-login" aria-selected="true" id="tab-login" role="tab">Log in</button>
+</div>
+<section aria-labelledby="tab-login" id="panel-login" role="tabpanel">
+<div class="social-stack">
+<button class="social-btn" type="button"><i class="fa-brands fa-google"></i> Log in with Google</button>
+<button class="social-btn" type="button"><i class="fa-brands fa-facebook"></i> Log in with Facebook</button>
+<button class="social-btn" type="button"><i class="fa-brands fa-apple"></i> Log in with Apple</button>
+</div>
+<div style="display:grid; grid-template-columns:1fr auto 1fr; gap:12px; align-items:center; margin:16px 0;">
+<div style="height:1px;background:#e5e7eb;"></div><div style="color:#94a3b8; font-weight:700;">or email</div><div style="height:1px;background:#e5e7eb;"></div>
+</div>
+<div class="field">
+<label class="label" for="auth-email">Email</label>
+<input autocomplete="username" class="input" id="auth-email" placeholder="Enter your email address or username" type="email"/>
+</div>
+<div class="field" style="margin-top:10px;">
+<div style="display:flex; justify-content:space-between; align-items:center;">
+<label class="label" for="auth-pass">Password</label>
+<a href="#" style="font-size:.86rem; color:#2563eb;">Forgot password</a>
+</div>
+<input autocomplete="current-password" class="input" id="auth-pass" placeholder="Enter your password" type="password"/>
+</div>
+<div class="auth-actions">
+<button class="auth-primary" id="authLoginBtn" type="button">Log in</button>
+<div class="auth-footer">By clicking Log in, you accept Activity Hub’s <a href="#" style="color:#2563eb;">Terms of Service</a> and <a href="#" style="color:#2563eb;">Privacy Policy</a>.</div>
+</div>
+</section>
+<div aria-labelledby="tab-signup" id="panel-signup" role="tabpanel">
+<div class="w-full">
+<div class="w-full max-w-md mx-auto">
+<form class="space-y-4" id="dsu-form" novalidate="">
+<!-- STEP: Account -->
+<section class="space-y-3" data-step-panel="account">
+<div>
+<label class="block text-sm font-medium mb-1" for="dsu-fullname">Full name</label>
+<input autocomplete="name" class="w-full rounded-lg border border-gray-300 px-3 py-2" id="dsu-fullname" placeholder="Jane Doe" required="" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium mb-1" for="dsu-email">Email</label>
+<input autocomplete="email" class="w-full rounded-lg border border-gray-300 px-3 py-2" id="dsu-email" placeholder="name@gmail.com" required="" type="email"/>
+</div>
+<div>
+<label class="block text-sm font-medium mb-1" for="dsu-password">Password</label>
+<input autocomplete="new-password" class="w-full rounded-lg border border-gray-300 px-3 py-2" id="dsu-password" placeholder="Create a password" required="" type="password"/>
+</div>
+</section>
+<!-- STEP: School -->
+<section class="space-y-3 hidden" data-step-panel="school">
+<div>
+<label class="block text-sm font-medium mb-1" for="dsu-school-email">University email</label>
+<input autocomplete="email" class="w-full rounded-lg border border-gray-300 px-3 py-2" id="dsu-school-email" placeholder="name@stjohns.edu" required="" type="email"/>
+<p class="text-xs text-gray-500 mt-1" id="dsu-school-hint">Use your @stjohns.edu email to verify your school.</p>
+</div>
+<div class="hidden rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm" id="dsu-school-detect">
+            Matched: <strong>St. John’s University — Queens</strong> (stjohns.edu)
+          </div>
+</section>
+<!-- STEP: Academics -->
+<section class="space-y-3 hidden" data-step-panel="academics">
+<div>
+<label class="block text-sm font-medium mb-1" for="dsu-year">Year</label>
+<select class="w-full rounded-lg border border-gray-300 px-3 py-2" id="dsu-year" required="">
+<option disabled="" selected="" value="">Choose year…</option>
+<option>Freshman</option><option>Sophomore</option><option>Junior</option>
+<option>Senior</option><option>Graduate</option><option>Other</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium mb-1" for="dsu-major">Major</label>
+<select class="w-full rounded-lg border border-gray-300 px-3 py-2" id="dsu-major" required="">
+<option disabled="" selected="" value="">Choose major…</option>
+<option>Accounting</option><option>Finance</option><option>Computer Science</option>
+<option>Cybersecurity</option><option>Psychology</option><option>Biology</option>
+<option>Marketing</option><option>Economics</option><option>Management</option>
+<option>Other</option>
+</select>
+</div>
+</section>
+<!-- STEP: Interests -->
+<section class="space-y-3 hidden" data-step-panel="interests">
+<p class="text-sm text-gray-700">Pick at least one interest:</p>
+<div class="grid grid-cols-2 gap-2" id="dsu-interests">
+<!-- chips injected by JS -->
+</div>
+</section>
+<!-- progress moved to bottom -->
+<ol class="flex items-center gap-2 text-sm mt-2" id="dsu-progress">
+<li class="px-2 py-1 rounded bg-blue-600 text-white" data-step="account">Account</li>
+<li class="px-2 py-1 rounded bg-gray-100 text-gray-700" data-step="school">School</li>
+<li class="px-2 py-1 rounded bg-gray-100 text-gray-700" data-step="academics">Academics</li>
+<li class="px-2 py-1 rounded bg-gray-100 text-gray-700" data-step="interests">Interests</li>
+</ol>
+<!-- actions -->
+<div class="flex items-center justify-between pt-2">
+<button class="px-3 py-2 rounded-lg border border-gray-300 text-gray-700 disabled:opacity-40" id="dsu-prev" type="button">Back</button>
+<div class="flex items-center gap-2">
+<button class="px-4 py-2 rounded-lg bg-gray-900 text-white disabled:opacity-40" id="dsu-next" type="button">
+              Continue
+            </button>
+<button class="px-4 py-2 rounded-lg bg-gray-900 text-white hidden disabled:opacity-40" id="dsu-finish" type="button">
+              Finish
+            </button>
+</div>
+</div>
+</form>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+(function(){
+  const modal = document.getElementById('authModal');
+  const loginBtn = document.getElementById('loginBtn');
+  if (!modal || !loginBtn) return;
+
+  const tabLogin   = document.getElementById('tab-login');
+  const tabSignup  = document.getElementById('tab-signup');
+  const panelLogin = document.getElementById('panel-login');
+  const panelSignup= document.getElementById('panel-signup');
+  const emailInput = document.getElementById('auth-email');
+
+  function setTab(view){
+    const loginView = (view !== 'signup');
+    tabLogin.setAttribute('aria-selected', String(loginView));
+    tabSignup.setAttribute('aria-selected', String(!loginView));
+    panelLogin.hidden = !loginView;
+    panelSignup.hidden = loginView;
+  }
+
+  function openModal(view='login'){
+    modal.setAttribute('data-open','true');
+    modal.setAttribute('data-state','open');
+    modal.removeAttribute('aria-hidden');
+    document.body.style.overflow = 'hidden';
+    setTab(view);
+    setTimeout(()=>{ (view === 'login' ? emailInput : tabSignup).focus({preventScroll:true}); }, 60);
+  }
+
+  function closeModal(){
+    modal.setAttribute('data-state','closing');
+    const onEnd = (e)=>{
+      if (!e.target.classList.contains('panel')) return;
+      modal.setAttribute('data-open','false');
+      modal.setAttribute('aria-hidden','true');
+      modal.removeEventListener('animationend', onEnd, true);
+      document.body.style.overflow = '';
+      loginBtn.focus();
+    };
+    modal.addEventListener('animationend', onEnd, true);
+  }
+
+  loginBtn.addEventListener('click', ()=>openModal('login'));
+  modal.addEventListener('click', (e)=>{ if (e.target.closest('[data-close="true"]')) closeModal(); });
+  document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape' && modal.getAttribute('data-open')==='true') closeModal(); });
+
+  tabLogin.addEventListener('click', ()=>setTab('login'));
+  tabSignup.addEventListener('click', ()=>setTab('signup'));
+
+  modal.addEventListener('keydown', (e)=>{
+    if (e.key !== 'Tab') return;
+    const f = Array.from(modal.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])'))
+      .filter(el => !el.hasAttribute('disabled') && !el.getAttribute('aria-hidden'));
+    if (!f.length) return;
+    const first=f[0], last=f[f.length-1];
+    if (e.shiftKey && document.activeElement===first){ last.focus(); e.preventDefault(); }
+    else if (!e.shiftKey && document.activeElement===last){ first.focus(); e.preventDefault(); }
+  });
+
+  // Expose helpers
+  window.openAuthModal = openModal;
+  window.closeAuthModal = closeModal;
+})();
+</script>
+<script>
+(function(){
+  const FORM_ENDPOINT = "https://docs.google.com/forms/d/e/1FAIpQLSfEwvKZjMFpCBFEfjN4aXjfQ50Tq3djKs9iOHfg_ohwB7D0Yw/formResponse";
+
+  const FIELD_MAP = {
+    fullname:  "entry.1890826348",
+    email:     "entry.2086925124",
+    password:  "entry.483309031",
+    uni_email: "entry.412189969",
+    year:      "entry.1336126874",
+    major:     "entry.1715561455",
+    interests: "entry.913456439",
+    school:    "entry.1904025125",
+  };
+
+  const ONBOARDING_INTERESTS = [
+    "Academic", "Cultural & Identity", "Arts & Media", "Tech & Engineering",
+    "Entrepreneurship", "Health & Wellness", "Sports & Recreation", "Community Service",
+    "Business & Finance", "Science", "Faith & Spirituality", "Other"
+  ];
+
+  const signupPanel = document.getElementById('panel-signup');
+  if (!signupPanel) return;
+
+  const progress = signupPanel.querySelector('#dsu-progress');
+  const form = signupPanel.querySelector('#dsu-form');
+  const prevBtn = signupPanel.querySelector('#dsu-prev');
+  const nextBtn = signupPanel.querySelector('#dsu-next');
+  const finishBtn = signupPanel.querySelector('#dsu-finish');
+
+  const stepOrder = ["account", "school", "academics", "interests"];
+  let stepIdx = 0;
+  const selectedInterests = new Set();
+
+  const interestWrap = signupPanel.querySelector('#dsu-interests');
+  if (interestWrap) {
+    ONBOARDING_INTERESTS.forEach(label => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = "text-sm px-3 py-2 rounded-lg border border-gray-300 text-gray-700 data-[sel=true]:bg-gray-900 data-[sel=true]:text-white";
+      b.textContent = label;
+      b.setAttribute('data-sel', 'false');
+      b.addEventListener('click', () => {
+        const sel = b.getAttribute('data-sel') === 'true';
+        if (sel) {
+          b.setAttribute('data-sel','false');
+          selectedInterests.delete(label);
+        } else {
+          b.setAttribute('data-sel','true');
+          selectedInterests.add(label);
+        }
+        syncButtons();
+      });
+      interestWrap.appendChild(b);
+    });
+  }
+
+  const schoolInput = signupPanel.querySelector('#dsu-school-email');
+  const schoolDetectBox = signupPanel.querySelector('#dsu-school-detect');
+  function updateSchoolDetector() {
+    const v = (schoolInput?.value || "").trim().toLowerCase();
+    const ok = v.endsWith("@stjohns.edu");
+    if (schoolDetectBox) schoolDetectBox.classList.toggle('hidden', !ok);
+    return ok;
+  }
+  if (schoolInput) {
+    schoolInput.addEventListener('input', () => { updateSchoolDetector(); syncButtons(); });
+  }
+
+  function showStep(idx){
+    stepIdx = Math.max(0, Math.min(stepOrder.length-1, idx));
+    const active = stepOrder[stepIdx];
+
+    signupPanel.querySelectorAll('[data-step-panel]').forEach(el=>{
+      el.classList.toggle('hidden', el.getAttribute('data-step-panel') !== active);
+    });
+
+    progress.querySelectorAll('li').forEach(li=>{
+      const me = li.getAttribute('data-step');
+      li.className = "px-2 py-1 rounded " + (me === active ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-700");
+    });
+
+    prevBtn.disabled = (stepIdx === 0);
+    nextBtn.classList.toggle('hidden', stepIdx === stepOrder.length-1);
+    finishBtn.classList.toggle('hidden', stepIdx !== stepOrder.length-1);
+
+    syncButtons();
+  }
+
+  function validateStep(){
+    const step = stepOrder[stepIdx];
+    if (step === "account") {
+      const fn = signupPanel.querySelector('#dsu-fullname')?.value.trim();
+      const em = signupPanel.querySelector('#dsu-email')?.value.trim();
+      const pw = signupPanel.querySelector('#dsu-password')?.value;
+      return !!(fn && em && pw && /.+@.+\..+/.test(em) && pw.length >= 6);
+    }
+    if (step === "school") {
+      return updateSchoolDetector();
+    }
+    if (step === "academics") {
+      const yr = signupPanel.querySelector('#dsu-year')?.value;
+      const mj = signupPanel.querySelector('#dsu-major')?.value;
+      return !!(yr && mj);
+    }
+    if (step === "interests") {
+      return selectedInterests.size > 0;
+    }
+    return true;
+  }
+
+  function syncButtons(){
+    const ok = validateStep();
+    if (stepIdx === stepOrder.length - 1) {
+      finishBtn.disabled = !ok;
+    } else {
+      nextBtn.disabled = !ok;
+    }
+  }
+
+  prevBtn.addEventListener('click', ()=> showStep(stepIdx-1));
+  nextBtn.addEventListener('click', ()=> { if (validateStep()) showStep(stepIdx+1); });
+  finishBtn.addEventListener('click', handleFinish);
+
+  function collectPayload(){
+    const fullname = signupPanel.querySelector('#dsu-fullname')?.value.trim() || "";
+    const email    = signupPanel.querySelector('#dsu-email')?.value.trim() || "";
+    const password = signupPanel.querySelector('#dsu-password')?.value || "";
+    const uniEmail = signupPanel.querySelector('#dsu-school-email')?.value.trim() || "";
+    const year     = signupPanel.querySelector('#dsu-year')?.value || "";
+    const major    = signupPanel.querySelector('#dsu-major')?.value || "";
+    const interestsCsv = Array.from(selectedInterests).join(", ");
+
+    const school = "St. John's University";
+
+    const formData = new URLSearchParams();
+    formData.append(FIELD_MAP.fullname,  fullname);
+    formData.append(FIELD_MAP.email,     email);
+    formData.append(FIELD_MAP.password,  password);
+    formData.append(FIELD_MAP.uni_email, uniEmail);
+    formData.append(FIELD_MAP.year,      year);
+    formData.append(FIELD_MAP.major,     major);
+    formData.append(FIELD_MAP.interests, interestsCsv);
+    formData.append(FIELD_MAP.school,    school);
+
+    return {formData, school};
+  }
+
+  async function handleFinish(){
+    if (!validateStep()) return;
+    const {formData} = collectPayload();
+
+    try {
+      await fetch(FORM_ENDPOINT, { method: "POST", mode: "no-cors", body: formData });
+    } catch(e) {
+      console.warn("Signup form submit (desktop) error suppressed:", e);
+    }
+
+    showLoadingOverlay();
+    setTimeout(()=> {
+      hideLoadingOverlay();
+      try { localStorage.setItem('ah_onboarded_v1','true'); } catch(e){}
+      closeAuthModal();
+      if (window.ahSwapLoginToAvatar) window.ahSwapLoginToAvatar();
+      if (typeof routeFromURL === 'function') routeFromURL();
+    }, 3200);
+  }
+
+  function closeAuthModal(){
+    const modal = document.getElementById('authModal');
+    if (modal) {
+      modal.setAttribute('data-open','false');
+      modal.classList.add('hidden');
+    }
+  }
+
+  function showLoadingOverlay(){
+    let ov = document.getElementById('ah-loading-overlay');
+    if (!ov) {
+      ov = document.createElement('div');
+      ov.id = 'ah-loading-overlay';
+      ov.className = "fixed inset-0 z-[999] grid place-items-center bg-black/50";
+      ov.innerHTML = '<div class="rounded-2xl bg-white px-6 py-5 shadow-lg"><div class="text-center"><div class="animate-spin inline-block w-6 h-6 border-2 border-gray-300 border-t-gray-900 rounded-full mb-3"></div><div class="text-sm text-gray-700">Personalizing clubs for you…</div></div></div>';
+      document.body.appendChild(ov);
+    } else {
+      ov.classList.remove('hidden');
+    }
+  }
+  function hideLoadingOverlay(){
+    const ov = document.getElementById('ah-loading-overlay');
+    if (ov) ov.classList.add('hidden');
+  }
+
+  showStep(0);
+  form.addEventListener('input', syncButtons);
+  form.addEventListener('change', syncButtons);
+})();
+</script>
+
+<script>
+window.ahSwapLoginToAvatar = function(){
+  const loginBtn = document.getElementById('loginBtn');
+  if (loginBtn) {
+    loginBtn.classList.add('hidden');
+  }
+  let avatar = document.getElementById('avatarBtn');
+  if (!avatar) {
+    avatar = document.createElement('button');
+    avatar.id = 'avatarBtn';
+    avatar.type = 'button';
+    avatar.setAttribute('aria-label','Account');
+    avatar.className = 'hidden md:grid h-9 w-9 rounded-full border border-gray-200 bg-white place-items-center';
+    avatar.innerHTML = '<i class="fa-regular fa-user text-[18px] text-gray-700"></i>';
+    if (loginBtn && loginBtn.parentNode) {
+      loginBtn.parentNode.insertBefore(avatar, loginBtn);
+    } else {
+      // fallback: try header right cluster
+      const header = document.querySelector('header') || document.body;
+      header.appendChild(avatar);
+    }
+  }
+};
+
+document.addEventListener('DOMContentLoaded', function(){
+  try {
+    if (localStorage.getItem('ah_onboarded_v1') === 'true') {
+      window.ahSwapLoginToAvatar();
+    }
+  } catch (e) {}
+});
 </script>
 </body>
 </html>
