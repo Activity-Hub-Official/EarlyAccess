@@ -934,9 +934,26 @@ body.onboarding-mode {
 </div>
 <!-- Only on Explore -->
 <div class="space-y-6" id="explore-bars">
+
+
 </div>
 <!-- Browse -->
-<section class="mb-4" id="home-tabs"><div class="flex items-center gap-2 border-b border-gray-200"><button aria-selected="true" class="px-4 py-2 text-sm font-medium border-b-2 border-ah-600 text-ah-700" data-tab="featured" id="tab-featured" role="tab">Featured</button><button aria-selected="false" class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-800" data-tab="foryou" id="tab-foryou" role="tab">For You</button></div><div class="mt-4" id="home-tabpanels"><div id="home-featured" role="tabpanel"><section id="section-orgs">
+<section>
+<div class="flex items-center justify-between mb-3"><h2 class="text-lg font-semibold">Browse</h2></div>
+<div class="flex gap-2 items-center -mx-4 px-4 md:mx-0 md:px-0 overflow-x-auto md:overflow-x-visible no-scrollbar pb-1 flex-nowrap md:flex-wrap max-w-full" id="browse-chips">
+<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0" data-selected="true">All</button>
+<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Academic</button>
+<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Professional Development</button>
+<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Service / Volunteering</button>
+<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Sports &amp; Athletics</button>
+<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Religious / Spiritual</button>
+<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Cultural / Identity-Based</button>
+<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Arts &amp; Media</button>
+<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Political / Activism</button>
+</div>
+</section>
+<!-- Sections -->
+<section id="section-orgs">
 <div class="flex items-center justify-between mb-3">
 <div class="mt-2 flex items-center justify-between w-full pr-2"><h2 class="text-lg font-semibold" id="title-orgs">Top organizations</h2><a class="text-sm font-medium text-blue-600 hover:underline see-all-link seeall-if-home" data-route="orgs" href="?sort=popular&amp;view=orgs">See all</a></div>
 <div class="relative hidden" id="sort-orgs-wrap">
@@ -954,7 +971,8 @@ body.onboarding-mode {
 </div>
 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="orgs-grid"></div>
 <div class="hidden text-sm text-gray-500" id="orgs-empty">No organizations match the current filter.</div>
-</section><section id="section-biz">
+</section>
+<section id="section-biz">
 <div class="flex items-center justify-between mb-3 mt-2">
 <div class="mt-2 flex items-center justify-between w-full pr-2"><h2 class="text-lg font-semibold" id="title-biz">Top businesses</h2><a class="text-sm font-medium text-blue-600 hover:underline see-all-link seeall-if-home" data-route="businesses" href="?sort=popular&amp;view=businesses">See all</a></div>
 <div class="relative hidden" id="sort-biz-wrap">
@@ -972,7 +990,8 @@ body.onboarding-mode {
 </div>
 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="biz-grid"></div>
 <div class="hidden text-sm text-gray-500" id="biz-empty">No businesses found in the data.</div>
-</section><section id="section-projects">
+</section>
+<section id="section-projects">
 <div class="flex items-center justify-between mb-3 mt-2">
 <div class="mt-2 flex items-center justify-between w-full pr-2"><h2 class="text-lg font-semibold" id="title-projects">Top projects</h2><a class="text-sm font-medium text-blue-600 hover:underline see-all-link seeall-if-home" data-route="projects" href="?sort=popular&amp;view=projects">See all</a></div>
 <div class="relative hidden" id="sort-projects-wrap">
@@ -990,11 +1009,7 @@ body.onboarding-mode {
 </div>
 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="projects-grid"></div>
 <div class="hidden text-sm text-gray-500" id="projects-empty">No projects found in the data.</div>
-</section></div><div class="hidden" id="home-foryou" role="tabpanel"><p class="text-gray-600">Sign in to see personalized picks near you.</p><button class="mt-3 inline-flex items-center gap-2 px-4 h-10 rounded-lg bg-ah-600 text-white hover:brightness-110 active:scale-[.99]" id="home-foryou-login" type="button">Log in to continue</button></div></div></section>
-<!-- Sections -->
-
-
-
+</section>
 <!-- EVENTS (visible only in Events view) -->
 <section class="hidden" id="section-events">
 <div class="flex items-center justify-between mb-3">
@@ -4783,57 +4798,93 @@ window.setActiveBottomBar = window.setActiveBottomBar || function(){ /* no-op */
   });
 })();
 </script>
+
+
+<!-- AH Auth/Persistence Patch BEGIN -->
 <script>
 (function(){
-  const $ = (s, r=document)=>r.querySelector(s);
-  const featuredBtn = $('#tab-featured');
-  const forYouBtn = $('#tab-foryou');
-  const featuredPanel = $('#home-featured');
-  const forYouPanel = $('#home-foryou');
-  const loginBtn = $('#home-foryou-login');
-  // naive user check: rely on a global currentUser or a data-auth attr on body if present
-  function isLoggedIn(){
-    try{
-      if (window.currentUser && window.currentUser.id) return true;
-      const b = document.body;
-      if (b && b.getAttribute('data-auth') === 'signed-in') return true;
-    }catch(e){}
-    return false;
-  }
-  function select(tab){
-    if(tab==='featured'){
-      featuredBtn.setAttribute('aria-selected','true');
-      featuredBtn.classList.add('border-ah-600','text-ah-700');
-      forYouBtn.setAttribute('aria-selected','false');
-      forYouBtn.classList.remove('border-ah-600','text-ah-700');
-      featuredPanel.classList.remove('hidden');
-      forYouPanel.classList.add('hidden');
-    }else{
-      forYouBtn.setAttribute('aria-selected','true');
-      forYouBtn.classList.add('border-ah-600','text-ah-700');
-      featuredBtn.setAttribute('aria-selected','false');
-      featuredBtn.classList.remove('border-ah-600','text-ah-700');
-      featuredPanel.classList.add('hidden');
-      forYouPanel.classList.remove('hidden');
-      if(!isLoggedIn()){
-        // If not logged in, open your existing sign-in panel/button
-        var loginTrigger = document.getElementById('btn-login') || document.querySelector('[data-open-auth]');
-        if (loginTrigger && typeof loginTrigger.click === 'function'){
-          loginTrigger.click();
-        }
-      }
+  // Keys
+  const LS_USER_KEY = 'ah_user_v1';
+  const FALLBACK_PFP = 'data:image/svg+xml;utf8,' +
+    encodeURIComponent(`<?xml version="1.0" encoding="UTF-8"?>
+      <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+        <rect width="128" height="128" rx="64" ry="64" fill="#e5e7eb"/>
+        <circle cx="64" cy="48" r="22" fill="#9ca3af"/>
+        <path d="M16 116c0-22 20-36 48-36s48 14 48 36" fill="#9ca3af"/>
+      </svg>`);
+
+  const $ = (s)=>document.querySelector(s);
+
+  // Require explicit hooks so we don't mistake the app logo for the avatar button
+  const loginBtn  = $('[data-el="login-btn"]')  || document.getElementById('loginBtn');
+  const avatarBtn = $('[data-el="avatar-btn"]') || document.getElementById('avatarBtn');
+  let   avatarImg = $('[data-el="avatar-img"]') || (avatarBtn ? avatarBtn.querySelector('img') : null);
+
+  function ensureAvatarImg(){
+    if (!avatarBtn) return null;
+    if (!avatarImg){
+      avatarImg = document.createElement('img');
+      avatarImg.alt = 'Account avatar';
+      avatarImg.className = 'w-8 h-8 rounded-full object-cover';
+      avatarBtn.prepend(avatarImg);
     }
+    return avatarImg;
   }
-  featuredBtn?.addEventListener('click', ()=>select('featured'));
-  forYouBtn?.addEventListener('click', ()=>select('foryou'));
-  loginBtn?.addEventListener('click', ()=>{
-    var loginTrigger = document.getElementById('btn-login') || document.querySelector('[data-open-auth]');
-    if (loginTrigger && typeof loginTrigger.click === 'function'){
-      loginTrigger.click();
+
+  function hide(el){ if (el) el.classList.add('hidden'); }
+  function show(el){ if (el) el.classList.remove('hidden'); }
+
+  function getCurrentUser(){
+    try { return JSON.parse(localStorage.getItem(LS_USER_KEY) || 'null'); }
+    catch(e){ return null; }
+  }
+  function setCurrentUser(user){
+    if (!user || typeof user !== 'object') return;
+    localStorage.setItem(LS_USER_KEY, JSON.stringify(user));
+  }
+
+  function setLoggedInUI(profile){
+    const imgEl = ensureAvatarImg();
+    if (imgEl){
+      const src = (profile && (profile.photoURL || profile['Profile Image URL'])) || imgEl.getAttribute('src') || FALLBACK_PFP;
+      imgEl.src = src;
     }
-  });
-  // default
-  select('featured');
+    hide(loginBtn);
+    show(avatarBtn);
+  }
+
+  function setLoggedOutUI(){
+    const imgEl = ensureAvatarImg();
+    if (imgEl) imgEl.src = FALLBACK_PFP;
+    show(loginBtn);
+    hide(avatarBtn);
+  }
+
+  // Public hooks
+  window.ahSwapLoginToAvatar = function(profile){ setLoggedInUI(profile || getCurrentUser()); };
+  window.__ahAuthSuccess = function(profile){
+    const user = {
+      id: profile?.id || String(Date.now()),
+      name: profile?.name || profile?.fullName || 'New User',
+      email: profile?.email || '',
+      photoURL: profile?.photoURL || profile?.avatar || profile?.['Profile Image URL'] || ''
+    };
+    setCurrentUser(user);
+    setLoggedInUI(user);
+  };
+
+  // Boot: STRICT — show avatar ONLY if a real user object exists
+  function bootAuthUI(){
+    const user = getCurrentUser();
+    if (user) setLoggedInUI(user);
+    else setLoggedOutUI();
+  }
+
+  document.addEventListener('DOMContentLoaded', bootAuthUI);
 })();
-</script></body>
+</script>
+<!-- AH Auth/Persistence Patch END -->
+
+
+</body>
 </html>
