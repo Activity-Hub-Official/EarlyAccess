@@ -710,6 +710,16 @@ body.onboarding-mode {
 <button class="h-9 px-3 flex items-center justify-center rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-neutral-900 transition" id="loginBtn">
         Log in
       </button>
+<div class="relative inline-block" id="avatarMenuContainer">
+<button aria-expanded="false" aria-haspopup="menu" aria-label="Account" class="hidden h-9 w-9 rounded-full border border-gray-300 bg-white overflow-hidden grid place-items-center" id="avatarBtn">
+<i class="fa-regular fa-user text-[18px] text-gray-700"></i>
+</button>
+<div aria-label="Account menu" class="hidden absolute right-0 mt-2 w-44 rounded-xl border border-gray-200 bg-white shadow-lg ring-1 ring-black/5 focus:outline-none z-50" id="avatarMenu" role="menu">
+<button class="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 rounded-xl" id="logoutBtn" role="menuitem" tabindex="-1">
+<i class="fa-solid fa-arrow-right-from-bracket mr-2"></i> Log out
+    </button>
+</div>
+</div>
 </div>
 </div> <!-- end header row -->
 <!-- Mobile inline search + full menu -->
@@ -924,38 +934,9 @@ body.onboarding-mode {
 </div>
 <!-- Only on Explore -->
 <div class="space-y-6" id="explore-bars">
-<div class="soft-card p-4 flex items-start gap-3">
-<div class="w-9 h-9 rounded-md ah-grad text-white grid place-items-center text-xs font-bold">SJU</div>
-<div class="flex-1 min-w-0">
-<div class="font-semibold">St. John's University — Queens</div>
-<div class="text-sm text-gray-500">Access campus resources and verified orgs</div>
-</div>
-</div>
-<div class="soft-card p-4 flex items-center gap-3">
-<div class="w-9 h-9 grid place-items-center rounded-full bg-white border border-ah-100">
-<i class="fa-solid fa-circle-check text-ah-700 text-[18px]"></i>
-</div>
-<div class="flex-1 text-sm text-ah-900">Claim your club’s page and get a verified badge.</div>
-<button class="px-3 py-1.5 rounded-md bg-white border border-ah-200 text-sm font-medium hover:bg-ah-100">Claim now</button>
-</div>
 </div>
 <!-- Browse -->
-<section>
-<div class="flex items-center justify-between mb-3"><h2 class="text-lg font-semibold">Browse</h2></div>
-<div class="flex gap-2 items-center -mx-4 px-4 md:mx-0 md:px-0 overflow-x-auto md:overflow-x-visible no-scrollbar pb-1 flex-nowrap md:flex-wrap max-w-full" id="browse-chips">
-<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0" data-selected="true">All</button>
-<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Academic</button>
-<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Professional Development</button>
-<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Service / Volunteering</button>
-<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Sports &amp; Athletics</button>
-<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Religious / Spiritual</button>
-<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Cultural / Identity-Based</button>
-<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Arts &amp; Media</button>
-<button class="ah-chip px-3 py-2 rounded-full border border-gray-200 bg-white text-sm shrink-0">Political / Activism</button>
-</div>
-</section>
-<!-- Sections -->
-<section id="section-orgs">
+<section class="mb-4" id="home-tabs"><div class="flex items-center gap-2 border-b border-gray-200"><button aria-selected="true" class="px-4 py-2 text-sm font-medium border-b-2 border-ah-600 text-ah-700" data-tab="featured" id="tab-featured" role="tab">Featured</button><button aria-selected="false" class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-800" data-tab="foryou" id="tab-foryou" role="tab">For You</button></div><div class="mt-4" id="home-tabpanels"><div id="home-featured" role="tabpanel"><section id="section-orgs">
 <div class="flex items-center justify-between mb-3">
 <div class="mt-2 flex items-center justify-between w-full pr-2"><h2 class="text-lg font-semibold" id="title-orgs">Top organizations</h2><a class="text-sm font-medium text-blue-600 hover:underline see-all-link seeall-if-home" data-route="orgs" href="?sort=popular&amp;view=orgs">See all</a></div>
 <div class="relative hidden" id="sort-orgs-wrap">
@@ -973,8 +954,7 @@ body.onboarding-mode {
 </div>
 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="orgs-grid"></div>
 <div class="hidden text-sm text-gray-500" id="orgs-empty">No organizations match the current filter.</div>
-</section>
-<section id="section-biz">
+</section><section id="section-biz">
 <div class="flex items-center justify-between mb-3 mt-2">
 <div class="mt-2 flex items-center justify-between w-full pr-2"><h2 class="text-lg font-semibold" id="title-biz">Top businesses</h2><a class="text-sm font-medium text-blue-600 hover:underline see-all-link seeall-if-home" data-route="businesses" href="?sort=popular&amp;view=businesses">See all</a></div>
 <div class="relative hidden" id="sort-biz-wrap">
@@ -992,8 +972,7 @@ body.onboarding-mode {
 </div>
 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="biz-grid"></div>
 <div class="hidden text-sm text-gray-500" id="biz-empty">No businesses found in the data.</div>
-</section>
-<section id="section-projects">
+</section><section id="section-projects">
 <div class="flex items-center justify-between mb-3 mt-2">
 <div class="mt-2 flex items-center justify-between w-full pr-2"><h2 class="text-lg font-semibold" id="title-projects">Top projects</h2><a class="text-sm font-medium text-blue-600 hover:underline see-all-link seeall-if-home" data-route="projects" href="?sort=popular&amp;view=projects">See all</a></div>
 <div class="relative hidden" id="sort-projects-wrap">
@@ -1011,7 +990,11 @@ body.onboarding-mode {
 </div>
 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="projects-grid"></div>
 <div class="hidden text-sm text-gray-500" id="projects-empty">No projects found in the data.</div>
-</section>
+</section></div><div class="hidden" id="home-foryou" role="tabpanel"><p class="text-gray-600">Sign in to see personalized picks near you.</p><button class="mt-3 inline-flex items-center gap-2 px-4 h-10 rounded-lg bg-ah-600 text-white hover:brightness-110 active:scale-[.99]" id="home-foryou-login" type="button">Log in to continue</button></div></div></section>
+<!-- Sections -->
+
+
+
 <!-- EVENTS (visible only in Events view) -->
 <section class="hidden" id="section-events">
 <div class="flex items-center justify-between mb-3">
@@ -2666,7 +2649,7 @@ async function updateDidYouMeanBar(q, scope){
 
 
     // ---------- PWA onboarding config ----------
-    const ONBOARDING_KEY = 'ah_onboarded_v1';
+    const ONBOARDING_KEY = 'ah_onboarded_v1 /* deprecated by auth patch */';
 
     function hasCompletedOnboarding(){
       try { return localStorage.getItem(ONBOARDING_KEY) === 'true'; }
@@ -4537,9 +4520,9 @@ document.addEventListener('DOMContentLoaded', function(){
     showLoadingOverlay();
     setTimeout(()=> {
       hideLoadingOverlay();
-      try { localStorage.setItem('ah_onboarded_v1','true'); } catch(e){}
+      try { localStorage.setItem('ah_onboarded_v1 /* deprecated by auth patch */','true'); } catch(e){}
       closeAuthModal();
-      if (window.ahSwapLoginToAvatar) window.ahSwapLoginToAvatar();
+      if (window.ahSwapLoginToAvatar /* deprecated by auth patch */) window.ahSwapLoginToAvatar /* deprecated by auth patch */();
       if (typeof routeFromURL === 'function') routeFromURL();
     }, 3200);
   }
@@ -4575,7 +4558,7 @@ document.addEventListener('DOMContentLoaded', function(){
 })();
 </script>
 <script>
-window.ahSwapLoginToAvatar = function(){
+window.ahSwapLoginToAvatar /* deprecated by auth patch */ = function(){
   const loginBtn = document.getElementById('loginBtn');
   if (loginBtn) {
     loginBtn.classList.add('hidden');
@@ -4600,8 +4583,8 @@ window.ahSwapLoginToAvatar = function(){
 
 document.addEventListener('DOMContentLoaded', function(){
   try {
-    if (localStorage.getItem('ah_onboarded_v1') === 'true') {
-      window.ahSwapLoginToAvatar();
+    if (localStorage.getItem('ah_onboarded_v1 /* deprecated by auth patch */') === 'true') {
+      window.ahSwapLoginToAvatar /* deprecated by auth patch */();
     }
   } catch (e) {}
 });
@@ -4610,5 +4593,247 @@ document.addEventListener('DOMContentLoaded', function(){
 // Defensive shims to prevent duplicate-tab crashes
 window.setActiveBottomBar = window.setActiveBottomBar || function(){ /* no-op */ };
 </script>
-</body>
+<!-- AUTH_PATCH_SIGNIN_JSON_SHEET2API -->
+<script>
+(() => {
+  const API_URL = 'https://sheet2api.com/v1/6ZHKuaw2RnaO/legacy-accounts'; // JSON rows
+  const loginBtn   = document.getElementById('loginBtn');
+  const avatarBtn  = document.getElementById('avatarBtn');
+  const emailEl    = document.getElementById('auth-email');
+  const passEl     = document.getElementById('auth-pass');
+  const submitEl   = document.getElementById('authLoginBtn');
+  const errEl      = document.getElementById('auth-error');
+
+  // ---------- Utilities ----------
+  const normEmail = s => (s || '').trim().toLowerCase();
+
+  function setError(msg) {
+    if (!errEl) return;
+    errEl.textContent = msg || '';
+    errEl.hidden = !msg;
+  }
+
+  function setCurrentUser(userRow) {
+    const clone = { ...userRow };
+    delete clone.Password;
+    try { localStorage.setItem('ah_user_v1', JSON.stringify(clone)); } catch (e) { console.warn(e); }
+  }
+
+  function getCurrentUser() {
+    try { return JSON.parse(localStorage.getItem('ah_user_v1') || 'null'); }
+    catch { return null; }
+  }
+
+  function clearCurrentUser() {
+    try { localStorage.removeItem('ah_user_v1'); } catch (e) {}
+  }
+
+  function closeAuthModal() {
+    // If you have a modal helper, call it instead.
+    const modal = document.getElementById('authModal');
+    if (modal) {
+      modal.setAttribute('aria-hidden','true');
+      modal.style.display = 'none';
+    }
+  }
+
+  function renderAvatar(url) {
+    loginBtn?.classList.add('hidden');
+    avatarBtn?.classList.remove('hidden');
+
+    if (url && typeof url === 'string' && url.trim()) {
+      const safe = url.trim();
+      avatarBtn.innerHTML =
+        '<img alt="Your profile photo" class="w-9 h-9 object-cover rounded-full" ' +
+        'onerror="this.remove();var i=document.createElement(\'i\');i.className=\'fa-regular fa-user text-[18px] text-gray-700\';this.parentNode.appendChild(i);" ' +
+        'referrerpolicy="no-referrer" src="' + safe + '">';
+    } else {
+      avatarBtn.innerHTML = '<i class="fa-regular fa-user text-[18px] text-gray-700"></i>';
+    }
+  }
+
+  function hideAvatarShowLogin() {
+    avatarBtn?.classList.add('hidden');
+    loginBtn?.classList.remove('hidden');
+  }
+
+  // ---------- Fetch + validate ----------
+  async function fetchRows() {
+    const res = await fetch(API_URL, { cache: 'no-store' });
+    if (!res.ok) throw new Error('Unable to reach accounts API.');
+    const json = await res.json();
+    return Array.isArray(json) ? json : (json?.data || []);
+  }
+
+  async function validateCredentials(email, password) {
+    const rows = await fetchRows();
+    const hit = rows.find(r =>
+      normEmail(r.Email) === normEmail(email) &&
+      String(r.Password) === String(password)
+    );
+    return hit || null;
+  }
+
+  // ---------- Sign-in flow ----------
+  async function handleLogin(e) {
+    e?.preventDefault?.();
+    setError('');
+
+    const email = emailEl?.value || '';
+    const pwd   = passEl?.value || '';
+
+    if (!email || !pwd) {
+      setError('Please enter both email and password.');
+      return;
+    }
+
+    submitEl?.setAttribute('disabled', 'true');
+    submitEl?.classList.add('opacity-50', 'cursor-not-allowed');
+
+    try {
+      const user = await validateCredentials(email, pwd);
+      if (!user) {
+        setError('Invalid email or password.');
+        return;
+      }
+
+      setCurrentUser(user);
+      renderAvatar(user['Profile Image URL'] || '');
+      closeAuthModal();
+      // TODO: update any other UI with user data if needed
+    } catch (err) {
+      setError(err?.message || 'Something went wrong signing you in.');
+      console.error(err);
+    } finally {
+      submitEl?.removeAttribute('disabled');
+      submitEl?.classList.remove('opacity-50', 'cursor-not-allowed');
+    }
+  }
+
+  submitEl?.addEventListener('click', handleLogin);
+  [emailEl, passEl].forEach(el => el?.addEventListener('keydown', ev => {
+    if (ev.key === 'Enter') handleLogin(ev);
+  }));
+
+  // ---------- Boot: show avatar ONLY if signed in ----------
+  function bootAuthUI() {
+    const user = getCurrentUser();
+    if (user) {
+      renderAvatar(user['Profile Image URL'] || '');
+    } else {
+      hideAvatarShowLogin();
+    }
+  }
+  document.addEventListener('DOMContentLoaded', bootAuthUI);
+
+  // ---------- Signup integration ----------
+  window.ahOnSignupSuccess = function(newUserRow) {
+    if (!newUserRow) return;
+    setCurrentUser(newUserRow);
+    renderAvatar(newUserRow['Profile Image URL'] || '');
+  };
+
+  // ---------- Optional: Sign out ----------
+  window.ahSignOut = function() {
+    clearCurrentUser();
+    hideAvatarShowLogin();
+  };
+})();
+</script>
+<!-- AVATAR_MENU_DROPDOWN -->
+<script>
+(() => {
+  const container = document.getElementById('avatarMenuContainer');
+  const btn = container?.querySelector('#avatarBtn');
+  const menu = container?.querySelector('#avatarMenu');
+  const logoutBtn = container?.querySelector('#logoutBtn');
+  if (!(container && btn && menu && logoutBtn)) return;
+
+  function isOpen() { return !menu.classList.contains('hidden'); }
+  function openMenu() {
+    menu.classList.remove('hidden');
+    btn.setAttribute('aria-expanded','true');
+    logoutBtn.focus();
+    document.addEventListener('mousedown', onDocDown, true);
+    document.addEventListener('keydown', onKey);
+  }
+  function closeMenu(focusBtn=true) {
+    menu.classList.add('hidden');
+    btn.setAttribute('aria-expanded','false');
+    document.removeEventListener('mousedown', onDocDown, true);
+    document.removeEventListener('keydown', onKey);
+    if (focusBtn) btn.focus();
+  }
+  function onDocDown(e) {
+    if (!container.contains(e.target)) closeMenu(false);
+  }
+  function onKey(e) {
+    if (e.key === 'Escape') { e.preventDefault(); closeMenu(); }
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); logoutBtn.focus(); }
+  }
+
+  btn.addEventListener('click', (e) => { e.preventDefault(); isOpen() ? closeMenu(false) : openMenu(); });
+  btn.addEventListener('keydown', (e) => {
+    if ((e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') && !isOpen()) { e.preventDefault(); openMenu(); }
+  });
+
+  logoutBtn.addEventListener('click', () => {
+    if (typeof window.ahSignOut === 'function') window.ahSignOut();
+    closeMenu(false);
+  });
+})();
+</script>
+<script>
+(function(){
+  const $ = (s, r=document)=>r.querySelector(s);
+  const featuredBtn = $('#tab-featured');
+  const forYouBtn = $('#tab-foryou');
+  const featuredPanel = $('#home-featured');
+  const forYouPanel = $('#home-foryou');
+  const loginBtn = $('#home-foryou-login');
+  // naive user check: rely on a global currentUser or a data-auth attr on body if present
+  function isLoggedIn(){
+    try{
+      if (window.currentUser && window.currentUser.id) return true;
+      const b = document.body;
+      if (b && b.getAttribute('data-auth') === 'signed-in') return true;
+    }catch(e){}
+    return false;
+  }
+  function select(tab){
+    if(tab==='featured'){
+      featuredBtn.setAttribute('aria-selected','true');
+      featuredBtn.classList.add('border-ah-600','text-ah-700');
+      forYouBtn.setAttribute('aria-selected','false');
+      forYouBtn.classList.remove('border-ah-600','text-ah-700');
+      featuredPanel.classList.remove('hidden');
+      forYouPanel.classList.add('hidden');
+    }else{
+      forYouBtn.setAttribute('aria-selected','true');
+      forYouBtn.classList.add('border-ah-600','text-ah-700');
+      featuredBtn.setAttribute('aria-selected','false');
+      featuredBtn.classList.remove('border-ah-600','text-ah-700');
+      featuredPanel.classList.add('hidden');
+      forYouPanel.classList.remove('hidden');
+      if(!isLoggedIn()){
+        // If not logged in, open your existing sign-in panel/button
+        var loginTrigger = document.getElementById('btn-login') || document.querySelector('[data-open-auth]');
+        if (loginTrigger && typeof loginTrigger.click === 'function'){
+          loginTrigger.click();
+        }
+      }
+    }
+  }
+  featuredBtn?.addEventListener('click', ()=>select('featured'));
+  forYouBtn?.addEventListener('click', ()=>select('foryou'));
+  loginBtn?.addEventListener('click', ()=>{
+    var loginTrigger = document.getElementById('btn-login') || document.querySelector('[data-open-auth]');
+    if (loginTrigger && typeof loginTrigger.click === 'function'){
+      loginTrigger.click();
+    }
+  });
+  // default
+  select('featured');
+})();
+</script></body>
 </html>
