@@ -2679,36 +2679,67 @@ async function updateDidYouMeanBar(q, scope){
     }
 
     const ONBOARDING_INTERESTS = [
-    "Academic",
-    "Professional Development",
-    "Service / Volunteering",
-    "Recreational",
-    "Sports & Athletics",
-    "Religious / Spiritual",
-    "Cultural / Identity-Based",
-    "Arts & Media",
-    "Political / Activism",
-    "Other"
-  ];
-
-  const ONBOARDING_COLORS = {
-    "Academic":"#3b82f6",
-    "Professional Development":"#8b5cf6",
-    "Service / Volunteering":"#10b981",
-    "Recreational":"#f59e0b",
-    "Sports & Athletics":"#ef4444",
-    "Religious / Spiritual":"#06b6d4",
-    "Cultural / Identity-Based":"#f43f5e",
-    "Arts & Media":"#a855f7",
-    "Political / Activism":"#22c55e",
-    "Other":"#64748b"
-  };
-  function hexToRgba(hex, a){
-    const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    if(!m) return `rgba(0,0,0,${a||1})`;
-    return `rgba(${parseInt(m[1],16)},${parseInt(m[2],16)},${parseInt(m[3],16)},${a})`;
+  { key: 'academic', icon: 'fa-book-open', label: 'Academic',
+    desc: 'Majors, study & academic orgs',
+    tileClass: 'bg-blue-600 text-white border border-blue-700 shadow-lg shadow-blue-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 focus:outline-none flex flex-col items-center text-center',
+    iconClass: 'mx-auto w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/20 text-white'
+  },
+  { key: 'professional', icon: 'fa-briefcase', label: 'Professional Development',
+    desc: 'Career & networking groups',
+    tileClass: 'bg-amber-500 text-black border border-amber-600 shadow-lg shadow-amber-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 focus:outline-none flex flex-col items-center text-center',
+    iconClass: 'mx-auto w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-black/10 text-black'
+  },
+  { key: 'service', icon: 'fa-hand-holding-heart', label: 'Service & Volunteering',
+    desc: 'Community & philanthropy',
+    tileClass: 'bg-emerald-600 text-white border border-emerald-700 shadow-lg shadow-emerald-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 focus:outline-none flex flex-col items-center text-center',
+    iconClass: 'mx-auto w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/20 text-white'
+  },
+  { key: 'cultural', icon: 'fa-globe', label: 'Cultural & Identity',
+    desc: 'Affinity & cultural orgs',
+    tileClass: 'bg-violet-600 text-white border border-violet-700 shadow-lg shadow-violet-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 focus:outline-none flex flex-col items-center text-center',
+    iconClass: 'mx-auto w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/20 text-white'
+  },
+  { key: 'arts', icon: 'fa-paintbrush', label: 'Arts & Media',
+    desc: 'Design, music, film & media',
+    tileClass: 'bg-pink-600 text-white border border-pink-700 shadow-lg shadow-pink-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 focus:outline-none flex flex-col items-center text-center',
+    iconClass: 'mx-auto w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/20 text-white'
+  },
+  { key: 'faith', icon: 'fa-place-of-worship', label: 'Faith & Spiritual',
+    desc: 'Religious & spiritual life',
+    tileClass: 'bg-indigo-600 text-white border border-indigo-700 shadow-lg shadow-indigo-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 focus:outline-none flex flex-col items-center text-center',
+    iconClass: 'mx-auto w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/20 text-white'
+  },
+  { key: 'entrepreneurship', icon: 'fa-lightbulb', label: 'Entrepreneurship',
+    desc: 'Startup & founder clubs',
+    tileClass: 'bg-orange-500 text-black border border-orange-600 shadow-lg shadow-orange-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 focus:outline-none flex flex-col items-center text-center',
+    iconClass: 'mx-auto w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-black/10 text-black'
+  },
+  { key: 'tech', icon: 'fa-microchip', label: 'Tech & Engineering',
+    desc: 'Coding, robotics, AI',
+    tileClass: 'bg-slate-900 text-white border border-slate-800 shadow-lg shadow-black/30 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 focus:outline-none flex flex-col items-center text-center',
+    iconClass: 'mx-auto w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/10 text-white'
+  },
+  { key: 'health', icon: 'fa-heart-pulse', label: 'Health & Wellness',
+    desc: 'Mental, physical, nutrition',
+    tileClass: 'bg-rose-600 text-white border border-rose-700 shadow-lg shadow-rose-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 focus:outline-none flex flex-col items-center text-center',
+    iconClass: 'mx-auto w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/20 text-white'
+  },
+  { key: 'recreational', icon: 'fa-gamepad', label: 'Recreational',
+    desc: 'Hobbies, fun, casual social',
+    tileClass: 'bg-fuchsia-600 text-white border border-fuchsia-700 shadow-lg shadow-fuchsia-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 focus:outline-none flex flex-col items-center text-center',
+    iconClass: 'mx-auto w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/20 text-white'
+  },
+  { key: 'sports', icon: 'fa-dumbbell', label: 'Sports & Athletics',
+    desc: 'Club sports & fitness teams',
+    tileClass: 'bg-red-600 text-white border border-red-700 shadow-lg shadow-red-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 focus:outline-none flex flex-col items-center text-center',
+    iconClass: 'mx-auto w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/20 text-white'
+  },
+  { key: 'careerprep', icon: 'fa-user-graduate', label: 'Career Prep',
+    desc: 'Resume, interviews, internships',
+    tileClass: 'bg-teal-600 text-white border border-teal-700 shadow-lg shadow-teal-900/20 px-4 py-5 rounded-xl active:scale-[.99] transition-all ring-offset-2 focus:outline-none flex flex-col items-center text-center',
+    iconClass: 'mx-auto w-10 h-10 mb-3 rounded-md flex items-center justify-center text-[18px] font-semibold bg-white/20 text-white'
   }
-
+];
 
     let selectedInterests = new Set();
 
@@ -4361,16 +4392,9 @@ document.addEventListener('DOMContentLoaded', function(){
   };
 
   const ONBOARDING_INTERESTS = [
-    "Academic",
-    "Professional Development",
-    "Service / Volunteering",
-    "Recreational",
-    "Sports & Athletics",
-    "Religious / Spiritual",
-    "Cultural / Identity-Based",
-    "Arts & Media",
-    "Political / Activism",
-    "Other"
+    "Academic", "Cultural & Identity", "Arts & Media", "Tech & Engineering",
+    "Entrepreneurship", "Health & Wellness", "Sports & Recreation", "Community Service",
+    "Business & Finance", "Science", "Faith & Spirituality", "Other"
   ];
 
   const signupPanel = document.getElementById('panel-signup');
@@ -4391,24 +4415,20 @@ document.addEventListener('DOMContentLoaded', function(){
     ONBOARDING_INTERESTS.forEach(label => {
       const b = document.createElement('button');
       b.type = 'button';
-      b.className = "text-sm px-3 py-2 rounded-lg border text-white";
+      b.className = "text-sm px-3 py-2 rounded-lg border border-gray-300 text-gray-700 data-[sel=true]:bg-gray-900 data-[sel=true]:text-white";
       b.textContent = label;
-      b.setAttribute("data-sel","false");
-      function paint(){
-        const col = ONBOARDING_COLORS[label] || "#3b82f6";
-        const sel = b.getAttribute("data-sel")==="true";
-        b.style.backgroundColor = sel ? col : hexToRgba(col, 0.12);
-        b.style.borderColor = sel ? "transparent" : hexToRgba(col, 0.35);
-        b.style.color = sel ? "#ffffff" : col;
-      }
-      b.addEventListener("click", () => {
-        const sel = b.getAttribute("data-sel")==="true";
-        if (sel) { b.setAttribute("data-sel","false"); selectedInterests.delete(label); }
-        else { b.setAttribute("data-sel","true"); selectedInterests.add(label); }
-        paint();
+      b.setAttribute('data-sel', 'false');
+      b.addEventListener('click', () => {
+        const sel = b.getAttribute('data-sel') === 'true';
+        if (sel) {
+          b.setAttribute('data-sel','false');
+          selectedInterests.delete(label);
+        } else {
+          b.setAttribute('data-sel','true');
+          selectedInterests.add(label);
+        }
         syncButtons();
       });
-      paint();
       interestWrap.appendChild(b);
     });
   }
@@ -4589,128 +4609,6 @@ document.addEventListener('DOMContentLoaded', function(){
 <script>
 // Defensive shims to prevent duplicate-tab crashes
 window.setActiveBottomBar = window.setActiveBottomBar || function(){ /* no-op */ };
-</script>
-
-<script>
-/* ===== Fix mobile Interests: replace 'undefined' tiles and mirror the desktop list ===== */
-(function(){
-  // Canonical interests with optional short subtitles
-  const INTERESTS = [
-    {name:"Academic", sub:"Courses, study groups"},
-    {name:"Professional Development", sub:"Career prep, workshops"},
-    {name:"Service / Volunteering", sub:"Give back, community work"},
-    {name:"Recreational", sub:"Hobbies, leisure groups"},
-    {name:"Sports & Athletics", sub:"Teams, fitness, clubs"},
-    {name:"Religious / Spiritual", sub:"Faith-based orgs"},
-    {name:"Cultural / Identity-Based", sub:"Heritage & identity orgs"},
-    {name:"Arts & Media", sub:"Creative, performance, media"},
-    {name:"Political / Activism", sub:"Advocacy & debate"},
-    {name:"Other", sub:"Everything else"}
-  ];
-
-  const COLORS = {
-    "Academic":"#3b82f6",
-    "Professional Development":"#8b5cf6",
-    "Service / Volunteering":"#10b981",
-    "Recreational":"#f59e0b",
-    "Sports & Athletics":"#ef4444",
-    "Religious / Spiritual":"#06b6d4",
-    "Cultural / Identity-Based":"#f43f5e",
-    "Arts & Media":"#a855f7",
-    "Political / Activism":"#22c55e",
-    "Other":"#64748b"
-  };
-  function hexToRgba(hex, a){
-    const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    if(!m) return `rgba(0,0,0,${a||1})`;
-    return `rgba(${parseInt(m[1],16)},${parseInt(m[2],16)},${parseInt(m[3],16)},${a})`;
-  }
-
-  // Find the mobile interests grid (try several likely selectors)
-  function findMobileGrid(){
-    const sels = [
-      "#ob-interests",
-      "#onboarding-interests",
-      "#view-onboarding-interests #interests-grid",
-      "#view-onboarding-interests .grid",
-      "[data-ob='interests-grid']"
-    ];
-    for (const s of sels){
-      const el = document.querySelector(s);
-      if (el) return el;
-    }
-    return null;
-  }
-
-  function rebuildMobileInterests(){
-    const grid = findMobileGrid();
-    if (!grid) return false;
-
-    // If the grid already looks correct, skip (heuristic: no 'undefined' text)
-    if (grid.textContent && !/undefined/i.test(grid.textContent)) return true;
-
-    grid.innerHTML = "";
-    const selected = new Set();
-    const finishBtn = document.getElementById("ob-finish");
-
-    INTERESTS.forEach(({name, sub}) => {
-      const col = COLORS[name] || "#3b82f6";
-      const card = document.createElement("button");
-      card.type = "button";
-      card.setAttribute("data-sel","false");
-      card.className = "rounded-2xl border px-3 py-2 text-left";
-      card.style.borderColor = hexToRgba(col, 0.35);
-      card.style.background = hexToRgba(col, 0.10);
-      card.style.color = "#111827";
-
-      const t = document.createElement("div");
-      t.className = "text-[15px] font-medium";
-      t.textContent = name;
-
-      const s = document.createElement("div");
-      s.className = "text-xs text-gray-500";
-      s.textContent = sub || "";
-
-      function paint(){
-        const sel = card.getAttribute("data-sel")==="true";
-        card.style.background = sel ? col : hexToRgba(col, 0.10);
-        card.style.borderColor = sel ? "transparent" : hexToRgba(col, 0.35);
-        t.style.color = sel ? "#ffffff" : "#111827";
-        s.style.color = sel ? "rgba(255,255,255,.9)" : "#6b7280";
-      }
-      card.addEventListener("click", ()=>{
-        const sel = card.getAttribute("data-sel")==="true";
-        if (sel) { card.setAttribute("data-sel","false"); selected.delete(name); }
-        else { card.setAttribute("data-sel","true"); selected.add(name); }
-        if (finishBtn) finishBtn.disabled = selected.size === 0;
-        // Try to keep a shared global set if the app uses one
-        try {
-          if (window.selectedInterests && window.selectedInterests.add) {
-            if (!sel) window.selectedInterests.add(name);
-            else window.selectedInterests.delete(name);
-          }
-        } catch(e){}
-        paint();
-      });
-
-      paint();
-      card.appendChild(t);
-      card.appendChild(s);
-      grid.appendChild(card);
-    });
-
-    // Make sure Finish is disabled until a pick is made
-    if (finishBtn) finishBtn.disabled = true;
-    return true;
-  }
-
-  // Run soon after DOM is ready, and again after a small delay in case the view swaps in
-  document.addEventListener("DOMContentLoaded", ()=>{
-    rebuildMobileInterests();
-    setTimeout(rebuildMobileInterests, 400);
-    setTimeout(rebuildMobileInterests, 1200);
-  });
-})();
 </script>
 </body>
 </html>
