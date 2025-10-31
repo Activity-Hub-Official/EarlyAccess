@@ -4590,5 +4590,127 @@ document.addEventListener('DOMContentLoaded', function(){
 // Defensive shims to prevent duplicate-tab crashes
 window.setActiveBottomBar = window.setActiveBottomBar || function(){ /* no-op */ };
 </script>
+
+<script>
+/* ===== Fix mobile Interests: replace 'undefined' tiles and mirror the desktop list ===== */
+(function(){
+  // Canonical interests with optional short subtitles
+  const INTERESTS = [
+    {name:"Academic", sub:"Courses, study groups"},
+    {name:"Professional Development", sub:"Career prep, workshops"},
+    {name:"Service / Volunteering", sub:"Give back, community work"},
+    {name:"Recreational", sub:"Hobbies, leisure groups"},
+    {name:"Sports & Athletics", sub:"Teams, fitness, clubs"},
+    {name:"Religious / Spiritual", sub:"Faith-based orgs"},
+    {name:"Cultural / Identity-Based", sub:"Heritage & identity orgs"},
+    {name:"Arts & Media", sub:"Creative, performance, media"},
+    {name:"Political / Activism", sub:"Advocacy & debate"},
+    {name:"Other", sub:"Everything else"}
+  ];
+
+  const COLORS = {
+    "Academic":"#3b82f6",
+    "Professional Development":"#8b5cf6",
+    "Service / Volunteering":"#10b981",
+    "Recreational":"#f59e0b",
+    "Sports & Athletics":"#ef4444",
+    "Religious / Spiritual":"#06b6d4",
+    "Cultural / Identity-Based":"#f43f5e",
+    "Arts & Media":"#a855f7",
+    "Political / Activism":"#22c55e",
+    "Other":"#64748b"
+  };
+  function hexToRgba(hex, a){
+    const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    if(!m) return `rgba(0,0,0,${a||1})`;
+    return `rgba(${parseInt(m[1],16)},${parseInt(m[2],16)},${parseInt(m[3],16)},${a})`;
+  }
+
+  // Find the mobile interests grid (try several likely selectors)
+  function findMobileGrid(){
+    const sels = [
+      "#ob-interests",
+      "#onboarding-interests",
+      "#view-onboarding-interests #interests-grid",
+      "#view-onboarding-interests .grid",
+      "[data-ob='interests-grid']"
+    ];
+    for (const s of sels){
+      const el = document.querySelector(s);
+      if (el) return el;
+    }
+    return null;
+  }
+
+  function rebuildMobileInterests(){
+    const grid = findMobileGrid();
+    if (!grid) return false;
+
+    // If the grid already looks correct, skip (heuristic: no 'undefined' text)
+    if (grid.textContent && !/undefined/i.test(grid.textContent)) return true;
+
+    grid.innerHTML = "";
+    const selected = new Set();
+    const finishBtn = document.getElementById("ob-finish");
+
+    INTERESTS.forEach(({name, sub}) => {
+      const col = COLORS[name] || "#3b82f6";
+      const card = document.createElement("button");
+      card.type = "button";
+      card.setAttribute("data-sel","false");
+      card.className = "rounded-2xl border px-3 py-2 text-left";
+      card.style.borderColor = hexToRgba(col, 0.35);
+      card.style.background = hexToRgba(col, 0.10);
+      card.style.color = "#111827";
+
+      const t = document.createElement("div");
+      t.className = "text-[15px] font-medium";
+      t.textContent = name;
+
+      const s = document.createElement("div");
+      s.className = "text-xs text-gray-500";
+      s.textContent = sub || "";
+
+      function paint(){
+        const sel = card.getAttribute("data-sel")==="true";
+        card.style.background = sel ? col : hexToRgba(col, 0.10);
+        card.style.borderColor = sel ? "transparent" : hexToRgba(col, 0.35);
+        t.style.color = sel ? "#ffffff" : "#111827";
+        s.style.color = sel ? "rgba(255,255,255,.9)" : "#6b7280";
+      }
+      card.addEventListener("click", ()=>{
+        const sel = card.getAttribute("data-sel")==="true";
+        if (sel) { card.setAttribute("data-sel","false"); selected.delete(name); }
+        else { card.setAttribute("data-sel","true"); selected.add(name); }
+        if (finishBtn) finishBtn.disabled = selected.size === 0;
+        // Try to keep a shared global set if the app uses one
+        try {
+          if (window.selectedInterests && window.selectedInterests.add) {
+            if (!sel) window.selectedInterests.add(name);
+            else window.selectedInterests.delete(name);
+          }
+        } catch(e){}
+        paint();
+      });
+
+      paint();
+      card.appendChild(t);
+      card.appendChild(s);
+      grid.appendChild(card);
+    });
+
+    // Make sure Finish is disabled until a pick is made
+    if (finishBtn) finishBtn.disabled = true;
+    return true;
+  }
+
+  // Run soon after DOM is ready, and again after a small delay in case the view swaps in
+  document.addEventListener("DOMContentLoaded", ()=>{
+    rebuildMobileInterests();
+    setTimeout(rebuildMobileInterests, 400);
+    setTimeout(rebuildMobileInterests, 1200);
+  });
+})();
+</script>
 </body>
 </html>
