@@ -782,14 +782,14 @@ input:invalid, select:invalid, textarea:invalid {
   #floating-pill .fp-pill{
     pointer-events: auto;
     display: inline-flex; align-items: center; justify-content: center;
-    min-height: 44px; padding: 10px 16px;
+    min-height: 56px; padding: 12px 18px;
     border-radius: 999px;
     background: rgba(255,255,255,0.75);
     border: 1px solid rgba(15,23,42,0.12);
     box-shadow: 0 8px 28px rgba(2,6,23,0.12);
     -webkit-backdrop-filter: blur(10px) saturate(160%);
     backdrop-filter: blur(10px) saturate(160%);
-    width: clamp(96px, 30vw, 240px);
+    width: calc(100% - 24px); max-width: 720px;
     transform: translateY(8px);
     opacity: 0;
     transition: transform 220ms cubic-bezier(.2,.7,.2,1), opacity 220ms ease;
@@ -804,6 +804,41 @@ input:invalid, select:invalid, textarea:invalid {
       transform: none;
       opacity: 1;
     }
+  }
+}
+</style>
+
+<style>
+/* Floating pill content layout and active styles */
+@media (max-width: 768px){
+  #floating-pill .fp-pill{
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 12px 14px; /* keep comfortable padding with multiple items */
+  }
+  #floating-pill .fp-pill a[data-route]{
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-width: 56px;
+    padding: 8px 10px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: 12px;
+    line-height: 1;
+  }
+  #floating-pill .fp-pill a[aria-current="page"]{
+    background: rgba(37, 99, 235, 0.10); /* subtle primary tint */
+    border: 1px solid rgba(37, 99, 235, 0.18);
+  }
+  /* Make sure icons don't explode; if using FA/SVG, size them reasonably */
+  #floating-pill .fp-pill a[data-route] svg{
+    width: 22px; height: 22px;
   }
 }
 </style>
@@ -3868,7 +3903,28 @@ document.addEventListener('click', function(e){
 
 <!-- Floating pill bar (mobile PWA) -->
 <nav id="floating-pill" role="region" aria-label="Quick actions (empty)">
-  <div class="fp-pill" aria-hidden="true"></div>
+  <div class="fp-pill" aria-hidden="true">
+    <a aria-current="page" class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 aria-[current=page]:text-black min-h-[44px] px-4 py-2" data-route="home" href="?view=home">
+<i class="fa-solid fa-house text-[18px]"></i>
+<span>Home</span>
+</a>
+    <a class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 min-h-[44px] px-4 py-2" data-route="orgs" href="?view=orgs">
+<i class="fa-solid fa-users text-[18px]"></i>
+<span>Organizations</span>
+</a>
+    <a class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 min-h-[44px] px-4 py-2" data-route="businesses" href="?view=businesses">
+<i class="fa-solid fa-briefcase text-[18px]"></i>
+<span>Businesses</span>
+</a>
+    <a class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 min-h-[44px] px-4 py-2" data-route="projects" href="?view=projects">
+<i class="fa-solid fa-diagram-project text-[18px]"></i>
+<span>Projects</span>
+</a>
+    <a class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 min-h-[44px] px-4 py-2" data-route="events" href="?view=events">
+<i class="fa-solid fa-calendar-days text-[18px]"></i>
+<span>Events</span>
+</a>
+  </div>
 </nav>
 <nav class="fixed inset-x-0 bottom-0 z-[45] md:hidden bg-white/95 backdrop-blur border-t border-gray-200 py-2" id="bottom-bar">
 <div class="h-16 flex items-center justify-around pt-[env(safe-area-inset-top)] pb-[calc(env(safe-area-inset-bottom))]">
