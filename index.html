@@ -768,67 +768,68 @@ input:invalid, select:invalid, textarea:invalid {
 </style>
 
 
-  <!-- Injected: Floating iOS-style bottom bar -->
+  
+  <!-- Injected: Floating iOS-style bottom bar (clean) -->
   <style id="floating-tabbar-css">
-    /* Show only on small screens AND when the app is installed as a PWA */
+    /* Mobile only (no PWA requirement) */
     @media (max-width: 768px) {
-      body.has-bottom-bar.pwa #bottom-bar { display: grid; }
+      #bottom-bar { display: grid; }
+      body.has-bottom-bar main{ padding-bottom: calc(var(--bbh) + env(safe-area-inset-bottom, 0px) + 16px); }
     }
-    #bottom-bar { display: none; }
+    @media (min-width: 769px) {
+      #bottom-bar { display: none !important; }
+    }
 
-    :root{ --bbh: 76px; } /* fallback; JS updates this */
+    :root{ --bbh: 80px; }
 
-    /* Floating capsule container */
     #bottom-bar.bb-fab{
       position: fixed;
       left: 50%;
       transform: translateX(-50%);
-      bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+      bottom: calc(16px + env(safe-area-inset-bottom, 0px));
       z-index: 60;
 
       display: grid;
-      grid-auto-columns: 1fr;
-      grid-auto-flow: column;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 8px;
 
-      width: min(720px, calc(100vw - 24px));
-      padding: 8px;
-      border-radius: 18px;
+      width: min(640px, calc(100vw - 32px));
+      padding: 10px;
+      border-radius: 24px;
 
       background: rgba(255,255,255,0.92);
       -webkit-backdrop-filter: saturate(180%) blur(18px);
       backdrop-filter: saturate(180%) blur(18px);
 
       border: 1px solid rgba(15,23,42,0.10);
-      box-shadow: 0 6px 24px rgba(15,23,42,0.10);
+      box-shadow:
+        0 20px 40px rgba(15,23,42,0.16),
+        0 2px 6px rgba(15,23,42,0.08);
     }
 
-    /* Tab items */
     #bottom-bar a[data-route]{
       display:flex; flex-direction:column; align-items:center; justify-content:center;
-      gap:4px; padding:10px 0;
+      gap:6px; padding:10px 6px;
       text-decoration:none; user-select:none;
-      color:#475569; font-weight:600; border-radius:12px;
-      min-height:44px;
+      color:#475569; font-weight:600; border-radius:16px;
+      min-height:48px; min-width:0;
       -webkit-tap-highlight-color: transparent;
+      transition: background .18s ease, color .18s ease, transform .06s ease;
     }
-    #bottom-bar a[data-route] i{ font-size:20px; line-height:1; }
-    #bottom-bar a[data-route] .bb-label{ font-size:11px; line-height:1; }
+    #bottom-bar a[data-route] i{ font-size:22px; line-height:1; display:block; }
+    #bottom-bar a[data-route] .bb-label{ display:block; font-size:12px; line-height:1; letter-spacing:.2px; }
 
-    /* Active state: color-only emphasis (no pills) */
-    #bottom-bar a[aria-current="page"]{ color:#0B4BE0; }
+    #bottom-bar a[aria-current="page"]{
+      color:#0B4BE0;
+      background: rgba(11,75,224,0.08);
+      border: 1px solid rgba(11,75,224,0.15);
+    }
 
     @media (hover:hover){
       #bottom-bar a[data-route]:hover{ background: rgba(15,23,42,0.05); }
     }
     #bottom-bar a[data-route]:active{ transform: translateY(0.5px); }
 
-    /* Content padding so the bar doesn't overlap content */
-    body.has-bottom-bar main{
-      padding-bottom: calc(var(--bbh) + env(safe-area-inset-bottom, 0px) + 16px);
-    }
-
-    /* Super small screens: hide labels */
     @media (max-width:360px){
       #bottom-bar .bb-label{ display:none; }
     }
@@ -5153,34 +5154,19 @@ window.setActiveBottomBar = window.setActiveBottomBar || function(){ /* no-op */
 
 
 
-  <!-- Injected: Floating iOS-style bottom bar JS -->
+  
+  <!-- Injected: Floating iOS-style bottom bar JS (clean) -->
   <script id="floating-tabbar-js">
     (function(){
-      function isStandalone(){
-        return window.matchMedia('(display-mode: standalone)').matches
-          || window.navigator.standalone === true;
-      }
-      function isSmall(){ return matchMedia('(max-width:768px)').matches; }
-
       function measureBar(){
         const bb = document.getElementById('bottom-bar');
         if (!bb) return;
-        // Auto grid columns to number of items
-        const count = bb.querySelectorAll('a[data-route]').length || 4;
+        const count = bb.querySelectorAll('a[data-route]').length || 5;
         bb.style.gridTemplateColumns = `repeat(${count}, minmax(0, 1fr))`;
         const h = Math.ceil(bb.getBoundingClientRect().height);
         document.documentElement.style.setProperty('--bbh', h + 'px');
       }
-
-      function apply(){
-        if (isStandalone() && isSmall()) {
-          document.body.classList.add('pwa','has-bottom-bar');
-        } else {
-          document.body.classList.remove('pwa','has-bottom-bar');
-        }
-        measureBar();
-      }
-
+      function apply(){ measureBar(); }
       function setActiveFromHash(){
         const hash = (location.hash || '').replace('#','');
         const items = document.querySelectorAll('#bottom-bar a[data-route]');
@@ -5190,16 +5176,12 @@ window.setActiveBottomBar = window.setActiveBottomBar || function(){ /* no-op */
           a.setAttribute('aria-current', active ? 'page' : 'false');
           if (active) any = true;
         });
-        if (!any && items.length){
-          // Fallback: first tab as active
-          items[0].setAttribute('aria-current','page');
-        }
+        if (!any && items.length){ items[0].setAttribute('aria-current','page'); }
       }
-
-      window.addEventListener('hashchange', setActiveFromHash);
-      window.addEventListener('resize', apply, { passive:true });
-      window.addEventListener('orientationchange', apply, { passive:true });
-      window.addEventListener('load', function(){
+      addEventListener('hashchange', setActiveFromHash);
+      addEventListener('resize', apply, { passive:true });
+      addEventListener('orientationchange', apply, { passive:true });
+      addEventListener('load', function(){
         const bb = document.getElementById('bottom-bar');
         if (bb){
           bb.addEventListener('click', function(e){
