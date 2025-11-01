@@ -768,73 +768,45 @@ input:invalid, select:invalid, textarea:invalid {
 </style>
 
 
-  
-  <!-- Injected: Floating iOS-style bottom bar (clean) -->
-  <style id="floating-tabbar-css">
-    /* Mobile only (no PWA requirement) */
-    @media (max-width: 768px) {
-      #bottom-bar { display: grid; }
-      body.has-bottom-bar main{ padding-bottom: calc(var(--bbh) + env(safe-area-inset-bottom, 0px) + 16px); }
+<style>
+/* Floating glassmorphic pill above bottom bar — mobile only */
+@media (max-width: 768px){
+  #floating-pill{
+    position: fixed;
+    left: 0; right: 0;
+    bottom: calc(max(12px, env(safe-area-inset-bottom)) + var(--bbh, 64px));
+    display: grid; place-items: center;
+    pointer-events: none;
+    z-index: 50;
+  }
+  #floating-pill .fp-pill{
+    pointer-events: auto;
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 44px; padding: 10px 16px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.75);
+    border: 1px solid rgba(15,23,42,0.12);
+    box-shadow: 0 8px 28px rgba(2,6,23,0.12);
+    -webkit-backdrop-filter: blur(10px) saturate(160%);
+    backdrop-filter: blur(10px) saturate(160%);
+    width: clamp(96px, 30vw, 240px);
+    transform: translateY(8px);
+    opacity: 0;
+    transition: transform 220ms cubic-bezier(.2,.7,.2,1), opacity 220ms ease;
+  }
+  body.loaded #floating-pill .fp-pill{
+    transform: translateY(0);
+    opacity: 1;
+  }
+  @media (prefers-reduced-motion: reduce){
+    #floating-pill .fp-pill{
+      transition: none;
+      transform: none;
+      opacity: 1;
     }
-    @media (min-width: 769px) {
-      #bottom-bar { display: none !important; }
-    }
-
-    :root{ --bbh: 80px; }
-
-    #bottom-bar.bb-fab{
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: calc(16px + env(safe-area-inset-bottom, 0px));
-      z-index: 60;
-
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 8px;
-
-      width: min(640px, calc(100vw - 32px));
-      padding: 10px;
-      border-radius: 24px;
-
-      background: rgba(255,255,255,0.92);
-      -webkit-backdrop-filter: saturate(180%) blur(18px);
-      backdrop-filter: saturate(180%) blur(18px);
-
-      border: 1px solid rgba(15,23,42,0.10);
-      box-shadow:
-        0 20px 40px rgba(15,23,42,0.16),
-        0 2px 6px rgba(15,23,42,0.08);
-    }
-
-    #bottom-bar a[data-route]{
-      display:flex; flex-direction:column; align-items:center; justify-content:center;
-      gap:6px; padding:10px 6px;
-      text-decoration:none; user-select:none;
-      color:#475569; font-weight:600; border-radius:16px;
-      min-height:48px; min-width:0;
-      -webkit-tap-highlight-color: transparent;
-      transition: background .18s ease, color .18s ease, transform .06s ease;
-    }
-    #bottom-bar a[data-route] i{ font-size:22px; line-height:1; display:block; }
-    #bottom-bar a[data-route] .bb-label{ display:block; font-size:12px; line-height:1; letter-spacing:.2px; }
-
-    #bottom-bar a[aria-current="page"]{
-      color:#0B4BE0;
-      background: rgba(11,75,224,0.08);
-      border: 1px solid rgba(11,75,224,0.15);
-    }
-
-    @media (hover:hover){
-      #bottom-bar a[data-route]:hover{ background: rgba(15,23,42,0.05); }
-    }
-    #bottom-bar a[data-route]:active{ transform: translateY(0.5px); }
-
-    @media (max-width:360px){
-      #bottom-bar .bb-label{ display:none; }
-    }
-  </style>
-
+  }
+}
+</style>
 </head>
 <body class="has-bottom-bar min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
 <div class="flex w-full">
@@ -3893,6 +3865,11 @@ document.addEventListener('click', function(e){
 })();
 </script>
 <!-- Mobile Bottom Bar -->
+
+<!-- Floating pill bar (mobile PWA) -->
+<nav id="floating-pill" role="region" aria-label="Quick actions (empty)">
+  <div class="fp-pill" aria-hidden="true"></div>
+</nav>
 <nav class="fixed inset-x-0 bottom-0 z-[45] md:hidden bg-white/95 backdrop-blur border-t border-gray-200 py-2" id="bottom-bar">
 <div class="h-16 flex items-center justify-around pt-[env(safe-area-inset-top)] pb-[calc(env(safe-area-inset-bottom))]">
 <a aria-current="page" class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 aria-[current=page]:text-black min-h-[44px] px-4 py-2" data-route="home" href="?view=home">
@@ -5154,49 +5131,8 @@ window.setActiveBottomBar = window.setActiveBottomBar || function(){ /* no-op */
 
 
 
-  
-  <!-- Injected: Floating iOS-style bottom bar JS (clean) -->
-  <script id="floating-tabbar-js">
-    (function(){
-      function measureBar(){
-        const bb = document.getElementById('bottom-bar');
-        if (!bb) return;
-        const count = bb.querySelectorAll('a[data-route]').length || 5;
-        bb.style.gridTemplateColumns = `repeat(${count}, minmax(0, 1fr))`;
-        const h = Math.ceil(bb.getBoundingClientRect().height);
-        document.documentElement.style.setProperty('--bbh', h + 'px');
-      }
-      function apply(){ measureBar(); }
-      function setActiveFromHash(){
-        const hash = (location.hash || '').replace('#','');
-        const items = document.querySelectorAll('#bottom-bar a[data-route]');
-        let any = false;
-        items.forEach(a => {
-          const active = hash && a.getAttribute('data-route') === hash;
-          a.setAttribute('aria-current', active ? 'page' : 'false');
-          if (active) any = true;
-        });
-        if (!any && items.length){ items[0].setAttribute('aria-current','page'); }
-      }
-      addEventListener('hashchange', setActiveFromHash);
-      addEventListener('resize', apply, { passive:true });
-      addEventListener('orientationchange', apply, { passive:true });
-      addEventListener('load', function(){
-        const bb = document.getElementById('bottom-bar');
-        if (bb){
-          bb.addEventListener('click', function(e){
-            const a = e.target.closest('a[data-route]');
-            if (!a) return;
-            document.querySelectorAll('#bottom-bar a[aria-current="page"]').forEach(el=>el.setAttribute('aria-current','false'));
-            a.setAttribute('aria-current','page');
-            measureBar();
-          }, { passive:true });
-        }
-        setActiveFromHash();
-        apply();
-      }, { passive:true });
-    })();
-  </script>
-
+<script>
+  window.addEventListener('load', () => document.body.classList.add('loaded'));
+</script>
 </body>
 </html>
