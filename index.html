@@ -872,6 +872,29 @@ html.is-mobile-browser .site-header{
   }
 </style>
 
+
+<style id="mobile-search-pill-v2">
+  @media (max-width: 767px) {
+    /* Target both possible IDs and increase specificity by scoping under #navbar */
+    #navbar #searchbox,
+    #navbar #m-searchbox {
+      height: 52px !important;
+      border-radius: 9999px !important;
+      padding-left: 14px !important;
+      padding-right: 14px !important;
+      overflow: hidden !important; /* ensure children don't poke out of the rounded edges */
+    }
+    /* When expanded, KEEP the pill (override any earlier square-bottom rules) */
+    #navbar #searchbox[aria-expanded="true"],
+    #navbar #m-searchbox[aria-expanded="true"] {
+      border-top-left-radius: 9999px !important;
+      border-top-right-radius: 9999px !important;
+      border-bottom-left-radius: 9999px !important;
+      border-bottom-right-radius: 9999px !important;
+    }
+  }
+</style>
+
 </head>
 <body class="has-bottom-bar min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
 
