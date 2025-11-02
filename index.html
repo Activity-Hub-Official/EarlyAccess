@@ -814,6 +814,25 @@ html.is-mobile-browser .site-header{
 }
 </style>
 
+
+<style id="pwa-mobile-search-css">
+  /* PWA-aware visibility toggles */
+  .show-when-pwa { display: none; }
+  .hide-when-pwa { display: inline-flex; }
+  html.pwa .show-when-pwa { display: inline-flex; }
+  html.pwa .hide-when-pwa { display: none; }
+
+  /* Mobile dropdown panel positioning */
+  #m-search-menu {
+    position: fixed;
+    left: 0; right: 0;
+    top: var(--nvh, 56px);
+    max-height: calc(100dvh - var(--nvh, 56px));
+    overflow: auto;
+    z-index: 60;
+  }
+</style>
+
 </head>
 <body class="has-bottom-bar min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
 
@@ -843,6 +862,37 @@ html.is-mobile-browser .site-header{
 <span class="font-semibold text-gray-800">Activity Hub</span>
 </div>
 <nav class="px-2 py-3 space-y-1 text-sm">
+
+<!-- BEGIN: PWA full mobile combobox search (in navbar) -->
+<div id="searchbox-mobile" class="show-when-pwa md:hidden w-full flex items-center">
+  <div id="m-searchbox"
+       role="combobox"
+       aria-expanded="false"
+       aria-controls="m-search-menu"
+       class="flex w-full items-center gap-2 rounded-xl border border-gray-300 bg-white px-3 h-10">
+    <i class="fa-solid fa-magnifying-glass opacity-70"></i>
+    <button id="m-scope"
+            class="hidden xs:inline-flex shrink-0 items-center gap-1 rounded-md border border-gray-200 px-2 py-1 text-xs text-gray-600"
+            type="button"
+            aria-haspopup="listbox"
+            aria-expanded="false">
+      <span>All</span>
+      <i class="fa-solid fa-caret-down"></i>
+    </button>
+    <input id="m-q" type="search" autocomplete="off"
+           placeholder="Search orgs, projects, events…"
+           class="peer w-full bg-transparent outline-none" />
+    <button id="m-clear"
+            class="invisible text-gray-500"
+            type="button" aria-label="Clear">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div id="m-search-menu" role="listbox"
+       class="invisible opacity-0 transition bg-white border-t border-gray-200 shadow-lg"></div>
+</div>
+<!-- END: PWA full mobile combobox search -->
+
 <a aria-current="page" class="flex items-center gap-3 px-3 py-2 rounded-lg nav-active" data-route="home" href="?view=home"><i class="fa-solid fa-house text-[18px]"></i> Home</a>
 <div class="h-px bg-gray-100 my-2"></div>
 <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" data-route="orgs" href="?view=orgs"><i class="fa-solid fa-users text-[18px]"></i> Organizations</a>
@@ -5200,6 +5250,107 @@ window.setActiveBottomBar = window.setActiveBottomBar || function(){ /* no-op */
       if(inter) inter.style.display = 'none';
     }
   });
+})();
+</script>
+
+
+<script id="pwa-mobile-search-js">
+(function () {
+  try {
+    const isStandalone =
+      window.matchMedia('(display-mode: standalone)').matches ||
+      window.navigator.standalone === true;
+    document.documentElement.classList.toggle('pwa', !!isStandalone);
+
+    function setNavHeightVar() {
+      const nav = document.getElementById('navbar') || document.querySelector('nav');
+      if (!nav) return;
+      const h = nav.offsetHeight || 56;
+      document.documentElement.style.setProperty('--nvh', h + 'px');
+    }
+    setNavHeightVar();
+    addEventListener('resize', setNavHeightVar);
+
+    function initCombobox(opts) {
+      if (!opts) return;
+      const { box, menu, input, scope } = opts;
+      if (!box || !menu || !input) return;
+
+      const openMenu = () => {
+        box.setAttribute('aria-expanded', 'true');
+        menu.classList.remove('invisible', 'opacity-0');
+      };
+      const closeMenu = () => {
+        box.setAttribute('aria-expanded', 'false');
+        menu.classList.add('invisible', 'opacity-0');
+        input.removeAttribute('aria-activedescendant');
+      };
+
+      input.addEventListener('input', () => {
+        // Hook into existing search render function if present
+        if (typeof window.renderSearchResults === 'function') {
+          window.renderSearchResults(input.value || '', { mobile: true, menuEl: menu });
+        }
+        openMenu();
+      });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') { e.preventDefault(); closeMenu(); }
+        // Delegate to existing keyboard handlers if they exist
+        if (typeof window.handleSearchKeydown === 'function') {
+          window.handleSearchKeydown(e, { input, menu });
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!box.contains(e.target) && !menu.contains(e.target)) closeMenu();
+      });
+
+      const clearBtn = box.querySelector('#m-clear');
+      if (clearBtn) clearBtn.addEventListener('click', () => {
+        input.value = '';
+        input.focus();
+        if (typeof window.renderSearchEmpty === 'function') {
+          window.renderSearchEmpty({ mobile: true, menuEl: menu });
+        }
+        openMenu();
+      });
+
+      // Optional scope button
+      if (scope) {
+        scope.addEventListener('click', () => {
+          if (typeof window.openScopeMenu === 'function') window.openScopeMenu(scope);
+        });
+      }
+    }
+
+    // Try to reuse desktop search bits if present
+    const dBox   = document.getElementById('searchbox');
+    const dMenu  = document.getElementById('search-menu');
+    const dInput = dBox ? dBox.querySelector('input[type="search"], input') : null;
+    const dScope = dBox ? dBox.querySelector('#scope') : null;
+    initCombobox({ box: dBox, menu: dMenu, input: dInput, scope: dScope });
+
+    const mBox   = document.getElementById('m-searchbox');
+    const mMenu  = document.getElementById('m-search-menu');
+    const mInput = document.getElementById('m-q');
+    const mScope = document.getElementById('m-scope');
+    initCombobox({ box: mBox, menu: mMenu, input: mInput, scope: mScope });
+
+    // "/" to focus
+    addEventListener('keydown', (e) => {
+      const activeTag = (document.activeElement && document.activeElement.tagName) || '';
+      if (e.key === '/' && activeTag !== 'INPUT' && activeTag !== 'TEXTAREA') {
+        if (mInput && matchMedia('(max-width: 767px)').matches && isStandalone) {
+          e.preventDefault(); mInput.focus();
+        } else if (dInput) {
+          e.preventDefault(); dInput.focus();
+        }
+      }
+    });
+  } catch (err) {
+    console.warn('PWA mobile search init failed:', err);
+  }
 })();
 </script>
 
