@@ -781,15 +781,37 @@ input:invalid, select:invalid, textarea:invalid {
 
 
 <style>
-/* Hide logo + hamburger in MOBILE PWA only */
+/* Target only mobile widths and PWA mode */
 @media (max-width: 767px){
   html.is-pwa #open-sidebar-btn,
   html.is-pwa #mobile-brand-logo { display: none !important; }
 }
+/* Interstitial visibility + lock scroll when in mobile browser mode */
+html.is-mobile-browser #mobile-browser-interstitial { display: flex !important; }
+html.is-mobile-browser, html.is-mobile-browser body { overflow: hidden; height: 100%; }
 </style>
 
 </head>
 <body class="has-bottom-bar min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
+
+<!-- Mobile Browser Interstitial (shown when NOT in PWA standalone) -->
+<div id="mobile-browser-interstitial" class="fixed inset-0 z-[100] hidden items-center justify-center bg-white">
+  <div class="w-full max-w-sm mx-auto px-6 text-center">
+    <div class="mx-auto w-20 h-20 rounded-2xl overflow-hidden mb-4">
+      <img src="https://i.imgur.com/7dO0mhL.png" alt="Activity Hub" class="w-full h-full object-cover select-none" loading="lazy"/>
+    </div>
+    <h1 class="text-2xl font-semibold mb-2">Use the early beta mobile app</h1>
+    <p class="text-gray-600 mb-6">Add Activity Hub to your Home Screen to get the best experience on mobile.</p>
+    <div class="space-y-2 text-sm text-gray-700">
+      <p><strong>iOS (Safari):</strong> Tap <span aria-label="Share">Share</span> → <em>Add to Home Screen</em>.</p>
+      <p><strong>Android (Chrome/Brave):</strong> Tap <em>⋮</em> → <em>Add to Home screen</em>.</p>
+    </div>
+    <div class="mt-6">
+      <button id="continue-in-browser" class="px-4 py-2 rounded-xl border text-gray-700">Continue in browser</button>
+    </div>
+  </div>
+</div>
+
 <div class="flex w-full">
 <!-- ====== SIDEBAR ====== -->
 <aside class="hidden lg:flex lg:w-64 xl:w-72 lg:shrink-0 lg:sticky lg:top-0 lg:self-start lg:h-[100dvh] lg:overflow-y-auto border-r border-gray-200 sidebar-grad flex-col">
@@ -856,7 +878,7 @@ input:invalid, select:invalid, textarea:invalid {
 <i class="fa-solid fa-bars text-[20px]"></i>
 </button>
 <!-- Brand logo (mobile only) -->
-<div id="mobile-brand-logo" class="w-8 h-8 rounded-xl overflow-hidden md:hidden">
+<div class="w-8 h-8 rounded-xl overflow-hidden md:hidden" id="mobile-brand-logo">
 <img alt="Activity Hub" class="w-full h-full object-cover pointer-events-none select-none" loading="lazy" src="https://i.imgur.com/7dO0mhL.png"/>
 </div>
 <!-- Current view label (desktop only) -->
@@ -5130,16 +5152,31 @@ window.setActiveBottomBar = window.setActiveBottomBar || function(){ /* no-op */
     return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   }
   function apply(){
-    if(isStandalone() && isMobile()){
-      document.documentElement.classList.add('is-pwa');
+    var root = document.documentElement;
+    var pwa = isStandalone();
+    var mobile = isMobile();
+    if(pwa && mobile){
+      root.classList.add('is-pwa');
+      root.classList.remove('is-mobile-browser');
+    } else if(mobile){
+      root.classList.add('is-mobile-browser');
+      root.classList.remove('is-pwa');
     } else {
-      document.documentElement.classList.remove('is-pwa');
+      root.classList.remove('is-pwa');
+      root.classList.remove('is-mobile-browser');
     }
   }
-  // run now and on visibility/resize (iOS switches modes)
   apply();
   window.addEventListener('resize', apply, {passive:true});
   document.addEventListener('visibilitychange', apply);
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest && e.target.closest('#continue-in-browser');
+    if(btn){
+      document.documentElement.classList.remove('is-mobile-browser');
+      var inter = document.getElementById('mobile-browser-interstitial');
+      if(inter) inter.style.display = 'none';
+    }
+  });
 })();
 </script>
 
