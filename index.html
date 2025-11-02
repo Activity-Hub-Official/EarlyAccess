@@ -12,7 +12,19 @@
 <link href="https://i.imgur.com/SeNBgAx.png" rel="shortcut icon"/>
 <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.basic.min.js"></script>
-<script src="wordpos-browser.js"></script>
+<script>
+// Optional WordPOS loader (non-blocking for file://)
+(function(){
+  try {
+    var s = document.createElement('script');
+    s.src = 'wordpos-browser.js';
+    s.async = true;
+    s.onload = function(){ window.__wordposReady = true; };
+    s.onerror = function(){ console.warn('WordPOS optional dependency not found'); };
+    document.head.appendChild(s);
+  } catch(e) { console.warn('WordPOS loader failed', e); }
+})();
+</script>
 <script>
 // --- DuckDuckGo favicon helpers (GLOBAL). Must load before renderDetail ---
 (function(){
@@ -767,81 +779,6 @@ input:invalid, select:invalid, textarea:invalid {
 *[style*="box-shadow"] { box-shadow: none !important; }
 </style>
 
-
-<style>
-/* Floating glassmorphic pill above bottom bar — mobile only */
-@media (max-width: 768px){
-  #floating-pill{
-    position: fixed;
-    left: 0; right: 0;
-    bottom: calc(max(12px, env(safe-area-inset-bottom)) + var(--bbh, 64px));
-    display: grid; place-items: center;
-    pointer-events: none;
-    z-index: 50;
-  }
-  #floating-pill .fp-pill{
-    pointer-events: auto;
-    display: inline-flex; align-items: center; justify-content: center;
-    min-height: 56px; padding: 12px 18px;
-    border-radius: 999px;
-    background: rgba(255,255,255,0.75);
-    border: 1px solid rgba(15,23,42,0.12);
-    box-shadow: 0 8px 28px rgba(2,6,23,0.12);
-    -webkit-backdrop-filter: blur(10px) saturate(160%);
-    backdrop-filter: blur(10px) saturate(160%);
-    width: calc(100% - 24px); max-width: 720px;
-    transform: translateY(8px);
-    opacity: 0;
-    transition: transform 220ms cubic-bezier(.2,.7,.2,1), opacity 220ms ease;
-  }
-  body.loaded #floating-pill .fp-pill{
-    transform: translateY(0);
-    opacity: 1;
-  }
-  @media (prefers-reduced-motion: reduce){
-    #floating-pill .fp-pill{
-      transition: none;
-      transform: none;
-      opacity: 1;
-    }
-  }
-}
-</style>
-
-<style>
-/* Floating pill content layout and active styles */
-@media (max-width: 768px){
-  #floating-pill .fp-pill{
-    display: grid;
-    grid-auto-flow: column;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    padding: 12px 14px; /* keep comfortable padding with multiple items */
-  }
-  #floating-pill .fp-pill a[data-route]{
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    min-width: 56px;
-    padding: 8px 10px;
-    border-radius: 999px;
-    text-decoration: none;
-    font-size: 12px;
-    line-height: 1;
-  }
-  #floating-pill .fp-pill a[aria-current="page"]{
-    background: rgba(37, 99, 235, 0.10); /* subtle primary tint */
-    border: 1px solid rgba(37, 99, 235, 0.18);
-  }
-  /* Make sure icons don't explode; if using FA/SVG, size them reasonably */
-  #floating-pill .fp-pill a[data-route] svg{
-    width: 22px; height: 22px;
-  }
-}
-</style>
 </head>
 <body class="has-bottom-bar min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
 <div class="flex w-full">
@@ -1414,8 +1351,8 @@ input:invalid, select:invalid, textarea:invalid {
 </div>
 </section>
 <section class="py-6" id="overview-contact-inline">
-<h2 class="text-lg font-semibold mb-2">Contact Info</h2>
-<div class="text-sm text-gray-700">this is a test</div>
+  <h2 class="text-lg font-semibold mb-2">Contact Info</h2>
+  <div class="flex flex-wrap gap-2" id="overview-emails"></div>
 </section>
 <section class="py-6">
 <h2 class="text-lg font-semibold mb-2">Links</h2>
@@ -1536,7 +1473,10 @@ input:invalid, select:invalid, textarea:invalid {
       const name = safe(row.org_name || row.name);
       if(!name) return null;
       return {
-        slug: slugify(name),
+        emails: String(row.emails || row.email || '')
+      .split(/[,\s]+/)
+      .filter(Boolean),
+    slug: slugify(name),
         name,
         kind: kindOf(row.page_type || row.type || 'org'),
         logo: safe(row.logo_url),
@@ -1593,9 +1533,23 @@ input:invalid, select:invalid, textarea:invalid {
     // ---- Card & Event HTML ----
     function token(t){ return `<span class="inline-flex items-center text-[11px] px-2.5 py-1 rounded-full bg-gray-100 border border-gray-200">${t}</span>`; }
 
-    function cardHTML(o){
+    
+// Helpers — safe over file://
+if (typeof window.getSchoolLabel !== 'function') {
+  window.getSchoolLabel = function getSchoolLabel(o){
+    if (!o) return null;
+    const raw = (o.school && String(o.school).trim())
+             || (o.schoolName && String(o.schoolName).trim())
+             || (o.university && String(o.university).trim())
+             || "";
+    return raw || null;
+  };
+}
+
+function cardHTML(o){
       const hasLogo = isHttp(o.logo);
-      const members = o.members!=null ? token(`${o.members} members`) : '';
+      const school = getSchoolLabel(o);
+      const members = (o.members != null ? Number(o.members) : null);
       const verified = o.verified ? `<i class="fa-solid fa-circle-check text-sky-600 ml-1"></i>` : '';
       const c = colorsFor(o.name);
       return `
@@ -1611,7 +1565,7 @@ input:invalid, select:invalid, textarea:invalid {
               <h3 class="text-[15px] font-semibold tracking-tight truncate">${o.name}${verified}</h3>
               ${o.tagline ? `<p class="text-[13px] text-gray-500 mt-0.5 line-clamp-2">${o.tagline}</p>` : ''}
               <div class="mt-2 flex flex-wrap gap-2 justify-start md:justify-start">
-                ${o.theme ? token(o.theme) : ''} ${o.industry ? token(o.industry) : ''} ${members}
+                ${o.theme ? token(o.theme) : ''} ${o.industry ? token(o.industry) : ''} ${(()=>{let parts=[];if(school){parts.push(`<span class=\"inline-flex items-center gap-1 text-[12px] text-gray-700\"><i class=\"fa-solid fa-location-dot text-gray-500\"></i><span class=\"truncate max-w-[20ch]\">${school}</span></span>`);}if(school && members!=null){parts.push(`<span class=\"mx-1.5 text-gray-300\">&middot;</span>`);}if(members!=null){const n=Number(members)||0;parts.push(`<span class=\"inline-flex items-center gap-1 text-[12px] text-gray-700\"><span class=\"inline-block w-2 h-2 rounded-full bg-green-500\"></span><span>${n.toLocaleString()} ${n===1?'member':'members'}</span></span>`);}return parts.join('');})()}
               </div>
             </div>
           </div>
@@ -1691,6 +1645,27 @@ try {
     logo.removeAttribute('role'); logo.removeAttribute('tabindex'); logo.style.cursor='';
     logo.onclick = null; logo.onkeydown = null;
   }
+  // Render emails synchronously in Overview
+  (function(){
+    try{
+      const c = document.querySelector('#overview-emails');
+      if(!c) return;
+      c.innerHTML = '';
+      const emails = (o && o.emails) ? o.emails : [];
+      if(emails.length){
+        emails.forEach(em => {
+          const a = document.createElement('a');
+          a.className = 'contact-item';
+          a.href = 'mailto:' + em;
+          a.innerHTML = '<i class="fa-solid fa-envelope"></i><span>' + em + '</span>';
+          c.appendChild(a);
+        });
+      } else {
+        c.textContent = 'No email provided.';
+      }
+    }catch(e){}
+  })();
+
 } catch(e) { console.warn('logo lightbox hook failed', e); }
 
 
@@ -3900,32 +3875,6 @@ document.addEventListener('click', function(e){
 })();
 </script>
 <!-- Mobile Bottom Bar -->
-
-<!-- Floating pill bar (mobile PWA) -->
-<nav id="floating-pill" role="region" aria-label="Quick actions (empty)">
-  <div class="fp-pill" aria-hidden="true">
-    <a aria-current="page" class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 aria-[current=page]:text-black min-h-[44px] px-4 py-2" data-route="home" href="?view=home">
-<i class="fa-solid fa-house text-[18px]"></i>
-<span>Home</span>
-</a>
-    <a class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 min-h-[44px] px-4 py-2" data-route="orgs" href="?view=orgs">
-<i class="fa-solid fa-users text-[18px]"></i>
-<span>Organizations</span>
-</a>
-    <a class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 min-h-[44px] px-4 py-2" data-route="businesses" href="?view=businesses">
-<i class="fa-solid fa-briefcase text-[18px]"></i>
-<span>Businesses</span>
-</a>
-    <a class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 min-h-[44px] px-4 py-2" data-route="projects" href="?view=projects">
-<i class="fa-solid fa-diagram-project text-[18px]"></i>
-<span>Projects</span>
-</a>
-    <a class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 min-h-[44px] px-4 py-2" data-route="events" href="?view=events">
-<i class="fa-solid fa-calendar-days text-[18px]"></i>
-<span>Events</span>
-</a>
-  </div>
-</nav>
 <nav class="fixed inset-x-0 bottom-0 z-[45] md:hidden bg-white/95 backdrop-blur border-t border-gray-200 py-2" id="bottom-bar">
 <div class="h-16 flex items-center justify-around pt-[env(safe-area-inset-top)] pb-[calc(env(safe-area-inset-bottom))]">
 <a aria-current="page" class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 aria-[current=page]:text-black min-h-[44px] px-4 py-2" data-route="home" href="?view=home">
@@ -4073,7 +4022,7 @@ document.addEventListener('DOMContentLoaded', function(){
         const s = slug(name);
         if(s === orgSlug){ hit = r; break; }
       }
-      const container = document.querySelector('#panel-contact #d_links');
+      const container = document.querySelector('#overview-emails');
       if(!hit){ setContact(container, []); return; }
 
       // Primary: r.emails (string). Fallback: scrape r.other_links for embedded email-like tokens.
@@ -4085,7 +4034,7 @@ document.addEventListener('DOMContentLoaded', function(){
       }
       setContact(container, emails);
     }catch(e){
-      const container = document.querySelector('#panel-contact #d_links');
+      const container = document.querySelector('#overview-emails');
       if(container){
         container.innerHTML = '<div class="text-red-600">Failed to load contact info.</div>';
       }
@@ -5186,9 +5135,5 @@ window.setActiveBottomBar = window.setActiveBottomBar || function(){ /* no-op */
 <!-- AH Auth/Persistence Patch END -->
 
 
-
-<script>
-  window.addEventListener('load', () => document.body.classList.add('loaded'));
-</script>
 </body>
 </html>
