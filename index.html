@@ -815,64 +815,8 @@ html.is-mobile-browser .site-header{
 </style>
 
 
-<style id="pwa-mobile-search-css">
-  /* PWA-aware visibility toggles */
-  .{ display: none; }
-  .hide-when-pwa { display: inline-flex; }
-  html.pwa .{ display: inline-flex; }
-  html.pwa .hide-when-pwa { display: none; }
-
-  /* Mobile dropdown panel positioning */
-  #m-search-menu {
-    position: fixed;
-    left: 0; right: 0;
-    top: var(--nvh, 56px);
-    max-height: calc(100dvh - var(--nvh, 56px));
-    overflow: auto;
-    z-index: 60;
-  }
-</style>
-
-
-<style id="mobile-full-search-v2">
-  /* Force navbar to be a single-row flex on mobile so the search fits inline */
-  #navbar { display: flex; align-items: center; gap: .5rem; }
-  #navbar > * { flex-shrink: 0; }
-  /* Make the mobile search take remaining space */
-  #searchbox-mobile { display: inline-flex; flex: 1 1 auto; margin-left: .25rem; margin-right: .25rem; }
-  #searchbox-mobile #m-searchbox { width: 100%; }
-
-  /* Always hide any legacy mobile search trigger buttons/icons */
-  #open-mobile-search, .mobile-search-trigger, #search-toggle, #openSearch { display: none !important; }
-
-  /* Always show the mobile full combobox on small screens */
-  @media (min-width: 768px) {
-    #searchbox-mobile { display: none !important; }
-  }
-  @media (max-width: 767px) {
-    #searchbox-mobile { display: inline-flex !important; }
-  }
-
-  /* Dropdown panel pinned under navbar on mobile */
-  #m-search-menu {
-    position: fixed;
-    left: 0; right: 0;
-    top: var(--nvh, 56px);
-    max-height: calc(100dvh - var(--nvh, 56px));
-    overflow: auto;
-    z-index: 60;
-    background: #fff;
-    border-top: 1px solid #e5e7eb;
-    box-shadow: 0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -2px rgba(0,0,0,.05);
-  }
-</style>
-
-
-<style id="hide-heuristic-search-icon">
-  @media (max-width: 767px) {
-    #navbar button:has(i.fa-magnifying-glass),
-    #navbar a:has(i.fa-magnifying-glass) { display: none !important; }
-  }
+<style id="kill-mobile-search-btn">
+  #mobile-search-btn, #mobile-search-button, #open-mobile-search, #search-toggle, .mobile-search-trigger { display: none !important; }
 </style>
 
 </head>
@@ -904,37 +848,6 @@ html.is-mobile-browser .site-header{
 <span class="font-semibold text-gray-800">Activity Hub</span>
 </div>
 <nav class="px-2 py-3 space-y-1 text-sm">
-
-<!-- BEGIN: PWA full mobile combobox search (in navbar) -->
-<div id="searchbox-mobile" class="flex-1 md:hidden w-full flex items-center">
-  <div id="m-searchbox"
-       role="combobox"
-       aria-expanded="false"
-       aria-controls="m-search-menu"
-       class="flex w-full items-center gap-2 rounded-xl border border-gray-300 bg-white px-3 h-10">
-    <i class="fa-solid fa-magnifying-glass opacity-70"></i>
-    <button id="m-scope"
-            class="hidden xs:inline-flex shrink-0 items-center gap-1 rounded-md border border-gray-200 px-2 py-1 text-xs text-gray-600"
-            type="button"
-            aria-haspopup="listbox"
-            aria-expanded="false">
-      <span>All</span>
-      <i class="fa-solid fa-caret-down"></i>
-    </button>
-    <input id="m-q" type="search" autocomplete="off"
-           placeholder="Search orgs, projects, events…"
-           class="peer w-full bg-transparent outline-none" />
-    <button id="m-clear"
-            class="invisible text-gray-500"
-            type="button" aria-label="Clear">
-      <i class="fa-solid fa-xmark"></i>
-    </button>
-  </div>
-  <div id="m-search-menu" role="listbox"
-       class="invisible opacity-0 transition bg-white border-t border-gray-200 shadow-lg"></div>
-</div>
-<!-- END: PWA full mobile combobox search -->
-
 <a aria-current="page" class="flex items-center gap-3 px-3 py-2 rounded-lg nav-active" data-route="home" href="?view=home"><i class="fa-solid fa-house text-[18px]"></i> Home</a>
 <div class="h-px bg-gray-100 my-2"></div>
 <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" data-route="orgs" href="?view=orgs"><i class="fa-solid fa-users text-[18px]"></i> Organizations</a>
@@ -1003,7 +916,7 @@ html.is-mobile-browser .site-header{
 </div>
 </div>
 <!-- MIDDLE: global search (desktop only) -->
-<div class="flex-1 mx-2 hidden md:flex justify-start min-w-0">
+<div class="flex-1 mx-2 flex  justify-start min-w-0 ">
 <div aria-expanded="false" aria-haspopup="listbox" aria-owns="search-menu" class="relative w-full max-w-lg" id="searchbox" role="combobox">
 <!-- magnifying glass icon -->
 <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[14px]"></i>
@@ -1045,9 +958,6 @@ html.is-mobile-browser .site-header{
 <!-- RIGHT: mobile search trigger + login CTA -->
 <div class="ml-auto flex items-center gap-2">
 <!-- mobile / small-screen search button -->
-<button aria-label="Search" class="md:hidden h-9 w-9 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 active:bg-gray-100" id="mobile-search-btn">
-<i class="fa-solid fa-magnifying-glass text-[18px]"></i>
-</button>
 <!-- login button (all breakpoints) -->
 <!-- Create menu (desktop only) -->
 <div class="create-menu-wrap">
@@ -5296,169 +5206,48 @@ window.setActiveBottomBar = window.setActiveBottomBar || function(){ /* no-op */
 </script>
 
 
-<script id="pwa-mobile-search-js">
-(function () {
-  try {
-    const isStandalone =
-      window.matchMedia('(display-mode: standalone)').matches ||
-      window.navigator.standalone === true;
-    document.documentElement.classList.toggle('pwa', !!isStandalone);
-
-    function setNavHeightVar() {
-      const nav = document.getElementById('navbar') || document.querySelector('nav');
-      if (!nav) return;
-      const h = nav.offsetHeight || 56;
-      document.documentElement.style.setProperty('--nvh', h + 'px');
-    }
-    setNavHeightVar();
-    addEventListener('resize', setNavHeightVar);
-
-    function initCombobox(opts) {
-      if (!opts) return;
-      const { box, menu, input, scope } = opts;
-      if (!box || !menu || !input) return;
-
-      const openMenu = () => {
-        box.setAttribute('aria-expanded', 'true');
-        menu.classList.remove('invisible', 'opacity-0');
-      };
-      const closeMenu = () => {
-        box.setAttribute('aria-expanded', 'false');
-        menu.classList.add('invisible', 'opacity-0');
-        input.removeAttribute('aria-activedescendant');
-      };
-
-      input.addEventListener('input', () => {
-        // Hook into existing search render function if present
-        if (typeof window.renderSearchResults === 'function') {
-          window.renderSearchResults(input.value || '', { mobile: true, menuEl: menu });
-        }
-        openMenu();
-      });
-
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') { e.preventDefault(); closeMenu(); }
-        // Delegate to existing keyboard handlers if they exist
-        if (typeof window.handleSearchKeydown === 'function') {
-          window.handleSearchKeydown(e, { input, menu });
-        }
-      });
-
-      document.addEventListener('click', (e) => {
-        if (!box.contains(e.target) && !menu.contains(e.target)) closeMenu();
-      });
-
-      const clearBtn = box.querySelector('#m-clear');
-      if (clearBtn) clearBtn.addEventListener('click', () => {
-        input.value = '';
-        input.focus();
-        if (typeof window.renderSearchEmpty === 'function') {
-          window.renderSearchEmpty({ mobile: true, menuEl: menu });
-        }
-        openMenu();
-      });
-
-      // Optional scope button
-      if (scope) {
-        scope.addEventListener('click', () => {
-          if (typeof window.openScopeMenu === 'function') window.openScopeMenu(scope);
-        });
-      }
-    }
-
-    // Try to reuse desktop search bits if present
-    const dBox   = document.getElementById('searchbox');
-    const dMenu  = document.getElementById('search-menu');
-    const dInput = dBox ? dBox.querySelector('input[type="search"], input') : null;
-    const dScope = dBox ? dBox.querySelector('#scope') : null;
-    initCombobox({ box: dBox, menu: dMenu, input: dInput, scope: dScope });
-
-    const mBox   = document.getElementById('m-searchbox');
-    const mMenu  = document.getElementById('m-search-menu');
-    const mInput = document.getElementById('m-q');
-    const mScope = document.getElementById('m-scope');
-    initCombobox({ box: mBox, menu: mMenu, input: mInput, scope: mScope });
-
-    // "/" to focus
-    addEventListener('keydown', (e) => {
-      const activeTag = (document.activeElement && document.activeElement.tagName) || '';
-      if (e.key === '/' && activeTag !== 'INPUT' && activeTag !== 'TEXTAREA') {
-        if (mInput && matchMedia('(max-width: 767px)').matches && isStandalone) {
-          e.preventDefault(); mInput.focus();
-        } else if (dInput) {
-          e.preventDefault(); dInput.focus();
-        }
-      }
-    });
-  } catch (err) {
-    console.warn('PWA mobile search init failed:', err);
-  }
-})();
-</script>
-
-
-<script id="mobile-full-search-v2-js">
+<script id="search-open-on-focus">
 (function(){
   try {
-    function setNavHeightVar() {
-      const nav = document.getElementById('navbar') || document.querySelector('nav');
+    var box  = document.getElementById('searchbox');
+    var menu = document.getElementById('search-menu');
+    var input = box ? box.querySelector('input[type="search"], input') : null;
+    if (!box || !menu || !input) return;
+
+    function openMenu(){
+      box.setAttribute('aria-expanded','true');
+      menu.classList.remove('invisible','opacity-0');
+      if (typeof window.renderSearchEmpty === 'function' && !input.value) {
+        window.renderSearchEmpty({ mobile: matchMedia('(max-width: 767px)').matches, menuEl: menu });
+      }
+    }
+    function closeMenu(){
+      box.setAttribute('aria-expanded','false');
+      menu.classList.add('invisible','opacity-0');
+    }
+    input.addEventListener('focus', openMenu);
+    input.addEventListener('input', function(){
+      if (typeof window.renderSearchResults === 'function') {
+        window.renderSearchResults(this.value || '', { mobile: matchMedia('(max-width: 767px)').matches, menuEl: menu });
+      }
+      openMenu();
+    });
+    input.addEventListener('keydown', function(e){
+      if (e.key === 'Escape'){ e.preventDefault(); closeMenu(); }
+    });
+    document.addEventListener('click', function(e){
+      if (box && menu && !box.contains(e.target) && !menu.contains(e.target)) closeMenu();
+    });
+
+    // Keep --nvh updated for proper dropdown placement on small screens
+    function setNavHeightVar(){
+      var nav = document.querySelector('header, nav');
       if (!nav) return;
-      const h = nav.offsetHeight || 56;
+      var h = nav.offsetHeight || 56;
       document.documentElement.style.setProperty('--nvh', h + 'px');
     }
-    setNavHeightVar();
-    addEventListener('resize', setNavHeightVar);
-
-    function openMenu(box, menu, input) {
-      if (!box || !menu) return;
-      box.setAttribute('aria-expanded', 'true');
-      menu.classList.remove('invisible', 'opacity-0');
-      if (typeof window.renderSearchEmpty === 'function' && (!input || !input.value)) {
-        window.renderSearchEmpty({ mobile: true, menuEl: menu });
-      }
-    }
-    function closeMenu(box, menu) {
-      if (!box || !menu) return;
-      box.setAttribute('aria-expanded', 'false');
-      menu.classList.add('invisible', 'opacity-0');
-    }
-
-    const mBox   = document.getElementById('m-searchbox');
-    const mMenu  = document.getElementById('m-search-menu');
-    const mInput = document.getElementById('m-q');
-
-    if (mInput) {
-      mInput.addEventListener('focus', () => openMenu(mBox, mMenu, mInput));
-      mInput.addEventListener('input', () => {
-        if (typeof window.renderSearchResults === 'function') {
-          window.renderSearchResults(mInput.value || '', { mobile: true, menuEl: mMenu });
-        }
-        openMenu(mBox, mMenu, mInput);
-      });
-      // Esc to close
-      mInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') { e.preventDefault(); closeMenu(mBox, mMenu); }
-      });
-    }
-    // Click-away
-    document.addEventListener('click', (e) => {
-      if (mBox && mMenu && !mBox.contains(e.target) && !mMenu.contains(e.target)) {
-        closeMenu(mBox, mMenu);
-      }
-    });
-
-    // "/" to focus search on mobile
-    addEventListener('keydown', (e) => {
-      const activeTag = (document.activeElement && document.activeElement.tagName) || '';
-      if (e.key === '/' && activeTag !== 'INPUT' && activeTag !== 'TEXTAREA') {
-        if (mInput && matchMedia('(max-width: 767px)').matches) {
-          e.preventDefault(); mInput.focus();
-        }
-      }
-    });
-  } catch (e) {
-    console.warn('mobile-full-search-v2 init error', e);
-  }
+    setNavHeightVar(); addEventListener('resize', setNavHeightVar);
+  } catch(e){ console.warn('search-open-on-focus error', e); }
 })();
 </script>
 
