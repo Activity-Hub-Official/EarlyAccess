@@ -817,9 +817,9 @@ html.is-mobile-browser .site-header{
 
 <style id="pwa-mobile-search-css">
   /* PWA-aware visibility toggles */
-  .show-when-pwa { display: none; }
+  .{ display: none; }
   .hide-when-pwa { display: inline-flex; }
-  html.pwa .show-when-pwa { display: inline-flex; }
+  html.pwa .{ display: inline-flex; }
   html.pwa .hide-when-pwa { display: none; }
 
   /* Mobile dropdown panel positioning */
@@ -830,6 +830,48 @@ html.is-mobile-browser .site-header{
     max-height: calc(100dvh - var(--nvh, 56px));
     overflow: auto;
     z-index: 60;
+  }
+</style>
+
+
+<style id="mobile-full-search-v2">
+  /* Force navbar to be a single-row flex on mobile so the search fits inline */
+  #navbar { display: flex; align-items: center; gap: .5rem; }
+  #navbar > * { flex-shrink: 0; }
+  /* Make the mobile search take remaining space */
+  #searchbox-mobile { display: inline-flex; flex: 1 1 auto; margin-left: .25rem; margin-right: .25rem; }
+  #searchbox-mobile #m-searchbox { width: 100%; }
+
+  /* Always hide any legacy mobile search trigger buttons/icons */
+  #open-mobile-search, .mobile-search-trigger, #search-toggle, #openSearch { display: none !important; }
+
+  /* Always show the mobile full combobox on small screens */
+  @media (min-width: 768px) {
+    #searchbox-mobile { display: none !important; }
+  }
+  @media (max-width: 767px) {
+    #searchbox-mobile { display: inline-flex !important; }
+  }
+
+  /* Dropdown panel pinned under navbar on mobile */
+  #m-search-menu {
+    position: fixed;
+    left: 0; right: 0;
+    top: var(--nvh, 56px);
+    max-height: calc(100dvh - var(--nvh, 56px));
+    overflow: auto;
+    z-index: 60;
+    background: #fff;
+    border-top: 1px solid #e5e7eb;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -2px rgba(0,0,0,.05);
+  }
+</style>
+
+
+<style id="hide-heuristic-search-icon">
+  @media (max-width: 767px) {
+    #navbar button:has(i.fa-magnifying-glass),
+    #navbar a:has(i.fa-magnifying-glass) { display: none !important; }
   }
 </style>
 
@@ -864,7 +906,7 @@ html.is-mobile-browser .site-header{
 <nav class="px-2 py-3 space-y-1 text-sm">
 
 <!-- BEGIN: PWA full mobile combobox search (in navbar) -->
-<div id="searchbox-mobile" class="show-when-pwa md:hidden w-full flex items-center">
+<div id="searchbox-mobile" class="flex-1 md:hidden w-full flex items-center">
   <div id="m-searchbox"
        role="combobox"
        aria-expanded="false"
@@ -5350,6 +5392,72 @@ window.setActiveBottomBar = window.setActiveBottomBar || function(){ /* no-op */
     });
   } catch (err) {
     console.warn('PWA mobile search init failed:', err);
+  }
+})();
+</script>
+
+
+<script id="mobile-full-search-v2-js">
+(function(){
+  try {
+    function setNavHeightVar() {
+      const nav = document.getElementById('navbar') || document.querySelector('nav');
+      if (!nav) return;
+      const h = nav.offsetHeight || 56;
+      document.documentElement.style.setProperty('--nvh', h + 'px');
+    }
+    setNavHeightVar();
+    addEventListener('resize', setNavHeightVar);
+
+    function openMenu(box, menu, input) {
+      if (!box || !menu) return;
+      box.setAttribute('aria-expanded', 'true');
+      menu.classList.remove('invisible', 'opacity-0');
+      if (typeof window.renderSearchEmpty === 'function' && (!input || !input.value)) {
+        window.renderSearchEmpty({ mobile: true, menuEl: menu });
+      }
+    }
+    function closeMenu(box, menu) {
+      if (!box || !menu) return;
+      box.setAttribute('aria-expanded', 'false');
+      menu.classList.add('invisible', 'opacity-0');
+    }
+
+    const mBox   = document.getElementById('m-searchbox');
+    const mMenu  = document.getElementById('m-search-menu');
+    const mInput = document.getElementById('m-q');
+
+    if (mInput) {
+      mInput.addEventListener('focus', () => openMenu(mBox, mMenu, mInput));
+      mInput.addEventListener('input', () => {
+        if (typeof window.renderSearchResults === 'function') {
+          window.renderSearchResults(mInput.value || '', { mobile: true, menuEl: mMenu });
+        }
+        openMenu(mBox, mMenu, mInput);
+      });
+      // Esc to close
+      mInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') { e.preventDefault(); closeMenu(mBox, mMenu); }
+      });
+    }
+    // Click-away
+    document.addEventListener('click', (e) => {
+      if (mBox && mMenu && !mBox.contains(e.target) && !mMenu.contains(e.target)) {
+        closeMenu(mBox, mMenu);
+      }
+    });
+
+    // "/" to focus search on mobile
+    addEventListener('keydown', (e) => {
+      const activeTag = (document.activeElement && document.activeElement.tagName) || '';
+      if (e.key === '/' && activeTag !== 'INPUT' && activeTag !== 'TEXTAREA') {
+        if (mInput && matchMedia('(max-width: 767px)').matches) {
+          e.preventDefault(); mInput.focus();
+        }
+      }
+    });
+  } catch (e) {
+    console.warn('mobile-full-search-v2 init error', e);
   }
 })();
 </script>
