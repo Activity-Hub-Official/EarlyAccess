@@ -791,11 +791,34 @@ html.is-mobile-browser #mobile-browser-interstitial { display: flex !important; 
 html.is-mobile-browser, html.is-mobile-browser body { overflow: hidden; height: 100%; }
 </style>
 
+
+<style id="mobile-interstitial-fixes">
+/* Cover full viewport, respect notches, sit above all fixed headers */
+html.is-mobile-browser #mobile-browser-interstitial{
+  padding-top: max(env(safe-area-inset-top), 0px);
+  padding-bottom: max(env(safe-area-inset-bottom), 0px);
+  min-height: 100vh;
+}
+@supports (height: 100svh){
+  html.is-mobile-browser #mobile-browser-interstitial{ min-height: 100svh; }
+}
+@supports (height: 100dvh){
+  html.is-mobile-browser #mobile-browser-interstitial{ min-height: 100dvh; }
+}
+/* If any fixed/sticky header/nav has higher z-index, hide it in mobile-browser mode */
+html.is-mobile-browser header, 
+html.is-mobile-browser .top-nav, 
+html.is-mobile-browser #topbar, 
+html.is-mobile-browser .site-header{
+  visibility: hidden !important;
+}
+</style>
+
 </head>
 <body class="has-bottom-bar min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
 
 <!-- Mobile Browser Interstitial (shown when NOT in PWA standalone) -->
-<div id="mobile-browser-interstitial" class="fixed inset-0 z-[100] hidden items-center justify-center bg-white">
+<div id="mobile-browser-interstitial" class="fixed inset-0 z-[9999] hidden items-center justify-center bg-white">
   <div class="w-full max-w-sm mx-auto px-6 text-center">
     <div class="mx-auto w-20 h-20 rounded-2xl overflow-hidden mb-4">
       <img src="https://i.imgur.com/7dO0mhL.png" alt="Activity Hub" class="w-full h-full object-cover select-none" loading="lazy"/>
