@@ -779,6 +779,15 @@ input:invalid, select:invalid, textarea:invalid {
 *[style*="box-shadow"] { box-shadow: none !important; }
 </style>
 
+
+<style>
+/* Hide logo + hamburger in MOBILE PWA only */
+@media (max-width: 767px){
+  html.is-pwa #open-sidebar-btn,
+  html.is-pwa #mobile-brand-logo { display: none !important; }
+}
+</style>
+
 </head>
 <body class="has-bottom-bar min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
 <div class="flex w-full">
@@ -847,7 +856,7 @@ input:invalid, select:invalid, textarea:invalid {
 <i class="fa-solid fa-bars text-[20px]"></i>
 </button>
 <!-- Brand logo (mobile only) -->
-<div class="w-8 h-8 rounded-xl overflow-hidden md:hidden">
+<div id="mobile-brand-logo" class="w-8 h-8 rounded-xl overflow-hidden md:hidden">
 <img alt="Activity Hub" class="w-full h-full object-cover pointer-events-none select-none" loading="lazy" src="https://i.imgur.com/7dO0mhL.png"/>
 </div>
 <!-- Current view label (desktop only) -->
@@ -1351,8 +1360,8 @@ input:invalid, select:invalid, textarea:invalid {
 </div>
 </section>
 <section class="py-6" id="overview-contact-inline">
-  <h2 class="text-lg font-semibold mb-2">Contact Info</h2>
-  <div class="flex flex-wrap gap-2" id="overview-emails"></div>
+<h2 class="text-lg font-semibold mb-2">Contact Info</h2>
+<div class="text-sm text-gray-700">this is a test</div>
 </section>
 <section class="py-6">
 <h2 class="text-lg font-semibold mb-2">Links</h2>
@@ -1473,10 +1482,7 @@ input:invalid, select:invalid, textarea:invalid {
       const name = safe(row.org_name || row.name);
       if(!name) return null;
       return {
-        emails: String(row.emails || row.email || '')
-      .split(/[,\s]+/)
-      .filter(Boolean),
-    slug: slugify(name),
+        slug: slugify(name),
         name,
         kind: kindOf(row.page_type || row.type || 'org'),
         logo: safe(row.logo_url),
@@ -1645,27 +1651,6 @@ try {
     logo.removeAttribute('role'); logo.removeAttribute('tabindex'); logo.style.cursor='';
     logo.onclick = null; logo.onkeydown = null;
   }
-  // Render emails synchronously in Overview
-  (function(){
-    try{
-      const c = document.querySelector('#overview-emails');
-      if(!c) return;
-      c.innerHTML = '';
-      const emails = (o && o.emails) ? o.emails : [];
-      if(emails.length){
-        emails.forEach(em => {
-          const a = document.createElement('a');
-          a.className = 'contact-item';
-          a.href = 'mailto:' + em;
-          a.innerHTML = '<i class="fa-solid fa-envelope"></i><span>' + em + '</span>';
-          c.appendChild(a);
-        });
-      } else {
-        c.textContent = 'No email provided.';
-      }
-    }catch(e){}
-  })();
-
 } catch(e) { console.warn('logo lightbox hook failed', e); }
 
 
@@ -4022,7 +4007,7 @@ document.addEventListener('DOMContentLoaded', function(){
         const s = slug(name);
         if(s === orgSlug){ hit = r; break; }
       }
-      const container = document.querySelector('#overview-emails');
+      const container = document.querySelector('#panel-contact #d_links');
       if(!hit){ setContact(container, []); return; }
 
       // Primary: r.emails (string). Fallback: scrape r.other_links for embedded email-like tokens.
@@ -4034,7 +4019,7 @@ document.addEventListener('DOMContentLoaded', function(){
       }
       setContact(container, emails);
     }catch(e){
-      const container = document.querySelector('#overview-emails');
+      const container = document.querySelector('#panel-contact #d_links');
       if(container){
         container.innerHTML = '<div class="text-red-600">Failed to load contact info.</div>';
       }
@@ -5134,6 +5119,29 @@ window.setActiveBottomBar = window.setActiveBottomBar || function(){ /* no-op */
 </script>
 <!-- AH Auth/Persistence Patch END -->
 
+
+
+<script>
+(function(){
+  function isStandalone(){
+    return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || (window.navigator && window.navigator.standalone === true);
+  }
+  function isMobile(){
+    return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  }
+  function apply(){
+    if(isStandalone() && isMobile()){
+      document.documentElement.classList.add('is-pwa');
+    } else {
+      document.documentElement.classList.remove('is-pwa');
+    }
+  }
+  // run now and on visibility/resize (iOS switches modes)
+  apply();
+  window.addEventListener('resize', apply, {passive:true});
+  document.addEventListener('visibilitychange', apply);
+})();
+</script>
 
 </body>
 </html>
