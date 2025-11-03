@@ -571,7 +571,6 @@ body.onboarding-mode {
 }
 #authModal .auth-form{display:flex;flex-direction:column;justify-content:center;padding:40px 48px;}
 </style>
-
 <style>
 /* ---------- Tokens ---------- */
 :root{
@@ -778,8 +777,6 @@ input:invalid, select:invalid, textarea:invalid {
 /* Last-resort kill for stray inline shadows */
 *[style*="box-shadow"] { box-shadow: none !important; }
 </style>
-
-
 <style>
 /* Target only mobile widths and PWA mode */
 @media (max-width: 767px){
@@ -790,8 +787,6 @@ input:invalid, select:invalid, textarea:invalid {
 html.is-mobile-browser #mobile-browser-interstitial { display: flex !important; }
 html.is-mobile-browser, html.is-mobile-browser body { overflow: hidden; height: 100%; }
 </style>
-
-
 <style id="mobile-interstitial-fixes">
 /* Cover full viewport, respect notches, sit above all fixed headers */
 html.is-mobile-browser #mobile-browser-interstitial{
@@ -813,8 +808,6 @@ html.is-mobile-browser .site-header{
   visibility: hidden !important;
 }
 </style>
-
-
 <style id="search-always-fullwidth-mobile">
   /* Navbar search always visible and fills center lane */
   #navbar { display:flex; align-items:center; gap:.5rem; overflow: visible !important; }
@@ -850,72 +843,32 @@ html.is-mobile-browser .site-header{
     }
   }
 </style>
-
-
-<style id="mobile-search-pill">
-  /* Pill styling for the search bar on mobile */
-  @media (max-width: 767px) {
-    #searchbox {
-      height: 48px !important;                /* nice touch target */
-      border-radius: 9999px !important;       /* pill */
-      padding-left: 12px !important;
-      padding-right: 12px !important;
-    }
-    #searchbox input {
-      line-height: 1.25rem;
-    }
-    /* Keep pill even when expanded (override any earlier square-bottom rules) */
-    #searchbox[aria-expanded="true"] {
-      border-bottom-left-radius: 9999px !important;
-      border-bottom-right-radius: 9999px !important;
-    }
-  }
-</style>
-
-
-<style id="mobile-search-pill-v2">
-  @media (max-width: 767px) {
-    /* Target both possible IDs and increase specificity by scoping under #navbar */
-    #navbar #searchbox,
-    #navbar #m-searchbox {
-      height: 52px !important;
-      border-radius: 9999px !important;
-      padding-left: 14px !important;
-      padding-right: 14px !important;
-      overflow: hidden !important; /* ensure children don't poke out of the rounded edges */
-    }
-    /* When expanded, KEEP the pill (override any earlier square-bottom rules) */
-    #navbar #searchbox[aria-expanded="true"],
-    #navbar #m-searchbox[aria-expanded="true"] {
-      border-top-left-radius: 9999px !important;
-      border-top-right-radius: 9999px !important;
-      border-bottom-left-radius: 9999px !important;
-      border-bottom-right-radius: 9999px !important;
-    }
-  }
-</style>
-
-</head>
+<style id="ah-mobile-pwa-signin-css">
+.onboarding-view.hidden { display: none; }
+.pwa-only.hidden { display: none !important; }
+.btn { border-radius: 9999px; padding: 0.75rem 1rem; border: 1px solid rgba(0,0,0,.1); font-weight:600; }
+.btn-primary { background: #2563eb; color: white; border-color: #2563eb; }
+.btn-outline { background: white; color: #111827; }
+.btn-light { background: #f3f4f6; color:#111827; }
+</style></head>
 <body class="has-bottom-bar min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
-
 <!-- Mobile Browser Interstitial (shown when NOT in PWA standalone) -->
-<div id="mobile-browser-interstitial" class="fixed inset-0 z-[9999] hidden items-center justify-center bg-white">
-  <div class="w-full max-w-sm mx-auto px-6 text-center">
-    <div class="mx-auto w-20 h-20 rounded-2xl overflow-hidden mb-4">
-      <img src="https://i.imgur.com/7dO0mhL.png" alt="Activity Hub" class="w-full h-full object-cover select-none" loading="lazy"/>
-    </div>
-    <h1 class="text-2xl font-semibold mb-2">Use the early beta mobile app</h1>
-    <p class="text-gray-600 mb-6">Add Activity Hub to your Home Screen to get the best experience on mobile.</p>
-    <div class="space-y-2 text-sm text-gray-700">
-      <p><strong>iOS (Safari):</strong> Tap <span aria-label="Share">Share</span> → <em>Add to Home Screen</em>.</p>
-      <p><strong>Android (Chrome/Brave):</strong> Tap <em>⋮</em> → <em>Add to Home screen</em>.</p>
-    </div>
-    <div class="mt-6">
-      <button id="continue-in-browser" class="px-4 py-2 rounded-xl border text-gray-700">Continue in browser</button>
-    </div>
-  </div>
+<div class="fixed inset-0 z-[9999] hidden items-center justify-center bg-white" id="mobile-browser-interstitial">
+<div class="w-full max-w-sm mx-auto px-6 text-center">
+<div class="mx-auto w-20 h-20 rounded-2xl overflow-hidden mb-4">
+<img alt="Activity Hub" class="w-full h-full object-cover select-none" loading="lazy" src="https://i.imgur.com/7dO0mhL.png"/>
 </div>
-
+<h1 class="text-2xl font-semibold mb-2">Use the early beta mobile app</h1>
+<p class="text-gray-600 mb-6">Add Activity Hub to your Home Screen to get the best experience on mobile.</p>
+<div class="space-y-2 text-sm text-gray-700">
+<p><strong>iOS (Safari):</strong> Tap <span aria-label="Share">Share</span> → <em>Add to Home Screen</em>.</p>
+<p><strong>Android (Chrome/Brave):</strong> Tap <em>⋮</em> → <em>Add to Home screen</em>.</p>
+</div>
+<div class="mt-6">
+<button class="px-4 py-2 rounded-xl border text-gray-700" id="continue-in-browser">Continue in browser</button>
+</div>
+</div>
+</div>
 <div class="flex w-full">
 <!-- ====== SIDEBAR ====== -->
 <aside class="hidden lg:flex lg:w-64 xl:w-72 lg:shrink-0 lg:sticky lg:top-0 lg:self-start lg:h-[100dvh] lg:overflow-y-auto border-r border-gray-200 sidebar-grad flex-col">
@@ -933,10 +886,6 @@ html.is-mobile-browser .site-header{
 <a aria-current="page" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" href="#"><i class="fa-solid fa-graduation-cap text-[18px]"></i> Schools</a>
 </nav>
 <div class="mt-auto p-4">
-<div class="rounded-xl border border-gray-200 p-4">
-<div class="text-sm text-gray-700 font-medium">1 profile view</div>
-<div class="text-xs text-gray-500">in the past 90 days</div>
-</div>
 <button class="w-full mt-3 flex items-center gap-2 rounded-xl border border-gray-200/70 bg-white px-4 py-3 text-[15px] font-medium text-gray-800 hover:bg-gray-50 active:scale-[.99]" id="getAppBtn"><i class="fa-solid fa-qrcode text-[18px]"></i><span>Get the app</span></button>
 </div>
 </aside>
@@ -992,7 +941,7 @@ html.is-mobile-browser .site-header{
 </div>
 </div>
 <!-- MIDDLE: global search (desktop only) -->
-<div class="flex-1 mx-2 flex  justify-start min-w-0 ">
+<div class="flex-1 mx-2 flex justify-start min-w-0">
 <div aria-expanded="false" aria-haspopup="listbox" aria-owns="search-menu" class="relative w-full max-w-lg" id="searchbox" role="combobox">
 <!-- magnifying glass icon -->
 <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[14px]"></i>
@@ -1112,7 +1061,7 @@ html.is-mobile-browser .site-header{
             Already have an account? <a class="text-ah-600 hover:underline" href="#">Sign in</a>
 </p>
 </div>
-</div>
+<div class="mt-4 flex gap-3"><button class="btn btn-primary" id="onboarding-btn-continue-email">Continue with email</button><button class="btn btn-outline pwa-only hidden" id="onboarding-btn-signin-mobile">Sign in</button></div></div>
 <!-- ====== ONBOARDING STEP 1 (Account Basics) ====== -->
 <div class="hidden min-h-screen bg-white flex flex-col" id="view-onboarding-account">
 <div class="p-6 flex-1 flex flex-col" data-onboarding-scroll="true">
@@ -1277,8 +1226,6 @@ html.is-mobile-browser .site-header{
 </div>
 <!-- Only on Explore -->
 <div class="space-y-6" id="explore-bars">
-
-
 </div>
 <!-- Browse -->
 <section>
@@ -5155,8 +5102,6 @@ window.setActiveBottomBar = window.setActiveBottomBar || function(){ /* no-op */
   });
 })();
 </script>
-
-
 <!-- AH Auth/Persistence Patch BEGIN -->
 <script>
 (function(){
@@ -5241,9 +5186,6 @@ window.setActiveBottomBar = window.setActiveBottomBar || function(){ /* no-op */
 })();
 </script>
 <!-- AH Auth/Persistence Patch END -->
-
-
-
 <script>
 (function(){
   function isStandalone(){
@@ -5280,8 +5222,6 @@ window.setActiveBottomBar = window.setActiveBottomBar || function(){ /* no-op */
   });
 })();
 </script>
-
-
 <script id="search-open-on-focus">
 (function(){
   try {
@@ -5330,6 +5270,53 @@ window.setActiveBottomBar = window.setActiveBottomBar || function(){ /* no-op */
   } catch(e){ console.warn('search-open-on-focus error', e); }
 })();
 </script>
-
-</body>
+<section class="hidden onboarding-view min-h-screen flex flex-col justify-between" id="view-onboarding-signin"><div class="p-6"><h2 class="text-xl font-semibold mb-1">Sign in</h2><p class="text-sm text-gray-500">Enter your email and password to continue.</p></div><form class="px-6 pt-2 pb-24" id="signin-form"><label class="block text-sm font-medium mb-1" for="signin-email">Email</label><input class="w-full rounded-xl border px-3 py-3" id="signin-email" placeholder="you@university.edu" required="True" type="email"/><label class="block text-sm font-medium mt-4 mb-1" for="signin-password">Password</label><input class="w-full rounded-xl border px-3 py-3" id="signin-password" minlength="6" placeholder="••••••••" required="True" type="password"/></form><div class="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-t flex gap-3"><button class="btn btn-light flex-1" id="signin-back" type="button">Back</button><button class="btn btn-primary flex-1" id="signin-submit" type="submit">Sign in</button></div></section><script id="ah-mobile-pwa-signin-js">
+(function(){
+  var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  function show(id){
+    document.querySelectorAll('.onboarding-view').forEach(function(v){ v.classList.add('hidden'); });
+    var el = document.getElementById(id);
+    if (el) el.classList.remove('hidden');
+  }
+  // Reveal the PWA-only "Sign in" button
+  if (isStandalone) {
+    document.querySelectorAll('.pwa-only').forEach(function(e){ e.classList.remove('hidden'); });
+  }
+  // Wire buttons
+  var signInBtn = document.getElementById('onboarding-btn-signin-mobile');
+  if (signInBtn) {
+    signInBtn.addEventListener('click', function(e){
+      e.preventDefault();
+      document.body.classList.add('onboarding-mode'); // hide app chrome during flow
+      show('view-onboarding-signin');
+      document.getElementById('signin-email')?.focus();
+    });
+  }
+  var backBtn = document.getElementById('signin-back');
+  if (backBtn) {
+    backBtn.addEventListener('click', function(e){
+      e.preventDefault();
+      show('view-onboarding-welcome');
+    });
+  }
+  var form = document.getElementById('signin-form');
+  if (form) {
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var email = (document.getElementById('signin-email')||{}).value || '';
+      var pw = (document.getElementById('signin-password')||{}).value || '';
+      // Basic checks
+      var ok = !!email && /@/.test(email) && pw && pw.length >= 6;
+      if (!ok) { alert('Enter a valid email and a password (≥ 6 chars).'); return; }
+      // Persist a minimal "signed-in" user; your existing boot code will pick this up.
+      try {
+        var user = { email: email, name: null, signed_in_at: new Date().toISOString(), source: 'pwa-signin' };
+        localStorage.setItem('ah_user_v1', JSON.stringify(user));
+      } catch(e){}
+      // Let the rest of the app rehydrate state
+      location.reload();
+    });
+  }
+})();
+</script></body>
 </html>
