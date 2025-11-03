@@ -5302,5 +5302,64 @@ document.addEventListener('DOMContentLoaded', function(){
     };
   } catch(e){}
 })();
-</script</body>
+</script
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  try {
+    // Force-visible main app chrome and views
+    ['view-directory','view-search','view-detail','bottom-bar','topbar'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (el){ el.classList && el.classList.remove('hidden'); el.removeAttribute && el.removeAttribute('aria-hidden'); }
+    });
+    document.body && document.body.classList && document.body.classList.remove('onboarding-mode');
+
+    // Hide any onboarding-only containers by default (still callable explicitly)
+    var ob = document.querySelectorAll('[id*="onboard" i], [class*="onboard" i], [data-onboarding], [data-view="onboarding"]');
+    ob.forEach(function(node){
+      // Only hide top-level onboarding screens, not buttons
+      if (node.tagName && /DIV|SECTION|ASIDE|MAIN|DIALOG/.test(node.tagName)){
+        node.setAttribute('hidden','');
+        node.classList && node.classList.add('hidden');
+        node.style && (node.style.display = 'none');
+      }
+    });
+
+    // Safety: If any script tries to auto-open onboarding within the first tick, close it.
+    setTimeout(function(){
+      document.body && document.body.classList && document.body.classList.remove('onboarding-mode');
+      var ob2 = document.querySelectorAll('[id*="onboard" i], [class*="onboard" i], [data-onboarding], [data-view="onboarding"]');
+      ob2.forEach(function(node){ 
+        if (node && node.offsetParent !== null) {
+          node.setAttribute('hidden','');
+          node.classList && node.classList.add('hidden');
+          node.style && (node.style.display = 'none');
+        }
+      });
+    }, 0);
+  } catch(e){}
+});
+</script>
+
+
+<script>
+(function(){
+  // Keep functions callable but never block the app.
+  var _enter = window.enterOnboarding;
+  window.enterOnboarding = function(){
+    if (window.AH_ONBOARDING_DISABLED) {
+      // If disabled, just no-op and ensure UI remains usable.
+      document.body && document.body.classList && document.body.classList.remove('onboarding-mode');
+      return; // don't open onboarding
+    }
+    if (typeof _enter === 'function') return _enter.apply(this, arguments);
+  };
+  var _exit = window.exitOnboarding;
+  window.exitOnboarding = function(){
+    document.body && document.body.classList && document.body.classList.remove('onboarding-mode');
+    if (typeof _exit === 'function') return _exit.apply(this, arguments);
+  };
+})();
+</script>
+
+</body>
 </html>
