@@ -31,88 +31,7 @@
   } catch(e) { console.warn('WordPOS loader failed', e); }
 })();
 </script>
-<script>
-// --- DuckDuckGo favicon helpers (GLOBAL). Must load before renderDetail ---
-(function(){
-  if (window.__duckFaviconInit) return; window.__duckFaviconInit = true;
 
-  window.esc = window.esc || function(s=''){
-    return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;')
-      .replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
-  };
-  // Emoji/diacritics-insensitive normalizer for facet labels (global)
-  window.foldFacet = window.foldFacet || function(s){
-    s = String(s||'').toLowerCase();
-    try { s = s.replace(/\p{Extended_Pictographic}|\p{Emoji_Component}|\p{Emoji_Presentation}|\uFE0F/ug, ''); }
-    catch(e) { s = s.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g,''); }
-    s = s.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
-    return s;
-  };
-
-
-  window.normPlatform = window.normPlatform || function(platform, raw){
-    if (!raw) return '';
-    let v = String(raw).trim();
-    if (!v || v.toLowerCase() == 'n/a') return '';
-
-    if (platform === 'email') {
-      if (/^mailto:/i.test(v)) return v;
-      if (/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)) return `mailto:${v}`;
-    }
-
-    const handle = v.startsWith('@') ? v.slice(1) : null;
-    const ensureHTTP = (u) => /^https?:\/\//i.test(u) ? u : 'https://' + u;
-
-    switch(platform){
-      case 'instagram': return ensureHTTP(handle ? `instagram.com/${handle}` : v);
-      case 'x':
-        if (handle) return `https://x.com/${handle}`;
-        return ensureHTTP(v.replace(/^https?:\/\/(www\.)?twitter\.com/i,'https://x.com'));
-      case 'facebook':
-      case 'linkedin':
-      case 'youtube':
-        return ensureHTTP(v);
-      case 'tiktok':
-        return ensureHTTP(handle ? `tiktok.com/@${handle}` : v);
-      case 'discord':
-        if (/^[A-Za-z0-9]{6,}$/i.test(v)) return `https://discord.gg/${v}`;
-        return ensureHTTP(v.replace(/^discord\.com\/invite\//i,'discord.gg/'));
-      case 'groupme':
-        return ensureHTTP(v);
-      case 'linktree':
-        return ensureHTTP(handle ? `linktr.ee/${handle}` : v);
-      case 'website':
-      default:
-        return ensureHTTP(v);
-    }
-  };
-
-  window.DDG_ICON = window.DDG_ICON || (host => `https://icons.duckduckgo.com/ip3/${host}.ico`);
-  window.getHostname = window.getHostname || function(u){
-    try { return new URL(u).hostname.replace(/^www\./,''); } catch { return ''; }
-  };
-  window.faviconFor = window.faviconFor || function(platform, href){
-    switch(platform){
-      case 'website':   return DDG_ICON(getHostname(href) || 'example.com');
-      case 'instagram': return DDG_ICON('instagram.com');
-      case 'x':         return DDG_ICON('x.com');
-      case 'facebook':  return DDG_ICON('facebook.com');
-      case 'linkedin':  return DDG_ICON('linkedin.com');
-      case 'youtube':   return DDG_ICON('youtube.com');
-      case 'tiktok':    return DDG_ICON('tiktok.com');
-      case 'discord':   return DDG_ICON('discord.gg');
-      case 'groupme':   return DDG_ICON('groupme.com');
-      case 'linktree':  return DDG_ICON('linktr.ee');
-      case 'email':     return DDG_ICON('gmail.com');
-      default:          return DDG_ICON('example.com');
-    }
-  };
-  window.makeLink = window.makeLink || function(platform, raw){
-    const href = window.normPlatform(platform, raw);
-    return href ? { platform, href, icon: window.faviconFor(platform, href) } : null;
-  };
-})();
-</script>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 // --- Prevent pinch/tap zoom (fallback for browsers that ignore viewport flags) ---
@@ -849,8 +768,35 @@ html.is-mobile-browser .site-header{
     }
   }
 </style>
+
+<style id="ah-scrolllock-style">
+/* Hardened scroll lock to prevent double scrollbars when modal is open */
+html.ah-modal-open, body.ah-modal-open { overflow: hidden !important; height: 100% !important; }
+</style>
 </head>
 <body class="has-bottom-bar min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
+<script id="ah-form-bootstrap-early">
+(function(){
+  // Ensure endpoint and field map exist before any submit logic runs.
+  if (typeof window.FORM_ENDPOINT === 'undefined' || !window.FORM_ENDPOINT) {
+    window.FORM_ENDPOINT = "https://docs.google.com/forms/d/e/1FAIpQLSfEwvKZjMFpCBFEfjN4aXjfQ50Tq3djKs9iOHfg_ohwB7D0Yw/formResponse";
+  }
+  if (!window.FIELD_MAP) {
+    window.FIELD_MAP = {
+      fullname:   "entry.1890826348",
+      email:      "entry.2086925124",
+      password:   "entry.483309031",
+      uni_email:  "entry.412189969",
+      year:       "entry.1336126874",
+      major:      "entry.1715561455",
+      interests:  "entry.913456439",
+      school:     "entry.1904025125",
+      pfp_url:    "entry.592106457"
+    };
+  }
+})();
+</script>
+
 <!-- Mobile Browser Interstitial (shown when NOT in PWA standalone) -->
 <div class="fixed inset-0 z-[9999] hidden items-center justify-center bg-white" id="mobile-browser-interstitial">
 <div class="w-full max-w-sm mx-auto px-6 text-center">
@@ -4482,7 +4428,7 @@ document.addEventListener('DOMContentLoaded', function(){
 })();
 </script>
 <!-- === AUTH MODAL === -->
-<div aria-hidden="true" aria-labelledby="authTitle" aria-modal="true" data-open="false" data-state="open" id="authModal" role="dialog">
+<div id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle" aria-hidden="true" data-open="false">
 <div class="backdrop" data-close="true"></div>
 <div aria-live="polite" class="panel-wrap">
 <div class="panel auth-grid" role="document">
@@ -4532,7 +4478,18 @@ document.addEventListener('DOMContentLoaded', function(){
 <div class="w-full max-w-[560px] mx-auto">
 <form class="space-y-5" id="dsu-form" novalidate="">
 <!-- STEP: Account -->
-<section class="space-y-3" data-step-panel="account">
+<section class="space-y-3" data-step-panel="account"><!-- Avatar uploader (tap/click to pick) -->
+<div class="w-full flex items-center justify-center mb-4">
+  <label for="dsu-pfp-file" id="dsu-pfp-uploader" class="relative grid place-items-center rounded-full shadow-xl cursor-pointer"
+       style="width:132px;height:132px;background: radial-gradient(72% 72% at 50% 50%, #60a5fa, #1d4ed8);">
+    <img id="dsu-pfp-img" alt="" class="hidden absolute inset-0 w-full h-full object-cover rounded-full"/>
+    <i class="fa-solid fa-user text-white/95 text-6xl"></i>
+    <div class="absolute -right-1 -bottom-1 w-9 h-9 rounded-full bg-white grid place-items-center shadow-lg">
+      <i class="fa-solid fa-pen text-blue-600 text-base"></i>
+    </div>
+  </label>
+  <input id="dsu-pfp-file" type="file" accept="image/*" class="hidden"/>
+</div>
 <div>
 <label class="block text-[15px] font-medium text-gray-800 mb-2" for="dsu-fullname">Full name</label>
 <input autocomplete="name" class="w-full h-12 rounded-2xl bg-gray-50 border border-gray-200 px-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400" id="dsu-fullname" placeholder="Jane Doe" required="" type="text"/>
@@ -4551,6 +4508,7 @@ document.addEventListener('DOMContentLoaded', function(){
 <div>
 <label class="block text-[15px] font-medium text-gray-800 mb-2" for="dsu-school-email">University email</label>
 <input autocomplete="email" class="w-full h-12 rounded-2xl bg-gray-50 border border-gray-200 px-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400" id="dsu-school-email" placeholder="name@stjohns.edu" required="" type="email"/>
+<div id="uni-email-note" class="mt-1 text-sm hidden" aria-live="polite"></div>
 <p class="text-xs text-gray-500 mt-1" id="dsu-school-hint">Use your @stjohns.edu email to verify your school.</p>
 </div>
 <div class="hidden rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm" id="dsu-school-detect">
@@ -4678,18 +4636,17 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 <script>
 (function(){
-  const FORM_ENDPOINT = "https://docs.google.com/forms/d/e/1FAIpQLSfEwvKZjMFpCBFEfjN4aXjfQ50Tq3djKs9iOHfg_ohwB7D0Yw/formResponse";
+  const IMGUR_UPLOAD_URL = "https://api.imgur.com/3/image";
+const IMGUR_CLIENT_ID = "4693c5376af54cb";
 
-  const FIELD_MAP = {
-    fullname:  "entry.1890826348",
-    email:     "entry.2086925124",
-    password:  "entry.483309031",
-    uni_email: "entry.412189969",
-    year:      "entry.1336126874",
-    major:     "entry.1715561455",
-    interests: "entry.913456439",
-    school:    "entry.1904025125",
-  };
+
+  // Ensure FIELD_MAP exists and add pfp_url key safely
+  try {
+    window.FIELD_MAP = Object.assign({}, window.FIELD_MAP || {});
+    if (!window.FIELD_MAP.pfp_url) {
+      window.FIELD_MAP.pfp_url = "entry.592106457";
+    }
+  } catch(e) {}
 
   const ONBOARDING_INTERESTS = [
     "Academic", "Cultural & Identity", "Arts & Media", "Tech & Engineering",
@@ -4737,7 +4694,7 @@ document.addEventListener('DOMContentLoaded', function(){
   const schoolDetectBox = signupPanel.querySelector('#dsu-school-detect');
   function updateSchoolDetector() {
     const v = (schoolInput?.value || "").trim().toLowerCase();
-    const ok = v.endsWith("@stjohns.edu");
+    const ok = (/\.edu$/i).test(v);
     if (schoolDetectBox) schoolDetectBox.classList.toggle('hidden', !ok);
     return ok;
   }
@@ -4798,7 +4755,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
   prevBtn.addEventListener('click', ()=> showStep(stepIdx-1));
   nextBtn.addEventListener('click', ()=> { if (validateStep()) showStep(stepIdx+1); });
-  finishBtn.addEventListener('click', handleFinish);
+  // finishBtn.addEventListener('click', handleFinish); // disabled to prevent duplicate submits
 
   function collectPayload(){
     const fullname = signupPanel.querySelector('#dsu-fullname')?.value.trim() || "";
@@ -4807,7 +4764,14 @@ document.addEventListener('DOMContentLoaded', function(){
     const uniEmail = signupPanel.querySelector('#dsu-school-email')?.value.trim() || "";
     const year     = signupPanel.querySelector('#dsu-year')?.value || "";
     const major    = signupPanel.querySelector('#dsu-major')?.value || "";
-    const interestsCsv = Array.from(selectedInterests).join(", ");
+    const interestsCsv = (function(){
+      const root = signupPanel.querySelector('#dsu-interests');
+      if (root){
+        const labels = Array.from(root.querySelectorAll('button[data-sel="true"]')).map(b=>b.textContent.trim());
+        if (labels.length) return labels.join(", ");
+      }
+      try { return Array.from(selectedInterests).join(", "); } catch(_){ return ""; }
+    })();
 
     const school = "St. John's University";
 
@@ -4824,9 +4788,52 @@ document.addEventListener('DOMContentLoaded', function(){
     return {formData, school};
   }
 
-  async function handleFinish(){
+  // === Avatar upload/preview ===
+let dsuSelectedPfpFile = null;
+(function(){
+  const shell = document.getElementById('dsu-pfp-uploader');
+  const file  = document.getElementById('dsu-pfp-file');
+  const img   = document.getElementById('dsu-pfp-img');
+  if (!shell || !file) return;
+  const openPicker = ()=> file.click();
+  shell.addEventListener('click', openPicker);
+  shell.addEventListener('keydown', (e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openPicker(); }});
+  file.addEventListener('change', ()=>{
+    const f = file.files && file.files[0];
+    if(!f) return;
+    dsuSelectedPfpFile = f;
+    const reader = new FileReader();
+    reader.onload = (ev)=>{
+      img.src = ev.target.result;
+      img.classList.remove('hidden');
+    };
+    reader.readAsDataURL(f);
+  });
+})();
+
+async function uploadImageToImgur(file){
+  const fd = new FormData();
+  fd.append('image', file);
+  const res = await fetch(IMGUR_UPLOAD_URL, {
+    method: 'POST',
+    headers: { Authorization: 'Client-ID ' + IMGUR_CLIENT_ID },
+    body: fd
+  });
+  if (!res.ok) throw new Error('Imgur upload failed: ' + res.status);
+  const data = await res.json();
+  if (!data?.success || !data?.data?.link) throw new Error('Imgur response missing link');
+  return data.data.link;
+}
+
+async function handleFinish(){
+    if (window.__ahSubmitting) return; window.__ahSubmitting = true;
     if (!validateStep()) return;
+    let uploadedPfpUrl = '';
+    if (dsuSelectedPfpFile) {
+      try { uploadedPfpUrl = await uploadImageToImgur(dsuSelectedPfpFile); } catch(e) { console.warn('Imgur upload failed:', e); }
+    }
     const {formData} = collectPayload();
+    if (uploadedPfpUrl) { try { formData.append(FIELD_MAP.pfp_url, uploadedPfpUrl); } catch(_){} }
 
     try {
       await fetch(FORM_ENDPOINT, { method: "POST", mode: "no-cors", body: formData });
@@ -5359,5 +5366,854 @@ document.addEventListener('DOMContentLoaded', function(){
 })();
 </script>
 
+
+<script>
+(function(){
+  const modal = document.getElementById('authModal');
+  if (!modal) return;
+
+  function setTab(view){
+    const loginView = (view !== 'signup');
+    const tabLogin    = document.getElementById('tab-login');
+    const tabSignup   = document.getElementById('tab-signup');
+    const panelLogin  = document.getElementById('panel-login');
+    const panelSignup = document.getElementById('panel-signup');
+    tabLogin && tabLogin.setAttribute('aria-selected', String(loginView));
+    tabSignup && tabSignup.setAttribute('aria-selected', String(!loginView));
+    if (panelLogin)  panelLogin.hidden  = !loginView;
+    if (panelSignup) panelSignup.hidden =  loginView;
+  }
+
+  function openModal(view='login'){
+    modal.setAttribute('data-open','true');
+    modal.setAttribute('data-state','open');
+    modal.removeAttribute('aria-hidden');
+    document.body.style.overflow = 'hidden';
+    setTab(view);
+    const focusEl = view === 'login' ? document.getElementById('auth-email')
+                                     : document.getElementById('tab-signup');
+    setTimeout(()=>{ focusEl && focusEl.focus && focusEl.focus({preventScroll:true}); }, 60);
+  }
+
+  // Delegated click: ensures newly created/replaced #loginBtn always works
+  document.addEventListener('click', (e) => {
+    const trigger = e.target.closest && e.target.closest('#loginBtn');
+    if (!trigger) return;
+    e.preventDefault();
+    openModal('login');
+  });
+
+  // Optional: harden logout to reset UI + modal state
+  const origSignOut = window.ahSignOut;
+  window.ahSignOut = function(){
+    try { localStorage.removeItem('ah_user_v1'); } catch(e) {}
+    const lb = document.getElementById('loginBtn');
+    const ab = document.getElementById('avatarBtn');
+    if (lb) lb.classList.remove('hidden');
+    if (ab) ab.classList.add('hidden');
+    if (typeof origSignOut === 'function') { try { origSignOut(); } catch(e) {} }
+
+    // Reset modal state
+    const m = document.getElementById('authModal');
+    if (m) {
+      m.setAttribute('data-open','false');
+      m.setAttribute('aria-hidden','true');
+      m.removeAttribute('data-state');
+    }
+    document.body && (document.body.style.overflow = '');
+  };
+})();
+</script>
+
+<script id="ah-auth-controller">
+(function(){
+  if (window.__ah_modal_wired) return;
+  window.__ah_modal_wired = true;
+
+  var modal = document.getElementById('authModal');
+  if (!modal) return;
+
+  function setTab(view){
+    var loginView = (view !== 'signup');
+    var tabLogin    = document.getElementById('tab-login');
+    var tabSignup   = document.getElementById('tab-signup');
+    var panelLogin  = document.getElementById('panel-login');
+    var panelSignup = document.getElementById('panel-signup');
+    if (tabLogin)  tabLogin.setAttribute('aria-selected', String(loginView));
+    if (tabSignup) tabSignup.setAttribute('aria-selected', String(!loginView));
+    if (panelLogin)  panelLogin.hidden  = !loginView;
+    if (panelSignup) panelSignup.hidden =  loginView;
+  }
+
+  function lockScroll(){
+    try {
+      document.documentElement.classList.add('ah-modal-open');
+      document.body.classList.add('ah-modal-open');
+      document.body.style.overflow = 'hidden';
+    } catch(e){}
+  }
+
+  function unlockScroll(){
+    try {
+      document.body.style.overflow = '';
+      document.documentElement.classList.remove('ah-modal-open');
+      document.body.classList.remove('ah-modal-open');
+    } catch(e){}
+  }
+
+  
+  function reallyShowModal(){
+    // Remove any "hidden" class and force display
+    modal.classList.remove('hidden');
+    if (modal.style) {
+      modal.style.display = 'block';
+      modal.style.zIndex = '9999';
+      modal.style.position = 'fixed';
+      modal.style.inset = '0';
+    }
+  }
+
+  function openAuthModal(view){
+    if (!view) view = 'login';
+    reallyShowModal();
+    modal.setAttribute('data-open','true');
+    modal.removeAttribute('aria-hidden');
+    modal.setAttribute('data-state','open');
+    lockScroll();
+    setTab(view);
+    // If any script flips it back to display:none, fix it for a short window
+    try {
+      var t0 = Date.now();
+      var mo = new MutationObserver(function(){
+        // Keep it open for ~800ms after open click
+        if (Date.now() - t0 > 800) { try{ mo.disconnect(); }catch(e){} return; }
+        var cs = window.getComputedStyle ? getComputedStyle(modal) : null;
+        if (!cs || cs.display === 'none' || modal.getAttribute('data-open') !== 'true') {
+          reallyShowModal();
+          modal.setAttribute('data-open','true');
+          modal.removeAttribute('aria-hidden');
+          modal.setAttribute('data-state','open');
+        }
+      });
+      mo.observe(modal, { attributes: true, attributeFilter: ['class','style','data-open','aria-hidden','data-state'] });
+      setTimeout(function(){ try{ mo.disconnect(); }catch(e){} }, 1200);
+    } catch(e){}
+    var focusEl = (view === 'login')
+      ? document.getElementById('auth-email')
+      : document.getElementById('tab-signup');
+    setTimeout(function(){ if (focusEl && focusEl.focus) focusEl.focus({preventScroll:true}); }, 30);
+  }
+
+  function closeAuthModal(){
+    modal.setAttribute('data-open','false');
+    modal.setAttribute('aria-hidden','true');
+    modal.removeAttribute('data-state');
+    if (modal.style) modal.style.display = 'none';
+    unlockScroll();
+  }
+
+  // Expose globally so any legacy code can reuse
+  window.ahOpenAuth = openAuthModal;
+  window.ahCloseAuth = closeAuthModal;
+
+  // Delegated login button handler (works after DOM swaps)
+  document.addEventListener('click', function(e){
+    var btn = e.target && e.target.closest && e.target.closest('#loginBtn');
+    if (btn){
+      e.preventDefault();
+      openAuthModal('login');
+    }
+  });
+
+  // Close on ESC anywhere
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' || e.keyCode === 27){
+      // Only close if actually open
+      if (modal.getAttribute('data-open') === 'true'){
+        e.preventDefault();
+        closeAuthModal();
+      }
+    }
+  });
+
+  // Close on any element carrying data-close="true"
+  document.addEventListener('click', function(e){
+    var closer = e.target && e.target.closest && e.target.closest('[data-close="true"]');
+    if (closer){
+      e.preventDefault();
+      closeAuthModal();
+    }
+  });
+
+  // Ensure logout always resets UI and modal state
+  var originalSignOut = window.ahSignOut;
+  window.ahSignOut = function(){
+    try { localStorage.removeItem('ah_user_v1'); } catch(e){}
+    var lb = document.getElementById('loginBtn');
+    var ab = document.getElementById('avatarBtn');
+    if (lb) lb.classList.remove('hidden');
+    if (ab) ab.classList.add('hidden');
+    closeAuthModal();
+    if (typeof originalSignOut === 'function'){
+      try { originalSignOut(); } catch(e){}
+    }
+  };
+
+  // Defensive: If modal somehow starts half-open, force closed state.
+  // (prevents double scrollbars on initial render or after SPA transitions)
+  setTimeout(function(){
+    if (modal.getAttribute('data-open') !== 'true'){
+      closeAuthModal();
+    }
+  }, 10);
+})();
+</script>
+
+<script>
+// Independent, safe wiring for avatar + submit (runs even if earlier scripts failed).
+(function(){
+  const IMGUR_UPLOAD_URL = "https://api.imgur.com/3/image";
+  const IMGUR_CLIENT_ID = "4693c5376af54cb";
+  window.FORM_ENDPOINT = window.FORM_ENDPOINT || "https://docs.google.com/forms/d/e/1FAIpQLSfEwvKZjMFpCBFEfjN4aXjfQ50Tq3djKs9iOHfg_ohwB7D0Yw/formResponse";
+
+  window.FIELD_MAP = Object.assign({}, window.FIELD_MAP || {}, {
+    fullname:   (window.FIELD_MAP && window.FIELD_MAP.fullname)   || "entry.1890826348",
+    email:      (window.FIELD_MAP && window.FIELD_MAP.email)      || "entry.2086925124",
+    password:   (window.FIELD_MAP && window.FIELD_MAP.password)   || "entry.483309031",
+    uni_email:  (window.FIELD_MAP && window.FIELD_MAP.uni_email)  || "entry.412189969",
+    year:       (window.FIELD_MAP && window.FIELD_MAP.year)       || "entry.1336126874",
+    major:      (window.FIELD_MAP && window.FIELD_MAP.major)      || "entry.1715561455",
+    interests:  (window.FIELD_MAP && window.FIELD_MAP.interests)  || "entry.913456439",
+    school:     (window.FIELD_MAP && window.FIELD_MAP.school)     || "entry.1904025125",
+    pfp_url:    (window.FIELD_MAP && window.FIELD_MAP.pfp_url)    || "entry.592106457"
+  });
+
+  // Avatar preview
+  const fileInput = document.getElementById('dsu-pfp-file');
+  const imgPrev   = document.getElementById('dsu-pfp-img');
+  if (fileInput){
+    fileInput.addEventListener('change', () => {
+      const f = fileInput.files && fileInput.files[0];
+      if(!f) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        if (imgPrev) { imgPrev.src = ev.target.result; imgPrev.classList.remove('hidden'); }
+      };
+      reader.readAsDataURL(f);
+    });
+  }
+
+  // Helper: upload to Imgur
+  async function uploadToImgur(file){
+    const fd = new FormData();
+    fd.append('image', file);
+    const res = await fetch(IMGUR_UPLOAD_URL, {
+      method: 'POST',
+      headers: { Authorization: 'Client-ID ' + IMGUR_CLIENT_ID },
+      body: fd
+    });
+    if (!res.ok) throw new Error('Imgur HTTP ' + res.status);
+    const data = await res.json();
+    if (!data || !data.success || !data.data || !data.data.link) throw new Error('Bad Imgur response');
+    return data.data.link;
+  }
+
+  // Helper: collect values
+  function v(id){ const el = document.getElementById(id); return (el && (el.value||"").trim()) || ""; }
+  function collect(){
+    // interests: try chips state, otherwise read any checked items
+    let interests = [];
+    document.querySelectorAll('#dsu-interests button[data-sel="true"]').forEach(el=> interests.push(el.textContent.trim()));
+    if (!interests.length) {
+      document.querySelectorAll('input[name="interests[]"]:checked').forEach(el=> interests.push(el.value));
+    }
+    return {
+      fullname: v('dsu-fullname') || v('signup-fullname'),
+      email: v('dsu-email') || v('signup-email'),
+      password: v('dsu-password') || v('signup-password'),
+      uni_email: v('dsu-school-email') || v('signup-uni-email'),
+      year: v('dsu-year') || v('signup-year'),
+      major: v('dsu-major') || v('signup-major'),
+      interests: interests.join(', '),
+      school: v('dsu-school') || "St. John's University"
+    };
+  }
+
+  async function safeSubmit(){
+    if (window.__ahSubmitting) return; window.__ahSubmitting = true;
+    const btn = document.getElementById('dsu-finish') || document.getElementById('btn-finish');
+    if (btn){ btn.disabled = true; btn.textContent = 'Submitting…'; }
+    try {
+      // Upload pfp if selected
+      let pfpUrl = "";
+      if (fileInput && fileInput.files && fileInput.files[0]) {
+        pfpUrl = await uploadToImgur(fileInput.files[0]);
+      }
+
+      const vals = collect();
+      const formData = new FormData();
+      for (const [k,v] of Object.entries(vals)){
+        if (FIELD_MAP[k]) formData.append(FIELD_MAP[k], v);
+      }
+      if (pfpUrl) formData.append(FIELD_MAP.pfp_url, pfpUrl);
+
+      const endpoint = FORM_ENDPOINT || (window.FORM_ENDPOINT || "");
+      if (!endpoint) { console.warn('FORM_ENDPOINT missing'); }
+      await fetch(endpoint, { method:'POST', mode:'no-cors', body: formData });
+
+      if (btn){ btn.textContent = 'Done!'; }
+    } catch (e){
+      console.error(e);
+      if (btn){ btn.textContent = 'Finish'; btn.disabled = false; }
+      alert('Submit failed: ' + e.message);
+    }
+  }
+
+  const finishBtn = document.getElementById('dsu-finish') || document.getElementById('btn-finish');
+  if (finishBtn){
+    // Attach a parallel handler that works even if earlier scripts errored
+    finishBtn.addEventListener('click', (e)=>{
+      e.preventDefault(); // ensure we control the flow
+      safeSubmit();
+    }, { once:false });
+  }
+})();
+</script>
+
+
+<script>
+(function(){
+  // Close modal + mark as logged-in after successful submit
+  window.__ah_loginFinalize = function(profile){
+    try { localStorage.setItem('ah_onboarded_v1','true'); } catch(e){}
+    try { localStorage.setItem('ah_is_logged_in','true'); } catch(e){}
+    try { if (profile && profile.email) localStorage.setItem('ah_user_email', profile.email); } catch(e){}
+    try { if (profile && profile.fullname) localStorage.setItem('ah_user_name', profile.fullname); } catch(e){}
+    try { if (profile && profile.pfp_url) localStorage.setItem('ah_user_pfp', profile.pfp_url); } catch(e){}
+
+    // Close any auth modal
+    const modal = document.getElementById('authModal');
+    if (modal){ modal.setAttribute('data-open','false'); modal.classList.add('hidden'); }
+    // Hide any loading overlay
+    const ov = document.getElementById('ah-loading-overlay');
+    if (ov){ ov.classList.add('hidden'); }
+
+    // Release scroll locks
+    document.documentElement.classList.remove('ah-modal-open');
+    document.body.classList.remove('ah-modal-open');
+
+    // Swap login to avatar (fallback if app helper absent)
+    if (typeof window.ahSwapLoginToAvatar === 'function'){
+      try { window.ahSwapLoginToAvatar(); } catch(e){}
+    } else {
+      const nav = document.getElementById('navbar') || document.querySelector('[data-nav]') || document.body;
+      let slot = nav.querySelector('#nav-auth-slot') || nav.querySelector('[data-auth-slot]');
+      if (!slot){
+        // try to hijack any "Log in" button
+        slot = Array.from(nav.querySelectorAll('button, a')).find(el => /log\s*in|sign\s*in/i.test(el.textContent||""));
+      }
+      if (slot){
+        const pfp = (profile && profile.pfp_url) || localStorage.getItem('ah_user_pfp') || '';
+        const name = (profile && profile.fullname) || localStorage.getItem('ah_user_name') || 'You';
+        const btn = document.createElement('button');
+        btn.className = 'w-9 h-9 rounded-full overflow-hidden ring-2 ring-blue-500/50';
+        if (pfp){
+          btn.innerHTML = '<img alt="avatar" src="'+pfp+'" class="w-full h-full object-cover">';
+        } else {
+          btn.innerHTML = '<i class="fa-solid fa-user text-lg"></i>';
+        }
+        try { slot.replaceWith(btn); } catch(e) { slot.parentNode && slot.parentNode.replaceChild(btn, slot); }
+      }
+    }
+    // Mark body for CSS
+    document.body.classList.add('is-authenticated');
+  };
+
+  // Patch our independent finish handler to call finalize
+  const finishBtn = document.getElementById('dsu-finish') || document.getElementById('btn-finish');
+  if (finishBtn){
+    finishBtn.addEventListener('click', function finalizeHookOnce(){
+      // The fallback submitter defined earlier will run; we also hook into a global promise if present.
+      // As a safety, after a short delay, finalize UI regardless (since Google Form POST is no-cors).
+      setTimeout(function(){
+        const prof = {
+          fullname: document.getElementById('dsu-fullname')?.value?.trim() || document.getElementById('signup-fullname')?.value?.trim() || '',
+          email: document.getElementById('dsu-email')?.value?.trim() || document.getElementById('signup-email')?.value?.trim() || '',
+          pfp_url: (document.getElementById('dsu-pfp-img')?.src && !document.getElementById('dsu-pfp-img').classList.contains('hidden'))
+                    ? localStorage.getItem('ah_user_pfp') || '' : (localStorage.getItem('ah_user_pfp') || '')
+        };
+        window.__ah_loginFinalize(prof);
+      }, 1000);
+    }, { once:false });
+  }
+})();
+</script>
+
+
+<script>
+(function() {
+  const uniInput = document.getElementById('dsu-school-email');
+  const note = document.getElementById('uni-email-note');
+
+  function isValidEdu(email) {
+    if (!email) return false;
+    email = String(email).trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return false;
+    return email.endsWith('.edu');
+  }
+
+  function getDomain(email) {
+    if (!email) return '';
+    const at = email.indexOf('@');
+    return at === -1 ? '' : email.slice(at + 1).toLowerCase();
+  }
+
+  function updateUniversityNotice() {
+    if (!uniInput || !note) return;
+    const val = uniInput.value.trim();
+    const domain = getDomain(val);
+
+    if (!val) {
+      note.classList.add('hidden');
+      note.textContent = '';
+      return;
+    }
+
+    if (isValidEdu(val)) {
+      if (domain === 'stjohns.edu' || domain === 'my.stjohns.edu') {
+        note.textContent = "We’ve matched your email address to St. John’s University.";
+        note.classList.remove('hidden');
+        note.classList.remove('text-amber-600','text-red-600');
+        note.classList.add('text-green-600');
+        uniInput.setAttribute('data-uni-match', 'stjohns');
+      } else {
+        note.textContent = "We couldn’t find your university.";
+        note.classList.remove('hidden');
+        note.classList.remove('text-green-600','text-red-600');
+        note.classList.add('text-amber-600');
+        uniInput.setAttribute('data-uni-match', 'unknown');
+      }
+    } else {
+      note.textContent = "";
+      note.classList.add('hidden');
+      uniInput.removeAttribute('data-uni-match');
+    }
+
+    try {
+      if (typeof validateStep === 'function') validateStep();
+      if (typeof syncButtons === 'function') syncButtons();
+    } catch (e) {}
+  }
+
+  if (uniInput) {
+    ['input','change','blur'].forEach(evt => uniInput.addEventListener(evt, updateUniversityNotice));
+    setTimeout(updateUniversityNotice, 0);
+  }
+
+  try {
+    if (typeof window.updateSchoolDetector === 'function') {
+      const originalDetector = window.updateSchoolDetector;
+      window.updateSchoolDetector = function() {
+        const val = uniInput ? uniInput.value : '';
+        const ok = isValidEdu(val);
+        try { originalDetector.apply(this, arguments); } catch(e) {}
+        return ok;
+      }
+    }
+  } catch (e) {}
+})();
+</script>
+
+
+<script>
+// Signup Back Button Fix + Robust Step Controller (v2) — recognizes [data-step-panel]
+(function() {
+  function ready(fn){ if(document.readyState!=='loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }
+
+  function getSteps(panel) {
+    if (!panel) return [];
+    // Primary selector for your markup:
+    let steps = Array.from(panel.querySelectorAll('[data-step-panel]'));
+    if (steps.length === 0) {
+      // Fallbacks
+      steps = Array.from(panel.querySelectorAll('[data-dsu-step], .dsu-step, [id^="dsu-step-"], section[data-step], .signup-step'));
+    }
+    return steps;
+  }
+
+  function firstFocusable(root) {
+    if (!root) return null;
+    const sel = [
+      'input:not([disabled])',
+      'select:not([disabled])',
+      'textarea:not([disabled])',
+      'button:not([disabled])',
+      '[tabindex]:not([tabindex="-1"])',
+      'a[href]'
+    ].join(',');
+    return root.querySelector(sel);
+  }
+
+  function syncProgress(stepEl) {
+    // Optional: highlight progress pill matching this step
+    try {
+      const key = stepEl?.getAttribute('data-step-panel');
+      const pills = document.querySelectorAll('#dsu-progress [data-step]');
+      pills.forEach(li => {
+        if (li.getAttribute('data-step') === key) {
+          li.classList.add('bg-blue-600','text-white');
+          li.classList.remove('bg-gray-100','text-gray-700');
+        } else {
+          li.classList.remove('bg-blue-600','text-white');
+          li.classList.add('bg-gray-100','text-gray-700');
+        }
+      });
+    } catch(e){}
+  }
+
+  function gotoStep(panel, steps, idx) {
+    if (!panel || !steps.length) return;
+    const clamped = Math.max(0, Math.min(idx, steps.length - 1));
+    steps.forEach((el, i) => {
+      const on = i === clamped;
+      el.classList.toggle('hidden', !on);
+      el.setAttribute('aria-hidden', on ? 'false' : 'true');
+    });
+    panel.dataset.stepIndex = String(clamped);
+
+    const prevBtn = document.getElementById('dsu-prev');
+    const nextBtn = document.getElementById('dsu-next');
+    if (prevBtn) prevBtn.disabled = clamped === 0;
+    if (nextBtn) nextBtn.disabled = false;
+
+    const focusEl = firstFocusable(steps[clamped]);
+    if (focusEl) { try { focusEl.focus({preventScroll:true}); } catch(e) {} }
+
+    syncProgress(steps[clamped]);
+
+    try {
+      if (typeof validateStep === 'function') validateStep();
+      if (typeof syncButtons === 'function') syncButtons();
+    } catch(e) {}
+  }
+
+  function findCurrentIndex(steps) {
+    if (!steps.length) return 0;
+    for (let i = 0; i < steps.length; i++) {
+      const el = steps[i];
+      if (!el.classList.contains('hidden') && el.getAttribute('aria-hidden') !== 'true') {
+        return i;
+      }
+    }
+    return 0;
+  }
+
+  function initSignupController() {
+    const panel = document.getElementById('panel-signup');
+    if (!panel) return;
+    const steps = getSteps(panel);
+    if (!steps.length) return;
+
+    let idx = parseInt(panel.dataset.stepIndex || '', 10);
+    if (Number.isNaN(idx)) idx = findCurrentIndex(steps);
+    gotoStep(panel, steps, idx);
+
+    const prevBtn = document.getElementById('dsu-prev');
+    if (prevBtn && !prevBtn.dataset._wired) {
+      prevBtn.dataset._wired = '1';
+      prevBtn.addEventListener('click', function(ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        let current = parseInt(panel.dataset.stepIndex || '0', 10) || 0;
+        gotoStep(panel, steps, current - 1);
+      });
+      prevBtn.addEventListener('keydown', function(e){
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); prevBtn.click(); }
+      });
+    }
+
+    const nextBtn = document.getElementById('dsu-next');
+    if (nextBtn && !nextBtn.dataset._wired) {
+      nextBtn.dataset._wired = '1';
+      nextBtn.addEventListener('click', function() {
+        const before = parseInt(panel.dataset.stepIndex || '0', 10) || 0;
+        setTimeout(function() {
+          let current = parseInt(panel.dataset.stepIndex || String(before), 10) || before;
+          if (current === before) {
+            try {
+              if (typeof validateStep === 'function' && !validateStep()) return;
+            } catch(e) {}
+            gotoStep(panel, steps, before + 1);
+          }
+        }, 0);
+      });
+    }
+  }
+
+  function patchSetTab() {
+    try {
+      const orig = window.setTab;
+      if (typeof orig === 'function' && !orig._patched_for_signup_steps) {
+        window.setTab = function(view) {
+          const result = orig.apply(this, arguments);
+          if (String(view).toLowerCase() === 'signup') {
+            setTimeout(initSignupController, 0);
+          }
+          return result;
+        };
+        window.setTab._patched_for_signup_steps = true;
+      }
+    } catch (e) {}
+  }
+
+  ready(function(){
+    initSignupController();
+    patchSetTab();
+    document.addEventListener('ah:auth:opened', function(e){
+      try {
+        const view = (e && e.detail && e.detail.view) ? String(e.detail.view).toLowerCase() : '';
+        if (view === 'signup') setTimeout(initSignupController, 0);
+      } catch(_){}
+    });
+  });
+})();
+</script>
+
+
+<style id="ah-interests-accessibility-css">
+  /* Desktop login/sign-up modal: interest chips */
+  #dsu-interests button {
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;
+  }
+  #dsu-interests button:hover {
+    background: #f8fafc; /* hover:bg-gray-50 */
+    border-color: #d1d5db; /* hover:border-gray-300 */
+    color: #111827; /* hover:text-gray-900 */
+  }
+  #dsu-interests button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59,130,246,.55); /* focus ring */
+  }
+  /* Selected state: high-contrast blue pill */
+  #dsu-interests button[data-sel="true"]{
+    background: #e8f0ff;
+    color: #0b4be0;
+    border-color: #c3d6ff;
+    box-shadow: 0 0 0 3px rgba(11,75,224,.12);
+    font-weight: 600;
+  }
+</style>
+
+<script id="ah-interests-accessibility-js">
+(function(){
+  function syncAria(btn){
+    const sel = (btn.getAttribute('data-sel') === 'true');
+    btn.setAttribute('aria-pressed', sel ? 'true' : 'false');
+  }
+  function enhance(){
+    const root = document.getElementById('dsu-interests');
+    if (!root) return;
+    const chips = root.querySelectorAll('button');
+    chips.forEach(btn => {
+      // Initialize aria-pressed from current data-sel
+      if (!btn.hasAttribute('aria-pressed')) syncAria(btn);
+      // Make sure keyboard focus is clear
+      btn.setAttribute('type','button');
+      btn.classList.add('ah-chip-enhanced'); // marker (no visual style by itself)
+      // Toggle handler to keep aria-pressed in sync
+      if (!btn.__ahBound){
+        btn.addEventListener('click', () => {
+          // If the app already toggles data-sel, read it after a tick
+          setTimeout(() => syncAria(btn), 0);
+        });
+        btn.__ahBound = true;
+      }
+    });
+  }
+  // Run now and also after modal/step changes
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', enhance);
+  } else {
+    enhance();
+  }
+  // If the app swaps steps dynamically, observe for chips being re-rendered
+  const obs = new MutationObserver((muts)=>{
+    for (const m of muts){
+      if (m.addedNodes && m.addedNodes.length){
+        if (document.getElementById('dsu-interests')) enhance();
+      }
+    }
+  });
+  try {
+    obs.observe(document.body, {childList:true, subtree:true});
+  } catch(e){}
+})();
+</script>
+
+<script id="ah-interests-hidden-sync">
+(function(){
+  function ensureHidden(){
+    const form = document.querySelector('#panel-signup #dsu-form');
+    if (!form) return null;
+    let hidden = form.querySelector('#dsu-interests-hidden');
+    if (!hidden){
+      hidden = document.createElement('input');
+      hidden.type = 'hidden';
+      hidden.id = 'dsu-interests-hidden';
+      hidden.name = 'interests'; // fallback name; fetch() still uses FIELD_MAP
+      form.appendChild(hidden);
+    }
+    return hidden;
+  }
+  function setHiddenFromSet(){
+    const hidden = ensureHidden();
+    try {
+      let csv = '';
+      const root = document.querySelector('#panel-signup #dsu-interests');
+      if (root){
+        csv = Array.from(root.querySelectorAll('button[data-sel="true"]')).map(b=>b.textContent.trim()).join(', ');
+      }
+      if (hidden) hidden.value = csv;
+    } catch(e){}
+  }
+  // Update on any click in the interests area or form changes
+  document.addEventListener('click', (e)=>{
+    if (e.target && (e.target.closest && e.target.closest('#dsu-interests'))) {
+      setTimeout(setHiddenFromSet, 0);
+    }
+  });
+  document.addEventListener('change', setHiddenFromSet);
+  document.addEventListener('DOMContentLoaded', setHiddenFromSet);
+  // Also run a periodic light sync during the signup step in case chips are re-rendered
+  setInterval(setHiddenFromSet, 800);
+})();
+</script>
 </body>
 </html>
+
+<script>
+// Ensure closing the auth modal always restores body scroll
+document.addEventListener('click', function(e){
+  var closeEl = e.target && e.target.closest && e.target.closest('#authModal [data-close]');
+  if (closeEl) {
+    try { document.body.style.overflow = ''; } catch(e){}
+  }
+});
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape') {
+    try { document.body.style.overflow = ''; } catch(e){}
+  }
+});
+</script>
+
+<script>
+// Resilient stepper override: keeps the Continue button working even if other scripts error.
+(function(){
+  const order = Array.from(document.querySelectorAll('[data-step-panel]')).map(s=> s.getAttribute('data-step-panel'));
+  if (!order.length) return;
+  let index = Math.max(0, order.findIndex(k => !document.querySelector(`[data-step-panel="${k}"]`)?.classList.contains('hidden')));
+  if (index === -1) index = 0;
+
+  const panels = k => document.querySelector(`[data-step-panel="${k}"]`);
+  const backBtn = document.getElementById('dsu-back') || document.querySelector('button#dsu-back, button:has(#dsu-back)');
+  const nextBtn = document.getElementById('dsu-next');
+  const finishBtn = document.getElementById('dsu-finish');
+
+  function show(i){
+    index = Math.max(0, Math.min(order.length-1, i));
+    order.forEach((k, j) => {
+      const el = panels(k);
+      if (!el) return;
+      if (j === index) el.classList.remove('hidden'); else el.classList.add('hidden');
+    });
+    if (backBtn){ backBtn.disabled = (index===0); backBtn.classList.toggle('opacity-50', index===0); }
+    if (nextBtn){ nextBtn.classList.toggle('hidden', index===order.length-1); }
+    if (finishBtn){ finishBtn.classList.toggle('hidden', index!==order.length-1); }
+    // Optional: update pill highlights
+    document.querySelectorAll('#dsu-progress [data-step]').forEach(p=>{
+      const step = p.getAttribute('data-step');
+      if (!step) return;
+      const j = order.indexOf(step);
+      p.classList.toggle('bg-blue-600', j <= index);
+      p.classList.toggle('text-white', j <= index);
+    });
+  }
+
+  if (nextBtn){
+    nextBtn.addEventListener('click', (e)=>{
+      e.preventDefault();
+      // minimal validation on account step
+      if (order[index]==='account'){
+        const name = document.getElementById('dsu-fullname')?.value?.trim();
+        const email = document.getElementById('dsu-email')?.value?.trim();
+        const pwd = document.getElementById('dsu-password')?.value;
+        if (!name || !email || !pwd){
+          alert('Please fill Full name, Email, and Password.');
+          return;
+        }
+      }
+      show(index+1);
+    });
+  }
+  if (backBtn){
+    backBtn.addEventListener('click', (e)=>{ e.preventDefault(); show(index-1); });
+  }
+  show(index);
+})();
+</script>
+
+<script>
+(function(){
+  // 1) Fill interests if empty
+  const wrap = document.getElementById('dsu-interests');
+  const defaults = ["Academic","Cultural & Identity","Arts & Media","Tech & Engineering","Entrepreneurship","Health & Wellness","Sports & Recreation","Community Service","Business & Finance","Science & Research"];
+  if (wrap && !wrap.children.length){
+    defaults.forEach(v=>{
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = v;
+      b.setAttribute('data-value', v);
+      b.className = 'px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-50';
+      wrap.appendChild(b);
+    });
+    wrap.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button[data-value]');
+      if(!btn) return;
+      btn.classList.toggle('bg-blue-600');
+      btn.classList.toggle('text-white');
+    });
+  }
+
+  // 2) Progress pill sync
+  const pills = document.querySelectorAll('#dsu-progress [data-step]');
+  const order = ['account','school','academics','interests'];
+  function setActiveStep(step){
+    const idx = order.indexOf(step);
+    pills.forEach((li,i)=>{
+      if (i <= idx){
+        li.classList.add('bg-blue-600','text-white');
+        li.classList.remove('bg-gray-100','text-gray-700');
+      } else {
+        li.classList.remove('bg-blue-600','text-white');
+        li.classList.add('bg-gray-100','text-gray-700');
+      }
+    });
+  }
+
+  // Wire to our override stepper if present
+  window.__ah_setStep = function(step){ setActiveStep(step); }
+
+  // Observe visibility changes to panels and update pills
+  const obs = new MutationObserver(()=>{
+    const cur = order.find(k => !document.querySelector(`[data-step-panel="${k}"]`)?.classList.contains('hidden'));
+    if (cur) setActiveStep(cur);
+  });
+  order.forEach(k=>{
+    const el = document.querySelector(`[data-step-panel="${k}"]`);
+    if (el) obs.observe(el, { attributes:true, attributeFilter:['class'] });
+  });
+  // Initialize once
+  const first = order.find(k => document.querySelector(`[data-step-panel="${k}"]`));
+  if (first) setActiveStep(first);
+})();
+</script>
