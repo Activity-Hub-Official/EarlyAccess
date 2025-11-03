@@ -2,6 +2,39 @@
 
 <html lang="en">
 <head>
+
+<script>
+// --- Injected by ChatGPT: minimal jQuery-ready shim to avoid '$ is not defined' errors ---
+(function(){
+  if (!window.$) {
+    function ready(fn){ 
+      if (document.readyState !== 'loading') fn();
+      else document.addEventListener('DOMContentLoaded', fn, { once:true });
+    }
+    function stubSel(){ 
+      return {
+        on: function(){ return this; },
+        click: function(){ return this; },
+        hide: function(){ return this; },
+        show: function(){ return this; },
+        addClass: function(){ return this; },
+        removeClass: function(){ return this; },
+        text: function(){ return this; },
+        val: function(){ return this; }
+      };
+    }
+    var $shim = function(arg){
+      if (typeof arg === 'function') { ready(arg); return; }
+      if (arg === document || arg === window) { return { ready: ready }; }
+      // Very small selector stub (non-functional, prevents crashes):
+      return stubSel();
+    };
+    window.$ = $shim;
+    window.jQuery = $shim;
+  }
+})();
+</script>
+
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" name="viewport"/>
@@ -843,14 +876,7 @@ html.is-mobile-browser .site-header{
     }
   }
 </style>
-<style id="ah-mobile-pwa-signin-css">
-.onboarding-view.hidden { display: none; }
-.pwa-only.hidden { display: none !important; }
-.btn { border-radius: 9999px; padding: 0.75rem 1rem; border: 1px solid rgba(0,0,0,.1); font-weight:600; }
-.btn-primary { background: #2563eb; color: white; border-color: #2563eb; }
-.btn-outline { background: white; color: #111827; }
-.btn-light { background: #f3f4f6; color:#111827; }
-</style></head>
+</head>
 <body class="has-bottom-bar min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
 <!-- Mobile Browser Interstitial (shown when NOT in PWA standalone) -->
 <div class="fixed inset-0 z-[9999] hidden items-center justify-center bg-white" id="mobile-browser-interstitial">
@@ -886,6 +912,7 @@ html.is-mobile-browser .site-header{
 <a aria-current="page" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" href="#"><i class="fa-solid fa-graduation-cap text-[18px]"></i> Schools</a>
 </nav>
 <div class="mt-auto p-4">
+
 <button class="w-full mt-3 flex items-center gap-2 rounded-xl border border-gray-200/70 bg-white px-4 py-3 text-[15px] font-medium text-gray-800 hover:bg-gray-50 active:scale-[.99]" id="getAppBtn"><i class="fa-solid fa-qrcode text-[18px]"></i><span>Get the app</span></button>
 </div>
 </aside>
@@ -1061,7 +1088,7 @@ html.is-mobile-browser .site-header{
             Already have an account? <a class="text-ah-600 hover:underline" href="#">Sign in</a>
 </p>
 </div>
-<div class="mt-4 flex gap-3"><button class="btn btn-primary" id="onboarding-btn-continue-email">Continue with email</button><button class="btn btn-outline pwa-only hidden" id="onboarding-btn-signin-mobile">Sign in</button></div></div>
+</div>
 <!-- ====== ONBOARDING STEP 1 (Account Basics) ====== -->
 <div class="hidden min-h-screen bg-white flex flex-col" id="view-onboarding-account">
 <div class="p-6 flex-1 flex flex-col" data-onboarding-scroll="true">
@@ -5270,104 +5297,36 @@ window.setActiveBottomBar = window.setActiveBottomBar || function(){ /* no-op */
   } catch(e){ console.warn('search-open-on-focus error', e); }
 })();
 </script>
-<section class="hidden onboarding-view min-h-screen flex flex-col justify-between" id="view-onboarding-signin"><div class="p-6"><h2 class="text-xl font-semibold mb-1">Sign in</h2><p class="text-sm text-gray-500">Enter your email and password to continue.</p></div><form class="px-6 pt-2 pb-24" id="signin-form"><label class="block text-sm font-medium mb-1" for="signin-email">Email</label><input class="w-full rounded-xl border px-3 py-3" id="signin-email" placeholder="you@university.edu" required="True" type="email"/><label class="block text-sm font-medium mt-4 mb-1" for="signin-password">Password</label><input class="w-full rounded-xl border px-3 py-3" id="signin-password" minlength="6" placeholder="••••••••" required="True" type="password"/></form><div class="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-t flex gap-3"><button class="btn btn-light flex-1" id="signin-back" type="button">Back</button><button class="btn btn-primary flex-1" id="signin-submit" type="submit">Sign in</button></div></section><script id="ah-mobile-pwa-signin-js">
+
+<script>
+// --- Injected by ChatGPT: override onboarding gate to allow immediate app access ---
 (function(){
-  var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-  function show(id){
-    document.querySelectorAll('.onboarding-view').forEach(function(v){ v.classList.add('hidden'); });
-    var el = document.getElementById(id);
-    if (el) el.classList.remove('hidden');
-  }
-  // Reveal the PWA-only "Sign in" button
-  if (isStandalone) {
-    document.querySelectorAll('.pwa-only').forEach(function(e){ e.classList.remove('hidden'); });
-  }
-  // Wire buttons
-  var signInBtn = document.getElementById('onboarding-btn-signin-mobile');
-  if (signInBtn) {
-    signInBtn.addEventListener('click', function(e){
-      e.preventDefault();
-      document.body.classList.add('onboarding-mode'); // hide app chrome during flow
-      show('view-onboarding-signin');
-      document.getElementById('signin-email')?.focus();
-    });
-  }
-  var backBtn = document.getElementById('signin-back');
-  if (backBtn) {
-    backBtn.addEventListener('click', function(e){
-      e.preventDefault();
-      show('view-onboarding-welcome');
-    });
-  }
-  var form = document.getElementById('signin-form');
-  if (form) {
-    form.addEventListener('submit', function(e){
-      e.preventDefault();
-      var email = (document.getElementById('signin-email')||{}).value || '';
-      var pw = (document.getElementById('signin-password')||{}).value || '';
-      // Basic checks
-      var ok = !!email && /@/.test(email) && pw && pw.length >= 6;
-      if (!ok) { alert('Enter a valid email and a password (≥ 6 chars).'); return; }
-      // Persist a minimal "signed-in" user; your existing boot code will pick this up.
-      try {
-        var user = { email: email, name: null, signed_in_at: new Date().toISOString(), source: 'pwa-signin' };
-        localStorage.setItem('ah_user_v1', JSON.stringify(user));
-      } catch(e){}
-      // Let the rest of the app rehydrate state
-      location.reload();
-    });
-  }
-})();
-</script><script id="ah-wire-tab-signup-to-onboarding-js">
-(function(){
-  // Return true for mobile-ish environments (PWA or small viewport)
-  function isMobileish(){
-    var standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-    var narrow = Math.max(window.innerWidth, window.innerHeight) <= 820;
-    var mobUA = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-    return standalone || narrow || mobUA;
-  }
-  function showOnboardingWelcome(){
-    document.body.classList.add('onboarding-mode'); // hide app chrome
-    // hide modal if present
-    var modal = document.getElementById('authModal');
-    if (modal){
-      modal.setAttribute('data-open','false');
-      modal.setAttribute('aria-hidden','true');
-      modal.setAttribute('data-state','open');
-      document.body.style.overflow = '';
+  try {
+    window.hasCompletedOnboarding = function(){ return true; };
+    try { localStorage.setItem('ah_onboarded_v1', 'true'); } catch(e){}
+    document.documentElement.classList.remove('onboarding-mode');
+    document.body && document.body.classList.remove('onboarding-mode');
+    if (typeof window.enterOnboarding === 'function') {
+      window.enterOnboarding = function(){
+        document.documentElement.classList.remove('onboarding-mode');
+        document.body && document.body.classList.remove('onboarding-mode');
+        if (typeof routeFromURL === 'function') {
+          try { routeFromURL(); } catch(e){}
+        }
+      };
     }
-    // Show the welcome step
-    document.querySelectorAll('.onboarding-view').forEach(function(v){ v.classList.add('hidden'); });
-    var w = document.getElementById('view-onboarding-welcome') || document.querySelector('[data-step-panel="welcome"]');
-    if (w) { w.classList.remove('hidden'); }
-    // focus a primary action if available
-    var cta = document.getElementById('onboarding-btn-continue-email') || w?.querySelector('button, [href], input');
-    try { cta && cta.focus({preventScroll:true}); } catch(e){}
-  }
-
-  var tabSignup = document.getElementById('tab-signup');
-  if (tabSignup){
-    tabSignup.addEventListener('click', function(e){
-      if (!isMobileish()) return; // keep desktop behavior
-      e.preventDefault(); e.stopPropagation();
-      showOnboardingWelcome();
-    }, true);
-  }
-
-  // Also catch any inline "Sign up" links/buttons inside the modal content
-  var modal = document.getElementById('authModal');
-  if (modal){
-    modal.addEventListener('click', function(e){
-      var t = e.target.closest('a,button');
-      if (!t) return;
-      var label = (t.getAttribute('aria-label') || t.textContent || '').trim().toLowerCase();
-      if (/\bsign\s*up\b/.test(label) && isMobileish()){
-        e.preventDefault(); e.stopPropagation();
-        showOnboardingWelcome();
+    function safeRoute(){
+      if (typeof routeFromURL === 'function') {
+        try { routeFromURL(); } catch(e){}
       }
-    }, true);
-  }
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', safeRoute, { once:true });
+    } else {
+      setTimeout(safeRoute, 0);
+    }
+  } catch(e){ console.warn('Onboarding override error', e); }
 })();
-</script></body>
+</script>
+</body>
 </html>
