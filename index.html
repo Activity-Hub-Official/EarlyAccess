@@ -3372,10 +3372,8 @@ async function routeFromURL(){
     (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
     (window.navigator.standalone === true);
 
-  if (isStandalone && !hasCompletedOnboarding()){
-    enterOnboarding();
-    return;
-  }
+  // UNGATED v4: standalone PWA must NOT auto-onboard.
+// (was: if (isStandalone && !hasCompletedOnboarding()) { enterOnboarding(); return; })
 
   // normal entry point
   routeFromURL();
