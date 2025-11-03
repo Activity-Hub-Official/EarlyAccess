@@ -1,38 +1,11 @@
 <!DOCTYPE html>
 
 <html lang="en">
-<head>
 
+
+<!-- UNGATED: Users can browse without creating an account -->
 <script>
-// --- Injected by ChatGPT: minimal jQuery-ready shim to avoid '$ is not defined' errors ---
-(function(){
-  if (!window.$) {
-    function ready(fn){ 
-      if (document.readyState !== 'loading') fn();
-      else document.addEventListener('DOMContentLoaded', fn, { once:true });
-    }
-    function stubSel(){ 
-      return {
-        on: function(){ return this; },
-        click: function(){ return this; },
-        hide: function(){ return this; },
-        show: function(){ return this; },
-        addClass: function(){ return this; },
-        removeClass: function(){ return this; },
-        text: function(){ return this; },
-        val: function(){ return this; }
-      };
-    }
-    var $shim = function(arg){
-      if (typeof arg === 'function') { ready(arg); return; }
-      if (arg === document || arg === window) { return { ready: ready }; }
-      // Very small selector stub (non-functional, prevents crashes):
-      return stubSel();
-    };
-    window.$ = $shim;
-    window.jQuery = $shim;
-  }
-})();
+  window.AH_REQUIRE_ONBOARDING = false;
 </script>
 
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
@@ -5299,34 +5272,35 @@ window.setActiveBottomBar = window.setActiveBottomBar || function(){ /* no-op */
 </script>
 
 <script>
-// --- Injected by ChatGPT: override onboarding gate to allow immediate app access ---
+document.addEventListener('DOMContentLoaded', function(){
+  try {
+    var ids = ['view-directory','view-search','view-detail','bottom-bar','topbar'];
+    ids.forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) { el.classList && el.classList.remove('hidden'); el.removeAttribute && el.removeAttribute('aria-hidden'); }
+    });
+    document.body && document.body.classList && document.body.classList.remove('onboarding-mode');
+  } catch(e){}
+});
+</script>
+
+
+<script>
 (function(){
   try {
-    window.hasCompletedOnboarding = function(){ return true; };
-    try { localStorage.setItem('ah_onboarded_v1', 'true'); } catch(e){}
-    document.documentElement.classList.remove('onboarding-mode');
-    document.body && document.body.classList.remove('onboarding-mode');
-    if (typeof window.enterOnboarding === 'function') {
-      window.enterOnboarding = function(){
-        document.documentElement.classList.remove('onboarding-mode');
-        document.body && document.body.classList.remove('onboarding-mode');
-        if (typeof routeFromURL === 'function') {
-          try { routeFromURL(); } catch(e){}
-        }
-      };
-    }
-    function safeRoute(){
-      if (typeof routeFromURL === 'function') {
-        try { routeFromURL(); } catch(e){}
-      }
-    }
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', safeRoute, { once:true });
-    } else {
-      setTimeout(safeRoute, 0);
-    }
-  } catch(e){ console.warn('Onboarding override error', e); }
+    var _enter = window.enterOnboarding;
+    window.enterOnboarding = function(){
+      document.body && document.body.classList && document.body.classList.add('onboarding-mode');
+      if (typeof _enter === 'function') return _enter.apply(this, arguments);
+    };
+  } catch(e){}
+  try {
+    var _exit = window.exitOnboarding;
+    window.exitOnboarding = function(){
+      document.body && document.body.classList && document.body.classList.remove('onboarding-mode');
+      if (typeof _exit === 'function') return _exit.apply(this, arguments);
+    };
+  } catch(e){}
 })();
-</script>
-</body>
+</script</body>
 </html>
