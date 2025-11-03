@@ -5318,5 +5318,56 @@ window.setActiveBottomBar = window.setActiveBottomBar || function(){ /* no-op */
     });
   }
 })();
+</script><script id="ah-wire-tab-signup-to-onboarding-js">
+(function(){
+  // Return true for mobile-ish environments (PWA or small viewport)
+  function isMobileish(){
+    var standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    var narrow = Math.max(window.innerWidth, window.innerHeight) <= 820;
+    var mobUA = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+    return standalone || narrow || mobUA;
+  }
+  function showOnboardingWelcome(){
+    document.body.classList.add('onboarding-mode'); // hide app chrome
+    // hide modal if present
+    var modal = document.getElementById('authModal');
+    if (modal){
+      modal.setAttribute('data-open','false');
+      modal.setAttribute('aria-hidden','true');
+      modal.setAttribute('data-state','open');
+      document.body.style.overflow = '';
+    }
+    // Show the welcome step
+    document.querySelectorAll('.onboarding-view').forEach(function(v){ v.classList.add('hidden'); });
+    var w = document.getElementById('view-onboarding-welcome') || document.querySelector('[data-step-panel="welcome"]');
+    if (w) { w.classList.remove('hidden'); }
+    // focus a primary action if available
+    var cta = document.getElementById('onboarding-btn-continue-email') || w?.querySelector('button, [href], input');
+    try { cta && cta.focus({preventScroll:true}); } catch(e){}
+  }
+
+  var tabSignup = document.getElementById('tab-signup');
+  if (tabSignup){
+    tabSignup.addEventListener('click', function(e){
+      if (!isMobileish()) return; // keep desktop behavior
+      e.preventDefault(); e.stopPropagation();
+      showOnboardingWelcome();
+    }, true);
+  }
+
+  // Also catch any inline "Sign up" links/buttons inside the modal content
+  var modal = document.getElementById('authModal');
+  if (modal){
+    modal.addEventListener('click', function(e){
+      var t = e.target.closest('a,button');
+      if (!t) return;
+      var label = (t.getAttribute('aria-label') || t.textContent || '').trim().toLowerCase();
+      if (/\bsign\s*up\b/.test(label) && isMobileish()){
+        e.preventDefault(); e.stopPropagation();
+        showOnboardingWelcome();
+      }
+    }, true);
+  }
+})();
 </script></body>
 </html>
