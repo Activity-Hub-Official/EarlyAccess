@@ -1,8 +1,8 @@
 {
   "name": "Activity Hub",
-  "short_name": "ActivityHub",
-  "start_url": "./?source=pwa",
-  "scope": "./",
+  "short_name": "Activity Hub",
+  "start_url": "/?source=pwa",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#0B0E14",
   "theme_color": "#1F2937",
@@ -25,5 +25,6 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "id": "/"
 }
