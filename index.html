@@ -798,11 +798,151 @@ html.ah-modal-open, body.ah-modal-open { overflow: hidden !important; height: 10
 </script>
 
 <!-- Mobile Browser Interstitial (shown when NOT in PWA standalone) -->
-<div class="fixed inset-0 z-[9999] hidden items-center justify-center bg-white" id="mobile-browser-interstitial">
-<div class="w-full max-w-sm mx-auto px-6 text-center">
-<div class="mx-auto w-20 h-20 rounded-2xl overflow-hidden mb-4">
-<img alt="Activity Hub" class="w-full h-full object-cover select-none" loading="lazy" src="https://i.imgur.com/7dO0mhL.png"/>
+
+<!-- Mobile Browser Interstitial v2 -->
+<div id="mobile-browser-interstitial" class="fixed inset-0 z-[1000] bg-black/70 backdrop-blur-sm flex items-stretch justify-center">
+  <div class="relative w-full max-w-md mx-auto my-0 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-50 h-[100svh] flex flex-col">
+    <!-- Header -->
+    <header class="px-5 pt-6 pb-3">
+      <div class="flex items-center gap-3">
+        <img alt="App" src="/icons/icon-192.png" class="h-9 w-9 rounded-xl shadow" onerror="this.style.display='none'"/>
+        <div class="flex flex-col">
+          <h1 class="text-xl font-semibold">Get the Activity Hub App</h1>
+          <p class="text-sm text-neutral-500 dark:text-neutral-400">Install for a faster, full‑screen experience.</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Views container -->
+    <main id="ah-ms-views" class="flex-1 overflow-y-auto px-5 pb-6">
+      <!-- Main choice view -->
+      <section id="ah-ms-view-main" class="space-y-4">
+        <button id="ah-choose-ios" class="w-full rounded-2xl border border-neutral-200 dark:border-neutral-800 p-4 text-left hover:bg-neutral-50 dark:hover:bg-neutral-800/50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <div class="flex items-center gap-3">
+            <span class="iOS-icon h-8 w-8 rounded-xl bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 grid place-items-center font-semibold"></span>
+            <div class="flex-1">
+              <div class="font-medium">iPhone / iPad</div>
+              <div class="text-sm text-neutral-500">Tap to see install steps</div>
+            </div>
+            <span aria-hidden="true" class="text-neutral-400">›</span>
+          </div>
+        </button>
+
+        <button id="ah-choose-android" class="w-full rounded-2xl border border-neutral-200 dark:border-neutral-800 p-4 text-left hover:bg-neutral-50 dark:hover:bg-neutral-800/50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <div class="flex items-center gap-3">
+            <span class="Android-icon h-8 w-8 rounded-xl bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 grid place-items-center font-semibold">🤖</span>
+            <div class="flex-1">
+              <div class="font-medium">Android</div>
+              <div class="text-sm text-neutral-500">Tap to see install steps</div>
+            </div>
+            <span aria-hidden="true" class="text-neutral-400">›</span>
+          </div>
+        </button>
+      </section>
+
+      <!-- iOS detail view -->
+      <section id="ah-ms-view-ios" class="hidden space-y-5">
+        <div class="flex items-center gap-2">
+          <button id="ah-ios-back" class="px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/50">← Back</button>
+          <h2 class="text-lg font-semibold">Install on iPhone / iPad</h2>
+        </div>
+
+        <article class="rounded-2xl border border-neutral-200 dark:border-neutral-800 p-4 space-y-2">
+          <h3 class="font-medium">Newer iOS (iOS 16 and later)</h3>
+          <ol class="list-decimal list-inside space-y-1 text-sm text-neutral-700 dark:text-neutral-300">
+            <li>Open in <b>Safari</b>.</li>
+            <li>Tap the <b>Share</b> icon.</li>
+            <li>Choose <b>Add to Home Screen</b>.</li>
+            <li>Tap <b>Add</b>. Launch from your Home Screen for a full‑screen app.</li>
+          </ol>
+        </article>
+
+        <article class="rounded-2xl border border-neutral-200 dark:border-neutral-800 p-4 space-y-2">
+          <h3 class="font-medium">Older iOS (iOS 15 and earlier)</h3>
+          <ol class="list-decimal list-inside space-y-1 text-sm text-neutral-700 dark:text-neutral-300">
+            <li>Open in <b>Safari</b> (not in-app browsers).</li>
+            <li>Tap <b>Share</b> (square with arrow).</li>
+            <li>Scroll the sheet if needed, tap <b>Add to Home Screen</b>.</li>
+            <li>Tap <b>Add</b>. Find the icon on your Home Screen.</li>
+          </ol>
+        </article>
+      </section>
+
+      <!-- Android detail view -->
+      <section id="ah-ms-view-android" class="hidden space-y-5">
+        <div class="flex items-center gap-2">
+          <button id="ah-android-back" class="px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/50">← Back</button>
+          <h2 class="text-lg font-semibold">Install on Android</h2>
+        </div>
+
+        <article class="rounded-2xl border border-neutral-200 dark:border-neutral-800 p-4 space-y-2">
+          <h3 class="font-medium">Recent Android (Android 13+ / Chrome)</h3>
+          <ol class="list-decimal list-inside space-y-1 text-sm text-neutral-700 dark:text-neutral-300">
+            <li>Open in <b>Chrome</b>.</li>
+            <li>Tap <b>⋮</b> menu.</li>
+            <li>Choose <b>Install app</b> or <b>Add to Home screen</b>.</li>
+            <li>Confirm <b>Install</b>. Launch from the app icon.</li>
+          </ol>
+        </article>
+
+        <article class="rounded-2xl border border-neutral-200 dark:border-neutral-800 p-4 space-y-2">
+          <h3 class="font-medium">Older Android (Android 7–12)</h3>
+          <ol class="list-decimal list-inside space-y-1 text-sm text-neutral-700 dark:text-neutral-300">
+            <li>Open in <b>Chrome</b>.</li>
+            <li>Tap <b>⋮</b> menu.</li>
+            <li>Tap <b>Add to Home screen</b> (or <b>Install</b> if shown).</li>
+            <li>Confirm. The app icon will appear on your Home Screen.</li>
+          </ol>
+        </article>
+      </section>
+    </main>
+
+    <!-- Footer link -->
+    <footer class="px-5 pb-[calc(16px+env(safe-area-inset-bottom))] pt-2">
+      <p id="ah-continue-browser" class="text-center text-xs text-neutral-500 underline decoration-dotted cursor-pointer">Continue in browser</p>
+    </footer>
+  </div>
 </div>
+
+<script>
+// Simple view switching for interstitial
+(function(){
+  const el = document.getElementById('mobile-browser-interstitial');
+  if(!el) return;
+  const views = {
+    main: document.getElementById('ah-ms-view-main'),
+    ios: document.getElementById('ah-ms-view-ios'),
+    android: document.getElementById('ah-ms-view-android')
+  };
+  const show = (name) => {
+    Object.values(views).forEach(v => v.classList.add('hidden'));
+    views[name]?.classList.remove('hidden');
+  };
+
+  document.getElementById('ah-choose-ios')?.addEventListener('click', () => show('ios'));
+  document.getElementById('ah-choose-android')?.addEventListener('click', () => show('android'));
+  document.getElementById('ah-ios-back')?.addEventListener('click', () => show('main'));
+  document.getElementById('ah-android-back')?.addEventListener('click', () => show('main'));
+
+  // Continue in browser – small text link at bottom
+  document.getElementById('ah-continue-browser')?.addEventListener('click', () => {
+    // Hide interstitial and clear any scroll locks
+    el.style.display = 'none';
+    document.documentElement.classList.remove('is-mobile-browser', 'ah-modal-open');
+    document.body.classList.remove('ah-modal-open');
+    document.body.style.overflow = '';
+    try { sessionStorage.setItem('ah_mobile_interstitial_dismissed', '1'); } catch(e){}
+  });
+
+  // If devs want persistence on load (optional):
+  try {
+    if (sessionStorage.getItem('ah_mobile_interstitial_dismissed') === '1') {
+      el.style.display = 'none';
+      document.documentElement.classList.remove('is-mobile-browser');
+    }
+  } catch(e){}
+})();
+</script>
 <h1 class="text-2xl font-semibold mb-2">Use the early beta mobile app</h1>
 <p class="text-gray-600 mb-6">Add Activity Hub to your Home Screen to get the best experience on mobile.</p>
 <div class="space-y-2 text-sm text-gray-700">
