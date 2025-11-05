@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en"><head><!--OG/Twitter tags inserted by ChatGPT — customize the placeholder values below.
-REQUIRED: Replace og:url, og:image, and text fields with real content.
-Recommended image sizes: 1200x630 (main), 1080x1080 (square fallback).--><link href="https://activityhub.example.com/your-page" rel="canonical"/><meta content="website" property="og:type"/><meta content="Activity Hub — Discover What’s Happening on Campus" property="og:title"/><meta content="One place to find every club, event, and project on campus. Smart filters, verified pages, and instant RSVPs." property="og:description"/><meta content="https://activityhub.example.com/your-page" property="og:url"/><meta content="Activity Hub" property="og:site_name"/><meta content="https://i.imgur.com/56XhIRS.png" property="og:image"/><meta content="https://i.imgur.com/56XhIRS.png" property="og:image:secure_url"/><meta content="Activity Hub logo over a collage of campus events." property="og:image:alt"/><meta content="https://i.imgur.com/56XhIRS.png" property="og:image"/><meta content="summary_large_image" name="twitter:card"/><meta content="Activity Hub — Discover What’s Happening on Campus" name="twitter:title"/><meta content="One place to find every club, event, and project on campus. Smart filters, verified pages, and instant RSVPs." name="twitter:description"/><meta content="https://i.imgur.com/56XhIRS.png" name="twitter:image"/><meta content="@YourHandle" name="twitter:site"/></head>
+<html lang="en">
 <!-- UNGATED: Users can browse without creating an account -->
 <script>
   window.AH_REQUIRE_ONBOARDING = false;
@@ -15,8 +13,8 @@ Recommended image sizes: 1200x630 (main), 1080x1080 (square fallback).--><link h
 <title>Activity Hub – Explore (v25)</title>
 <!-- App & site icons -->
 <link href="https://i.imgur.com/7dO0mhL.png" rel="apple-touch-icon" sizes="180x180"/>
-<link href="https://i.imgur.com/SeNBgAx.png" rel="icon" type="image/png"/>
-<link href="https://i.imgur.com/SeNBgAx.png" rel="shortcut icon">
+<link href="https://i.imgur.com/SeNBgAx.png" rel="icon" type="image/png">
+<link href="https://i.imgur.com/SeNBgAx.png" rel="shortcut icon"/>
 <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.basic.min.js"></script>
 <script>
@@ -6129,6 +6127,91 @@ document.addEventListener('DOMContentLoaded', function(){
   wireSmartEnter('#view-onboarding-account form');
   wireSmartEnter('#auth-modal form');
   wireSmartEnter('#dsu-signup-form');
+})();
+</script><script>
+/** ---------- Multi-source account validation patch (ChatGPT) ---------- **/
+(function(){
+  const AH_ACCOUNTS_SOURCES = [
+    'https://sheet2api.com/v1/6ZHKuaw2RnaO/created_accounts', // new
+    'https://sheet2api.com/v1/6ZHKuaw2RnaO/legacy-accounts',  // legacy
+  ];
+
+  async function fetchJson(url, { timeoutMs = 8000 } = {}) {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), timeoutMs);
+    try {
+      const res = await fetch(url, { signal: ctrl.signal, credentials: 'omit', cache: 'no-store' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return await res.json();
+    } catch (err) {
+      console.warn('[Auth] Failed to fetch', url, err);
+      return [];
+    } finally {
+      clearTimeout(t);
+    }
+  }
+
+  function mergeByEmailUnique(...lists) {
+    const seen = new Set();
+    const merged = [];
+    for (const list of lists) {
+      if (!Array.isArray(list)) continue;
+      for (const row of list) {
+        const emailKey = (row && row.Email ? String(row.Email) : '').trim().toLowerCase();
+        if (!emailKey || seen.has(emailKey)) continue;
+        seen.add(emailKey);
+        merged.push(row);
+      }
+    }
+    return merged;
+  }
+
+  function normalizeRow(row) {
+    const out = { ...row };
+    if (typeof out.Email === 'string') out.Email = out.Email.trim();
+    if (typeof out.Password === 'string') out.Password = out.Password.trim();
+    if (typeof out['Profile Image URL'] === 'string') out['Profile Image URL'] = out['Profile Image URL'].trim();
+    return out;
+  }
+
+  // Replacement: this overrides any earlier function with the same name
+  window.validateCredentials = async function(email, password) {
+    const inputEmail = (email || '').trim().toLowerCase();
+    const inputPass  = (password || '').trim();
+    const [createdRows, legacyRows] = await Promise.all(
+      AH_ACCOUNTS_SOURCES.map(u => fetchJson(u))
+    );
+    const merged = mergeByEmailUnique(createdRows, legacyRows).map(normalizeRow);
+    const match = merged.find(r =>
+      r && typeof r.Email === 'string' && typeof r.Password === 'string' &&
+      r.Email.trim().toLowerCase() === inputEmail &&
+      r.Password.trim() === inputPass
+    );
+    if (!match) return null;
+    const { Password, ...safe } = match;
+    return safe;
+  };
+
+  // Optional cached variant: call validateCredentialsCached(...) if desired
+  let __ahAccountsCache = null;
+  window.validateCredentialsCached = async function(email, password) {
+    if (!__ahAccountsCache) {
+      const [createdRows, legacyRows] = await Promise.all(
+        AH_ACCOUNTS_SOURCES.map(u => fetchJson(u))
+      );
+      __ahAccountsCache = mergeByEmailUnique(createdRows, legacyRows).map(normalizeRow);
+    }
+    const inputEmail = (email || '').trim().toLowerCase();
+    const inputPass  = (password || '').trim();
+    const match = __ahAccountsCache.find(r =>
+      r && typeof r.Email === 'string' && typeof r.Password === 'string' &&
+      r.Email.trim().toLowerCase() === inputEmail &&
+      r.Password.trim() === inputPass
+    );
+    if (!match) return null;
+    const { Password, ...safe } = match;
+    return safe;
+  };
 })();
 </script></body>
 </link></html>
