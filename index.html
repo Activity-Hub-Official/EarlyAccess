@@ -1,35 +1,3 @@
-<style>
-/* Bottom footer link for interstitial */
-#mobile-browser-interstitial .interstitial-footer {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
-  display: flex;
-  justify-content: center;
-  pointer-events: none; /* only the link is clickable */
-  z-index: 2147483647; /* above the interstitial card */
-}
-#mobile-browser-interstitial .interstitial-continue-link {
-  pointer-events: auto;
-  font-size: 0.875rem;           /* ~14px */
-  text-decoration: underline;
-  opacity: 0.7;                   /* low emphasis */
-  color: currentColor;            /* adapts to light/dark */
-  padding: 6px 10px;
-  border-radius: 10px;
-}
-#mobile-browser-interstitial .interstitial-continue-link:focus-visible {
-  outline: 2px solid currentColor;
-  outline-offset: 2px;
-  opacity: 0.9;
-}
-@supports (height: 100svh) {
-  #mobile-browser-interstitial .interstitial-footer {
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
-  }
-}
-</style>
 <!DOCTYPE html>
 
 <html lang="en">
@@ -835,16 +803,16 @@ html.ah-modal-open, body.ah-modal-open { overflow: hidden !important; height: 10
 </script>
 <!-- Mobile Browser Interstitial (shown when NOT in PWA standalone) -->
 <div class="fixed inset-0 z-[9999] hidden items-center justify-center bg-white" id="mobile-browser-interstitial">
-<div class="w-full max-w-sm mx-auto px-6 text-center">
-<div class="mx-auto w-20 h-20 rounded-2xl overflow-hidden mb-4">
-<img alt="Activity Hub" class="w-full h-full object-cover select-none" loading="lazy" src="https://i.imgur.com/7dO0mhL.png"/>
-
 <!-- Footer link: subtle, bottom-pinned -->
     <div class="interstitial-footer" aria-hidden="false">
       <a id="interstitial-continue" href="#" class="interstitial-continue-link">
         Continue in browser
       </a>
     </div>
+
+<div class="w-full max-w-sm mx-auto px-6 text-center">
+<div class="mx-auto w-20 h-20 rounded-2xl overflow-hidden mb-4">
+<img alt="Activity Hub" class="w-full h-full object-cover select-none" loading="lazy" src="https://i.imgur.com/7dO0mhL.png"/>
 </div>
 <h1 class="text-2xl font-semibold mb-2">Use the early beta mobile app</h1>
 <p class="text-gray-600 mb-6">Add Activity Hub to your Home Screen to get the best experience on mobile.</p>
@@ -853,7 +821,7 @@ html.ah-modal-open, body.ah-modal-open { overflow: hidden !important; height: 10
 <p><strong>Android (Chrome/Brave):</strong> Tap <em>⋮</em> → <em>Add to Home screen</em>.</p>
 </div>
 <div class="mt-6">
-<button class="px-4 py-2 rounded-xl border text-gray-700" id="continue-in-browser">Continue in browser</button>
+
 </div>
 </div>
 </div>
@@ -6285,11 +6253,9 @@ document.addEventListener('DOMContentLoaded', function(){
     var overlay = document.getElementById('mobile-browser-interstitial');
     if (overlay) overlay.style.display = 'none';
   }
-  // Optional: remember for this session
   function rememberDismiss(){
     try { sessionStorage.setItem('dismissedInterstitial', '1'); } catch(e){}
   }
-  // Click handler
   document.addEventListener('click', function(e){
     var t = e.target;
     if (t && t.id === 'interstitial-continue') {
@@ -6298,8 +6264,6 @@ document.addEventListener('DOMContentLoaded', function(){
       rememberDismiss();
     }
   }, true);
-
-  // On load, skip if dismissed already this session
   try {
     if (sessionStorage.getItem('dismissedInterstitial') === '1') {
       hideInterstitial();
