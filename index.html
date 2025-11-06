@@ -1,3 +1,67 @@
+<style>
+/* === Interstitial overlay fixes === */
+html.is-mobile-browser #mobile-browser-interstitial {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100svh !important;
+  height: 100dvh !important;
+  height: 100vh !important;
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  background: #ffffff;
+  z-index: 2147483646;
+}
+
+/* Hide underlying fixed headers/bars only while overlay is up (defensive) */
+html.is-mobile-browser .fixed, 
+html.is-mobile-browser [data-fixed="true"] {
+  visibility: hidden;
+}
+
+/* Footer link pinned bottom & centered */
+#mobile-browser-interstitial .interstitial-footer {
+  position: absolute !important;
+  left: 0;
+  right: 0;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+  display: flex;
+  justify-content: center;
+  pointer-events: none; /* only the link is clickable */
+  z-index: 2147483647;
+  padding: 0 12px;
+  text-align: center;
+}
+
+#mobile-browser-interstitial .interstitial-continue-link {
+  pointer-events: auto;
+  display: inline-block;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  text-decoration: underline;
+  opacity: 0.75;
+  color: #111; /* subtle but legible on white */
+  padding: 6px 10px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+#mobile-browser-interstitial .interstitial-continue-link:active,
+#mobile-browser-interstitial .interstitial-continue-link:hover {
+  opacity: 0.95;
+}
+
+#mobile-browser-interstitial .interstitial-continue-link:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+  opacity: 0.95;
+}
+</style>
 <!DOCTYPE html>
 
 <html lang="en">
@@ -6269,6 +6333,31 @@ document.addEventListener('DOMContentLoaded', function(){
       hideInterstitial();
     }
   } catch(e){}
+})();
+</script>
+<script>
+(function(){
+  // Ensure dismissal hides overlay and restores visibility
+  function hideInterstitial(){
+    document.documentElement.classList.remove('is-mobile-browser');
+    var overlay = document.getElementById('mobile-browser-interstitial');
+    if (overlay) {
+      overlay.style.display = 'none';
+      overlay.style.visibility = 'hidden';
+    }
+    // reveal any fixed elements we hid defensively
+    document.querySelectorAll('.fixed,[data-fixed="true"]').forEach(function(el){
+      el.style.visibility = '';
+    });
+  }
+  // If our handler already exists, we won't duplicate. We'll still ensure click is bound.
+  document.addEventListener('click', function(e){
+    var t = e.target;
+    if (t && t.id === 'interstitial-continue') {
+      e.preventDefault();
+      hideInterstitial();
+    }
+  }, true);
 })();
 </script>
 </body>
