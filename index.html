@@ -1,3 +1,17 @@
+<head>
+<style id="search-padding-patch">
+  :root {
+    --search-icon-left: 12px;   /* distance from left edge to icon */
+    --search-icon-size: 18px;   /* icon box size */
+    --search-icon-gap: 10px;    /* space between icon and text */
+  }
+  /* Ensure placeholder and typed text don't overlap the icon */
+  #global-search,
+  #mobile-global-search {
+    padding-left: calc(var(--search-icon-left) + var(--search-icon-size) + var(--search-icon-gap)) !important;
+  }
+</style>
+</head>
 <style>
 /* Bottom footer link for interstitial */
 #mobile-browser-interstitial .interstitial-footer {
@@ -33,33 +47,6 @@
 <!DOCTYPE html>
 
 <html lang="en">
-<head>
-<!-- Canonical -->
-  <link rel="canonical" href="https://activityhub.org/">
-
-  <!-- Basic SEO -->
-  <title>Activity Hub — Explore clubs & events near you</title>
-  <meta name="description" content="Discover campus clubs, events, and student projects in one place. Follow what interests you and never miss what’s happening.">
-
-  <!-- Open Graph -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://activityhub.org/">
-  <meta property="og:title" content="Activity Hub — Explore clubs & events near you">
-  <meta property="og:description" content="Discover campus clubs, events, and student projects in one place.">
-  <meta property="og:image" content="https://i.imgur.com/56XhIRS.png">
-  <meta property="og:site_name" content="Activity Hub">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Activity Hub — Explore clubs & events near you">
-  <meta name="twitter:description" content="Discover campus clubs, events, and student projects in one place.">
-  <meta name="twitter:image" content="https://i.imgur.com/56XhIRS.png">
-  <!-- Optional if you have a handle -->
-  <!-- <meta name="twitter:site" content="@activityhub"> -->
-</head>
-
 <!-- UNGATED: Users can browse without creating an account -->
 <script>
   window.AH_REQUIRE_ONBOARDING = false;
