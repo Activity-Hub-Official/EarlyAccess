@@ -1,4 +1,19 @@
 <head>
+<script>
+// Global HTML escaper (idempotent, tiny)
+if (typeof window.esc !== 'function') {
+  window.esc = function (s) {
+    s = (s ?? '').toString();
+    return s
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#39;');
+  };
+}
+</script>
+
   <meta name="twitter:image" content="https://i.imgur.com/ZivX6GV.png">
   <meta name="twitter:description" content="Discover campus clubs, events, and student projects in one place.">
   <meta name="twitter:title" content="Activity Hub — Explore clubs & events near you">
@@ -6333,6 +6348,41 @@ document.addEventListener('DOMContentLoaded', function(){
       hideInterstitial();
     }
   } catch(e){}
+})();
+</script>
+<script>
+(function(){
+  // Guard: only define if not already present
+  if (typeof window.makeLink !== "function") {
+    const DDG_ICON  = (host) => `https://icons.duckduckgo.com/ip3/${host}.ico`;
+    const getHost   = (url) => { try { return new URL(url).hostname.replace(/^www\./,''); } catch { return ''; } };
+    const faviconFor = (platform, href) => {
+      switch (platform) {
+        case 'website':   return DDG_ICON(getHost(href) || 'example.com');
+        case 'instagram': return DDG_ICON('instagram.com');
+        case 'x':         return DDG_ICON('x.com');
+        case 'facebook':  return DDG_ICON('facebook.com');
+        case 'linkedin':  return DDG_ICON('linkedin.com');
+        case 'youtube':   return DDG_ICON('youtube.com');
+        case 'tiktok':    return DDG_ICON('tiktok.com');
+        case 'discord':   return DDG_ICON('discord.gg');
+        case 'groupme':   return DDG_ICON('groupme.com');
+        case 'linktree':  return DDG_ICON('linktr.ee');
+        case 'email':     return DDG_ICON('gmail.com');
+        default:          return DDG_ICON('example.com');
+      }
+    };
+    window.makeLink = (platform, raw) => {
+      try {
+        // use site's existing normPlatform if present
+        const href = (typeof window.normPlatform === "function")
+          ? window.normPlatform(platform, raw)
+          : (raw || '').toString();
+        if (!href) return null;
+        return { platform, href, icon: faviconFor(platform, href) };
+      } catch (e) { return null; }
+    };
+  }
 })();
 </script>
 </body>
