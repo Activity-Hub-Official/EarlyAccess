@@ -6335,6 +6335,79 @@ document.addEventListener('DOMContentLoaded', function(){
   } catch(e){}
 })();
 </script>
+
+<script>
+/* Minimal rIC fallback */
+window.requestIdleCallback = window.requestIdleCallback || function (cb) {
+  const start = Date.now();
+  return setTimeout(() => cb({ didTimeout: false, timeRemaining: () => Math.max(0, 50 - (Date.now() - start)) }), 1);
+};
+
+(function () {
+  const FIRST_OPEN_KEY = 'ah_pwa_first_open_done_v1';
+  const USER_KEY = 'ah_user_v1';
+
+  function isPWA() {
+    const standaloneMM = window.matchMedia && (
+      window.matchMedia('(display-mode: standalone)').matches ||
+      window.matchMedia('(display-mode: window-controls-overlay)').matches
+    );
+    return Boolean(standaloneMM || window.navigator.standalone);
+  }
+
+  function firstOpenAlreadyHandled() {
+    return localStorage.getItem(FIRST_OPEN_KEY) === '1';
+  }
+
+  function markFirstOpenHandled() {
+    localStorage.setItem(FIRST_OPEN_KEY, '1');
+  }
+
+  function getSavedUser() {
+    try { return JSON.parse(localStorage.getItem(USER_KEY) || 'null'); }
+    catch (_) { return null; }
+  }
+
+  function openLoginModal() {
+    if (typeof openAuthModal === 'function') openAuthModal('login');
+    else document.getElementById('loginBtn')?.click();
+  }
+
+  function openAvatarDropdown() {
+    const btn = document.getElementById('avatarBtn');
+    if (btn) btn.click();
+  }
+
+  function scheduleOpen() {
+    const prefersReduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const delay = prefersReduced ? 120 : 250;
+
+    function go() {
+      requestIdleCallback(() => setTimeout(() => {
+        const user = getSavedUser();
+        if (user) openAvatarDropdown();
+        else openLoginModal();
+        markFirstOpenHandled();
+      }, delay));
+    }
+
+    if (document.visibilityState === 'visible') go();
+    else document.addEventListener('visibilitychange', function once() {
+      if (document.visibilityState === 'visible') { document.removeEventListener('visibilitychange', once); go(); }
+    });
+  }
+
+  if (new URL(location.href).searchParams.get('noauto') === '1') {
+    localStorage.removeItem(FIRST_OPEN_KEY);
+  }
+
+  if (isPWA() && !firstOpenAlreadyHandled()) {
+    if (document.readyState === 'complete' || document.readyState === 'interactive') scheduleOpen();
+    else document.addEventListener('DOMContentLoaded', scheduleOpen, { once: true });
+  }
+})();
+</script>
+
 </body>
 </link></html>
 <script>
