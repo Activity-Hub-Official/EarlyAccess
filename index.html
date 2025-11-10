@@ -1446,7 +1446,7 @@ html.ah-modal-open, body.ah-modal-open { overflow: hidden !important; height: 10
 </section>
 <section class="py-6" id="overview-contact-inline">
 <h2 class="text-lg font-semibold mb-2">Contact Info</h2>
-<div class="text-sm text-gray-700">this is a test</div>
+<div id="overview-emails" class="mt-2 flex flex-wrap gap-2"></div>
 </section>
 <section class="py-6">
 <h2 class="text-lg font-semibold mb-2">Links</h2>
@@ -4039,88 +4039,7 @@ document.addEventListener('DOMContentLoaded', function(){
   }catch(e){ /* noop */ }
 });
 </script>
-<script id="contact-email-populator">
-(function(){
-  if (window.__contactEmailInit) return; window.__contactEmailInit = true;
-
-  function slug(s){ return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,''); }
-  function parseEmails(v){
-    v = String(v||'').trim();
-    if(!v) return [];
-    // Some rows contain "https://email@domain.com/" -> strip scheme/trailing slash
-    v = v.replace(/https?:\/\//gi,'').replace(/\/+/g,'/').replace(/\/$/,'');
-    // Split by | , ; or whitespace blocks
-    const parts = v.split(/[|,;\s]+/g).map(s => s.trim()).filter(Boolean);
-    // Keep only valid-looking emails
-    const emails = parts.filter(x => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(x.toLowerCase()));
-    // De-dupe (case-insensitive)
-    return Array.from(new Set(emails.map(e => e.toLowerCase())));
-  }
-  function emailChip(addr){
-    const href = `mailto:${addr}`;
-    return `<a class="contact-item px-3 py-2 rounded-full bg-gray-100 border border-gray-200 hover:bg-gray-200 transition" href="${href}" rel="nofollow noopener" target="_self">
-      <i class="fa-solid fa-envelope"></i><span>${addr}</span>
-    </a>`;
-  }
-  function setContact(el, emails){
-    if(!el) return;
-    if(!emails || !emails.length){
-      el.innerHTML = '<div class="text-gray-500">No email provided.</div>';
-      return;
-    }
-    el.innerHTML = emails.map(emailChip).join('');
-  }
-
-  async function loadAndRender(){
-    try{
-      // Re-use global API_URL if available
-      var url = (typeof API_URL !== 'undefined' && API_URL) ? API_URL : "https://sheet2api.com/v1/ubMLioGAT8Gm/updated-listings";
-      const u = new URL(window.location.href);
-      const orgSlug = u.searchParams.get('org');
-      if(!orgSlug) return; // Not on a detail page
-
-      const res = await fetch(url, { cache: 'no-store' });
-      const raw = await res.json();
-      const rows = Array.isArray(raw) ? raw : (raw.data || []);
-
-      // Normalize rows and locate the one matching the slug
-      let hit = null;
-      for(const r of rows){
-        const name = (r.name || r.Name || '').toString();
-        const s = slug(name);
-        if(s === orgSlug){ hit = r; break; }
-      }
-      const container = document.querySelector('#panel-contact #d_links');
-      if(!hit){ setContact(container, []); return; }
-
-      // Primary: r.emails (string). Fallback: scrape r.other_links for embedded email-like tokens.
-      let emails = parseEmails(hit.emails || hit.email || '');
-      if(!emails.length && hit.other_links){
-        // pull anything that looks like an email from other_links
-        const m = String(hit.other_links||'').match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi);
-        if(m) emails = parseEmails(m.join(' '));
-      }
-      setContact(container, emails);
-    }catch(e){
-      const container = document.querySelector('#panel-contact #d_links');
-      if(container){
-        container.innerHTML = '<div class="text-red-600">Failed to load contact info.</div>';
-      }
-      console.error('Contact email render error:', e);
-    }
-  }
-
-  // Run on first load and also on history changes (if app uses SPA nav)
-  document.addEventListener('DOMContentLoaded', loadAndRender);
-  window.addEventListener('popstate', loadAndRender);
-  window.addEventListener('hashchange', loadAndRender);
-  // Also refresh when user switches to the Contact tab (if tabs are buttons)
-  document.body.addEventListener('click', function(ev){
-    const t = ev.target.closest && ev.target.closest('[data-tab="ai"], #tab-contact, [href="#contact"]');
-    if(t) setTimeout(loadAndRender, 0);
-  }, { passive: true });
-})();
-</script>
+<!-- removed contact-email-populator (merged into main render) -->
 <script id="no-hscroll-detail-script">
 (function(){
   function isDetail(){
@@ -6406,6 +6325,99 @@ document.addEventListener('DOMContentLoaded', function(){
 })();
 </script>
 
+
+<!-- unified-email-render: begin -->
+<script>
+(function(){
+  // Helper: de-dup & validate emails
+  function __ah_parseEmails(v){
+    try{
+      v = String(v||'').trim();
+      if(!v) return [];
+      // split by common separators
+      var parts = v.split(/[|,;\s]+/g).map(function(s){ return s.trim(); }).filter(Boolean);
+      // also strip any stray protocol fragments
+      var uniq = Array.from(new Set(parts.map(function(x){ return x.toLowerCase(); })));
+      var rx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return uniq.filter(function(x){ return rx.test(x); });
+    }catch(e){ return []; }
+  }
+
+  // Helper: derive emails from a raw row
+  function __ah_emailsFromRow(row){
+    if(!row) return [];
+    var emails = __ah_parseEmails(row.emails || row.email || "");
+    if(!emails.length && row.other_links){
+      try{
+        var matches = String(row.other_links||"").match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi);
+        if(matches) emails = __ah_parseEmails(matches.join(" "));
+      }catch(e){}
+    }
+    return emails;
+  }
+
+  // Patch normalize() to include { email, emails } on the normalized object
+  try{
+    if (typeof window !== "undefined" && typeof window.normalize === "function" && !window.__normalizeEmailPatched){
+      var __oldNormalize = window.normalize;
+      window.normalize = function(row){
+        var o = __oldNormalize(row);
+        try{
+          var emails = __ah_emailsFromRow(row);
+          if(o && Array.isArray(emails)){
+            o.emails = emails;
+            o.email = emails[0] || "";
+          }
+        }catch(e){}
+        return o;
+      };
+      window.__normalizeEmailPatched = true;
+    }
+  }catch(e){ console.warn("normalize email patch failed", e); }
+
+  // Provide Contact render helpers once
+  try{
+    if (typeof window.emailChip !== "function"){
+      window.emailChip = function(addr){
+        var href = "mailto:" + addr;
+        return '<a class="contact-item px-3 py-2 rounded-full bg-gray-100 border border-gray-200 hover:bg-gray-200 transition"'
+             + ' href="'+href+'" rel="nofollow noopener" target="_self">'
+             + ' <i class="fa-solid fa-envelope"></i><span>'+addr+'</span>'
+             + '</a>';
+      };
+    }
+    if (typeof window.setContact !== "function"){
+      window.setContact = function(el, emails){
+        if(!el) return;
+        if(!emails || !emails.length){
+          el.innerHTML = '<div class="text-gray-500">No email provided.</div>';
+          return;
+        }
+        el.innerHTML = emails.map(window.emailChip).join('');
+      };
+    }
+  }catch(e){ console.warn("contact helpers init failed", e); }
+
+  // Patch renderDetail to hydrate Overview → Contact from normalized data in the same render pass
+  try{
+    if (typeof window.renderDetail === "function" && !window.__renderDetailEmailPatched){
+      var __oldRenderDetail = window.renderDetail;
+      window.renderDetail = function(o){
+        var ret = __oldRenderDetail.apply(this, arguments);
+        try{
+          var wrap = document.querySelector('#overview-emails');
+          var emails = Array.isArray(o && o.emails) ? o.emails : (o && o.email ? [o.email] : []);
+          window.setContact && window.setContact(wrap, emails);
+        }catch(e){ console.warn("contact hydrate failed", e); }
+        return ret;
+      };
+      window.__renderDetailEmailPatched = true;
+    }
+  }catch(e){ console.warn("renderDetail email patch failed", e); }
+
+})();
+</script>
+<!-- unified-email-render: end -->
 </body>
 </link></html>
 <script>
