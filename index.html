@@ -106,23 +106,7 @@ if (typeof window.esc !== 'function') {
 })();
 </script>
 <script src="https://cdn.tailwindcss.com"></script>
-<script>
-// --- Prevent pinch/tap zoom (fallback for browsers that ignore viewport flags) ---
-['gesturestart','gesturechange','gestureend'].forEach(evt => {
-  document.addEventListener(evt, function(e){ e.preventDefault(); }, { passive: false });
-});
-// Prevent Ctrl/Cmd + wheel zoom
-document.addEventListener('wheel', function(e){
-  if (e.ctrlKey) { e.preventDefault(); }
-}, { passive: false });
-// Prevent double-tap to zoom (iOS fallback)
-let __lastTouchEnd = 0;
-document.addEventListener('touchend', function(e){
-  const now = Date.now();
-  if (now - __lastTouchEnd <= 350) { e.preventDefault(); }
-  __lastTouchEnd = now;
-}, { passive: false });
-</script>
+<!-- zoom-blocking script removed -->
 <script>
     tailwind.config = {
       theme: {
@@ -3960,24 +3944,24 @@ document.addEventListener('click', function(e){
 </script>
 <!-- Mobile Bottom Bar -->
 <nav class="fixed inset-x-0 bottom-0 z-[45] md:hidden bg-white/95 backdrop-blur border-t border-gray-200 py-2" id="bottom-bar">
-<div class="h-16 flex items-center justify-around pt-[env(safe-area-inset-top)] pb-[calc(env(safe-area-inset-bottom))]">
-<a aria-current="page" class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 aria-[current=page]:text-black min-h-[44px] px-4 py-2" data-route="home" href="?view=home">
+<div class="h-16 flex items-center pt-[env(safe-area-inset-top)] pb-[calc(env(safe-area-inset-bottom))]">
+<a aria-current="page" class="bb-item flex-1 flex flex-col items-center justify-center gap-1 text-xs text-gray-600 aria-[current=page]:text-black min-h-[44px] py-2" data-route="home" href="?view=home">
 <i class="fa-solid fa-house text-[18px]"></i>
 <span>Home</span>
 </a>
-<a class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 min-h-[44px] px-4 py-2" data-route="orgs" href="?view=orgs">
+<a class="bb-item flex-1 flex flex-col items-center justify-center gap-1 text-xs text-gray-600 min-h-[44px] py-2" data-route="orgs" href="?view=orgs">
 <i class="fa-solid fa-users text-[18px]"></i>
 <span>Organizations</span>
 </a>
-<a class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 min-h-[44px] px-4 py-2" data-route="businesses" href="?view=businesses">
+<a class="bb-item flex-1 flex flex-col items-center justify-center gap-1 text-xs text-gray-600 min-h-[44px] py-2" data-route="businesses" href="?view=businesses">
 <i class="fa-solid fa-briefcase text-[18px]"></i>
 <span>Businesses</span>
 </a>
-<a class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 min-h-[44px] px-4 py-2" data-route="projects" href="?view=projects">
+<a class="bb-item flex-1 flex flex-col items-center justify-center gap-1 text-xs text-gray-600 min-h-[44px] py-2" data-route="projects" href="?view=projects">
 <i class="fa-solid fa-diagram-project text-[18px]"></i>
 <span>Projects</span>
 </a>
-<a class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 min-h-[44px] px-4 py-2" data-route="events" href="?view=events">
+<a class="bb-item flex-1 flex flex-col items-center justify-center gap-1 text-xs text-gray-600 min-h-[44px] py-2" data-route="events" href="?view=events">
 <i class="fa-solid fa-calendar-days text-[18px]"></i>
 <span>Events</span>
 </a>
@@ -6385,6 +6369,43 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 })();
 </script>
+
+<script>
+(function(){
+  var bar = document.getElementById('bottom-bar');
+  if (!bar) return;
+
+  function onActivate(e){
+    var a = e.target && e.target.closest ? e.target.closest('[data-route]') : null;
+    if (!a) return;
+    e.preventDefault();
+    e.stopPropagation();
+
+    var view = a.getAttribute('data-route');
+    try {
+      if (typeof navigateToView === 'function') {
+        navigateToView(view, true);
+      } else {
+        // Fallback router: push state, update active states, scroll top
+        if (history && history.pushState) {
+          history.pushState({view:view}, '', '?view=' + encodeURIComponent(view));
+        }
+        if (typeof updateNavCurrent === 'function') updateNavCurrent(view);
+        if (typeof setActiveSidebar === 'function') setActiveSidebar(view);
+        if (typeof setActiveBottomBar === 'function') setActiveBottomBar(view);
+        if (typeof window.scrollTo === 'function') window.scrollTo(0, 0);
+      }
+    } catch (err) {
+      console && console.error && console.error('bottom-bar activation error:', err);
+    }
+  }
+
+  // Use pointerup for reliable touch activation; keep click as a fallback.
+  bar.addEventListener('pointerup', onActivate, { passive: true });
+  bar.addEventListener('click', onActivate, { passive: true });
+})();
+</script>
+
 </body>
 </link></html>
 <script>
