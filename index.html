@@ -109,36 +109,34 @@ if (typeof window.esc !== 'function') {
 </style>
 
 
-<style id="detail-mode-complete-v1">
+<style id="detail-mode-complete-v2">
 :root{
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
-  --ah-blue: #2563eb;       /* blue-600 */
-  --ah-gray: #6b7280;       /* gray-500 */
-  --ah-ink:  #374151;       /* gray-700 */
+  --ah-blue: #2563eb;
+  --ah-gray: #6b7280;
+  --ah-ink:  #374151;
   --bbh: 0px;
 }
 
-/* ===== 1) Hide chrome in detail mode; reclaim space ===== */
+/* === Hide chrome in detail mode and reclaim space === */
 html.detail-mode #appTopBar,
 html.detail-mode .topbar,
 html.detail-mode [data-topbar]{
-  display: none !important;          /* collapse height so content starts higher */
+  display: none !important;
 }
 html.detail-mode #bottom-bar{
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
 }
-
-/* Make sure bottom bar is visible outside detail mode */
 html:not(.detail-mode) #bottom-bar{
   opacity: 1 !important;
   visibility: visible !important;
   pointer-events: auto !important;
 }
 
-/* Cancel any reserved paddings in detail mode */
+/* === Cancel reserved top/bottom spacing in detail mode === */
 html.detail-mode body,
 html.detail-mode main,
 html.detail-mode #app,
@@ -152,7 +150,7 @@ html.detail-mode #view-detail{
 }
 html.detail-mode{ --bbh: 0px !important; }
 
-/* ===== 2) Full-bleed detail content ===== */
+/* === Full-bleed detail content === */
 html.detail-mode #view-detail{
   position: relative;
   z-index: 1;
@@ -166,8 +164,6 @@ html.detail-mode #view-detail article{
   border-radius: 0 !important;
   box-shadow: none !important;
 }
-
-/* Flatten common section cards inside panels */
 html.detail-mode #panel-overview > .space-y-6 > section,
 html.detail-mode #panel-events   > .space-y-6 > section,
 html.detail-mode #panel-ai       > .space-y-6 > section{
@@ -176,23 +172,15 @@ html.detail-mode #panel-ai       > .space-y-6 > section{
   border-radius: 0 !important;
   box-shadow: none !important;
 }
+html.detail-mode #view-detail section{ background: transparent !important; box-shadow: none !important; }
 
-/* Fallback: be aggressive in detail mode so everything looks flush */
-html.detail-mode #view-detail section{
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-/* ===== 3) Tabbar: flush, blue active tab + underline ===== */
-
-/* Flatten any container that holds the tablist (kills white tile) */
+/* === Tabbar: flush background, blue active tab with underline === */
 html.detail-mode #view-detail :has(> [role="tablist"]){
   background: transparent !important;
   border: 0 !important;
   border-radius: 0 !important;
   box-shadow: none !important;
 }
-
 html.detail-mode #view-detail [role="tablist"]{
   display: flex;
   gap: 8px;
@@ -201,75 +189,59 @@ html.detail-mode #view-detail [role="tablist"]{
   border: 0 !important;
   box-shadow: none !important;
   padding: 0 16px;
-  border-bottom: 1px solid rgba(0,0,0,.06); /* hairline across page */
+  border-bottom: 1px solid rgba(0,0,0,.06);
 }
 
-html.detail-mode #view-detail [role="tablist"] [role="tab"]{
+/* Base for tab items */
+html.detail-mode #view-detail [role="tablist"] [role="tab"],
+html.detail-mode #view-detail [role="tablist"] .tab,
+html.detail-mode #view-detail [role="tablist"] a,
+html.detail-mode #view-detail [role="tablist"] button{
   -webkit-appearance: none;
   appearance: none;
   background: transparent;
   border: 0;
-  padding: 12px 10px;
   margin: 0;
   font-weight: 600;
   color: var(--ah-ink);
-  border-bottom: 2px solid transparent;
   outline: none;
   display: inline-flex;
   align-items: center;
   gap: 6px;
   cursor: pointer;
+  position: relative;
+  padding: 12px 10px 12px;
+  border-bottom: 2px solid transparent !important; /* space reserved for underline */
+  /* Make FA icons follow color (incl duotone) */
+  --fa-primary-color: currentColor;
+  --fa-secondary-color: currentColor;
 }
 
-/* inactive */
+/* Inactive */
 html.detail-mode #view-detail [role="tablist"] [role="tab"][aria-selected="false"],
 html.detail-mode #view-detail [role="tablist"] [role="tab"]:not([aria-selected="true"]){
   color: var(--ah-gray);
 }
 
-/* active: blue text + underline */
-html.detail-mode #view-detail [role="tablist"] [role="tab"][aria-selected="true"]{
-  color: var(--ah-blue);
-  border-bottom-color: var(--ah-blue);
-}
-
-/* icons follow color */
-html.detail-mode #view-detail [role="tablist"] [role="tab"] svg{
-  width: 18px; height: 18px;
-  color: currentColor; fill: currentColor; stroke: currentColor;
-}
-</style>
-
-
-<style id="detail-mode-tabbar-fa-fix">
-/* Make Font Awesome icons follow tab color (including duotone) */
-html.detail-mode #view-detail [role="tablist"] [role="tab"] {
-  --fa-primary-color: currentColor;
-  --fa-secondary-color: currentColor;
-}
-html.detail-mode #view-detail [role="tablist"] [role="tab"] .fa,
-html.detail-mode #view-detail [role="tablist"] [role="tab"] .fas,
-html.detail-mode #view-detail [role="tablist"] [role="tab"] .far,
-html.detail-mode #view-detail [role="tablist"] [role="tab"] .fal,
-html.detail-mode #view-detail [role="tablist"] [role="tab"] .fat,
-html.detail-mode #view-detail [role="tablist"] [role="tab"] .fa-solid,
-html.detail-mode #view-detail [role="tablist"] [role="tab"] .fa-regular,
-html.detail-mode #view-detail [role="tablist"] [role="tab"] .fa-light,
-html.detail-mode #view-detail [role="tablist"] [role="tab"] .fa-thin,
-html.detail-mode #view-detail [role="tablist"] [role="tab"] .fa-duotone {
-  color: currentColor !important;
-}
-
-/* Ensure a clear blue underline under the selected tab */
-html.detail-mode #view-detail [role="tablist"] [role="tab"] {
-  border-bottom-width: 2px;
-  border-bottom-style: solid;
-}
-html.detail-mode #view-detail [role="tablist"] [role="tab"][aria-selected="true"] {
+/* Active — cover all common state patterns */
+html.detail-mode #view-detail [role="tablist"] [role="tab"][aria-selected="true"],
+html.detail-mode #view-detail [role="tablist"] [aria-current="page"],
+html.detail-mode #view-detail [role="tablist"] .is-active,
+html.detail-mode #view-detail [role="tablist"] .active,
+html.detail-mode #view-detail [role="tablist"] [data-state="active"],
+html.detail-mode #view-detail [role="tablist"] [data-selected="true"]{
+  color: var(--ah-blue) !important;
   border-bottom-color: var(--ah-blue) !important;
+  box-shadow: inset 0 -2px 0 0 var(--ah-blue) !important; /* fallback underline */
 }
-html.detail-mode #view-detail [role="tablist"] [role="tab"]:not([aria-selected="true"]) {
-  border-bottom-color: transparent !important;
+
+/* SVG and FA icons inherit active color */
+html.detail-mode #view-detail [role="tablist"] [role="tab"] svg,
+html.detail-mode #view-detail [role="tablist"] [role="tab"] .fa,
+html.detail-mode #view-detail [role="tablist"] .tab svg,
+html.detail-mode #view-detail [role="tablist"] .tab .fa {
+  width: 18px; height: 18px;
+  color: currentColor !important; fill: currentColor; stroke: currentColor;
 }
 </style>
 
@@ -6652,55 +6624,39 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 <!-- unified-email-render: end -->
 
-<script id="detail-mode-complete-toggle">
+<script id="detail-mode-complete-toggle-v2">
 (function(){
   const ROOT = document.documentElement;
-
   function isElementVisible(el){
     if(!el) return false;
     const cs = getComputedStyle(el);
     if(cs.display === 'none' || cs.visibility === 'hidden') return false;
     return el.offsetParent !== null || cs.position === 'fixed';
   }
-
   function isDetailView(){
     const detail = document.getElementById('view-detail');
     return isElementVisible(detail);
   }
-
   function setDetailMode(on){
     ROOT.classList.toggle('detail-mode', !!on);
-    // a11y
     const topEl = document.getElementById('appTopBar') || document.querySelector('.topbar,[data-topbar]');
     const bottomEl = document.getElementById('bottom-bar');
     if(topEl)   topEl.setAttribute('aria-hidden', on ? 'true' : 'false');
     if(bottomEl)bottomEl.setAttribute('aria-hidden', on ? 'true' : 'false');
     document.body.classList.toggle('has-bottom-bar', !on);
   }
-
   function refresh(){ setDetailMode(isDetailView()); }
-
-  // initial
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', refresh, { once: true });
-  } else { refresh(); }
-
-  // watch detail node for visibility/class changes
+  if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', refresh, { once: true }); } else { refresh(); }
   const detail = document.getElementById('view-detail');
   if(detail){
     const mo = new MutationObserver(refresh);
     mo.observe(detail, { attributes: true, attributeFilter: ['class','style','hidden'] });
   }
-
-  // router changes
   ['popstate','hashchange'].forEach(ev => window.addEventListener(ev, refresh));
   const _push = history.pushState, _replace = history.replaceState;
   history.pushState = function(){ _push.apply(this, arguments); refresh(); };
   history.replaceState = function(){ _replace.apply(this, arguments); refresh(); };
-
-  // small rechecks
-  setTimeout(refresh, 150);
-  setTimeout(refresh, 600);
+  setTimeout(refresh, 150); setTimeout(refresh, 600);
 })();
 </script>
 
