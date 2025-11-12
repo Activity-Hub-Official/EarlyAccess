@@ -147,6 +147,41 @@ html:not(.detail-mode) #bottom-bar {
 }
 </style>
 
+
+<style id="detail-mode-top-spacing-fix">
+/* Collapse the actual header height in detail mode to remove the gap */
+html.detail-mode #appTopBar,
+html.detail-mode .topbar,
+html.detail-mode [data-topbar]{
+  display: none !important;       /* reclaim layout space */
+}
+
+/* Nuke common top offsets reserved for headers */
+html.detail-mode body,
+html.detail-mode main,
+html.detail-mode #app,
+html.detail-mode #content,
+html.detail-mode .page,
+html.detail-mode .page-content,
+html.detail-mode #view-detail {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+  scroll-margin-top: 0 !important;
+}
+
+/* Ensure the detail view still respects the safe area a tiny bit */
+html.detail-mode #view-detail {
+  padding-top: max(env(safe-area-inset-top, 0px), 8px) !important;
+}
+
+/* Prevent any first-child "mt-*" from pushing the content down */
+html.detail-mode #view-detail > *:first-child,
+html.detail-mode #view-detail > .mx-auto > *:first-child,
+html.detail-mode #view-detail article > *:first-child {
+  margin-top: 0 !important;
+}
+</style>
+
 </head>
 <style>
 /* Bottom footer link for interstitial */
