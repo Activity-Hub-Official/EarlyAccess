@@ -109,76 +109,134 @@ if (typeof window.esc !== 'function') {
 </style>
 
 
-<style id="detail-mode-patch-v2">
-/* === Detail Mode v2: listing view takes over the screen === */
-:root{ --safe-top: env(safe-area-inset-top, 0px); --safe-bottom: env(safe-area-inset-bottom, 0px); }
+<style id="detail-mode-complete-v1">
+:root{
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --ah-blue: #2563eb;       /* blue-600 */
+  --ah-gray: #6b7280;       /* gray-500 */
+  --ah-ink:  #374151;       /* gray-700 */
+  --bbh: 0px;
+}
 
-/* Hide top & bottom chrome ONLY in detail mode */
+/* ===== 1) Hide chrome in detail mode; reclaim space ===== */
 html.detail-mode #appTopBar,
 html.detail-mode .topbar,
-html.detail-mode [data-topbar],
-html.detail-mode #bottom-bar {
+html.detail-mode [data-topbar]{
+  display: none !important;          /* collapse height so content starts higher */
+}
+html.detail-mode #bottom-bar{
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
 }
 
-/* Reclaim any reserved space in detail mode */
-html.detail-mode body { padding-top: 0 !important; padding-bottom: 0 !important; }
-html.detail-mode { --bbh: 0px !important; }
-
-/* Make the detail view full-bleed */
-html.detail-mode #view-detail { position: relative; z-index: 1; padding-top: var(--safe-top); padding-bottom: var(--safe-bottom); }
-html.detail-mode #view-detail > .mx-auto { max-width: 100% !important; }
-html.detail-mode #view-detail article { background: transparent !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; }
-
-/* Flatten section blocks */
-html.detail-mode #panel-overview > .space-y-6 > section,
-html.detail-mode #panel-events   > .space-y-6 > section,
-html.detail-mode #panel-ai       > .space-y-6 > section {
-  background: transparent !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important;
-}
-
-/* Ensure bottom bar is visible outside detail mode (guard against any accidental hides) */
-html:not(.detail-mode) #bottom-bar {
+/* Make sure bottom bar is visible outside detail mode */
+html:not(.detail-mode) #bottom-bar{
   opacity: 1 !important;
   visibility: visible !important;
   pointer-events: auto !important;
 }
-</style>
 
-
-<style id="detail-mode-top-spacing-fix">
-/* Collapse the actual header height in detail mode to remove the gap */
-html.detail-mode #appTopBar,
-html.detail-mode .topbar,
-html.detail-mode [data-topbar]{
-  display: none !important;       /* reclaim layout space */
-}
-
-/* Nuke common top offsets reserved for headers */
+/* Cancel any reserved paddings in detail mode */
 html.detail-mode body,
 html.detail-mode main,
 html.detail-mode #app,
 html.detail-mode #content,
 html.detail-mode .page,
 html.detail-mode .page-content,
-html.detail-mode #view-detail {
+html.detail-mode #view-detail{
   padding-top: 0 !important;
   margin-top: 0 !important;
   scroll-margin-top: 0 !important;
 }
+html.detail-mode{ --bbh: 0px !important; }
 
-/* Ensure the detail view still respects the safe area a tiny bit */
-html.detail-mode #view-detail {
-  padding-top: max(env(safe-area-inset-top, 0px), 8px) !important;
+/* ===== 2) Full-bleed detail content ===== */
+html.detail-mode #view-detail{
+  position: relative;
+  z-index: 1;
+  padding-top: max(var(--safe-top), 8px);
+  padding-bottom: var(--safe-bottom);
+}
+html.detail-mode #view-detail > .mx-auto{ max-width: 100% !important; }
+html.detail-mode #view-detail article{
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
 }
 
-/* Prevent any first-child "mt-*" from pushing the content down */
-html.detail-mode #view-detail > *:first-child,
-html.detail-mode #view-detail > .mx-auto > *:first-child,
-html.detail-mode #view-detail article > *:first-child {
-  margin-top: 0 !important;
+/* Flatten common section cards inside panels */
+html.detail-mode #panel-overview > .space-y-6 > section,
+html.detail-mode #panel-events   > .space-y-6 > section,
+html.detail-mode #panel-ai       > .space-y-6 > section{
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Fallback: be aggressive in detail mode so everything looks flush */
+html.detail-mode #view-detail section{
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* ===== 3) Tabbar: flush, blue active tab + underline ===== */
+
+/* Flatten any container that holds the tablist (kills white tile) */
+html.detail-mode #view-detail :has(> [role="tablist"]){
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+html.detail-mode #view-detail [role="tablist"]{
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 16px;
+  border-bottom: 1px solid rgba(0,0,0,.06); /* hairline across page */
+}
+
+html.detail-mode #view-detail [role="tablist"] [role="tab"]{
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  padding: 12px 10px;
+  margin: 0;
+  font-weight: 600;
+  color: var(--ah-ink);
+  border-bottom: 2px solid transparent;
+  outline: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+/* inactive */
+html.detail-mode #view-detail [role="tablist"] [role="tab"][aria-selected="false"],
+html.detail-mode #view-detail [role="tablist"] [role="tab"]:not([aria-selected="true"]){
+  color: var(--ah-gray);
+}
+
+/* active: blue text + underline */
+html.detail-mode #view-detail [role="tablist"] [role="tab"][aria-selected="true"]{
+  color: var(--ah-blue);
+  border-bottom-color: var(--ah-blue);
+}
+
+/* icons follow color */
+html.detail-mode #view-detail [role="tablist"] [role="tab"] svg{
+  width: 18px; height: 18px;
+  color: currentColor; fill: currentColor; stroke: currentColor;
 }
 </style>
 
@@ -6561,57 +6619,53 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 <!-- unified-email-render: end -->
 
-<script id="detail-mode-toggle-v2">
-(function () {
+<script id="detail-mode-complete-toggle">
+(function(){
   const ROOT = document.documentElement;
 
   function isElementVisible(el){
     if(!el) return false;
-    const style = window.getComputedStyle(el);
-    if(style.display === 'none' || style.visibility === 'hidden') return false;
-    return el.offsetParent !== null || style.position === 'fixed';
+    const cs = getComputedStyle(el);
+    if(cs.display === 'none' || cs.visibility === 'hidden') return false;
+    return el.offsetParent !== null || cs.position === 'fixed';
   }
 
   function isDetailView(){
-    // v2: trust the DOM, not the URL param (?org= can linger)
     const detail = document.getElementById('view-detail');
     return isElementVisible(detail);
   }
 
   function setDetailMode(on){
     ROOT.classList.toggle('detail-mode', !!on);
-    // aria hygiene
+    // a11y
     const topEl = document.getElementById('appTopBar') || document.querySelector('.topbar,[data-topbar]');
     const bottomEl = document.getElementById('bottom-bar');
     if(topEl)   topEl.setAttribute('aria-hidden', on ? 'true' : 'false');
     if(bottomEl)bottomEl.setAttribute('aria-hidden', on ? 'true' : 'false');
-
-    // revert any bottom-bar padding reservation when in detail mode
     document.body.classList.toggle('has-bottom-bar', !on);
   }
 
   function refresh(){ setDetailMode(isDetailView()); }
 
-  // Initial
+  // initial
   if(document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded', refresh, { once: true });
-  }else{ refresh(); }
+  } else { refresh(); }
 
-  // In case the app flips the view by toggling classes
+  // watch detail node for visibility/class changes
   const detail = document.getElementById('view-detail');
   if(detail){
     const mo = new MutationObserver(refresh);
-    mo.observe(detail, { attributes: true, attributeFilter: ['class','style'] });
+    mo.observe(detail, { attributes: true, attributeFilter: ['class','style','hidden'] });
   }
 
-  // Router changes
-  window.addEventListener('popstate', refresh);
-  window.addEventListener('hashchange', refresh);
+  // router changes
+  ['popstate','hashchange'].forEach(ev => window.addEventListener(ev, refresh));
   const _push = history.pushState, _replace = history.replaceState;
   history.pushState = function(){ _push.apply(this, arguments); refresh(); };
   history.replaceState = function(){ _replace.apply(this, arguments); refresh(); };
 
-  // Fallback: re-check shortly after load (fonts/layout settle)
+  // small rechecks
   setTimeout(refresh, 150);
   setTimeout(refresh, 600);
 })();
