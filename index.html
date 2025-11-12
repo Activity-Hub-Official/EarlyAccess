@@ -6803,6 +6803,24 @@ html.detail-mode #view-detail > :first-child > :first-child{
 }
 </style>
 
+
+<style id="detail-top-gap-fix-v4">
+/* Hard override the inner page wrapper that currently has Tailwind 'py-6' */
+html.detail-mode #view-detail > .mx-auto{
+  padding-top: max(4px, env(safe-area-inset-top, 0px)) !important;
+}
+
+/* Remove any extra margin on the first visible block (the back-link <nav>) */
+html.detail-mode #view-detail > .mx-auto > :first-child{
+  margin-top: 0 !important;
+}
+
+/* Optional: tighten the spacing between the back-link and the hero block */
+html.detail-mode #view-detail nav{
+  margin-bottom: 8px !important; /* from mb-4 (~16px) to 8px */
+}
+</style>
+
 </body>
 </link></html>
 <script>
