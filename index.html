@@ -6732,6 +6732,46 @@ document.addEventListener('DOMContentLoaded', function(){
 }
 </style>
 
+
+<style id="cta-equal-width-patch-v2">
+/* Force the parent row that contains both buttons to fill the full width */
+:where(.flex, .inline-flex, .block, .contents):has(> #claimBtn):has(> #shareBtn){
+  width: 100% !important;
+  max-width: none !important;
+  align-self: stretch !important;   /* override parent items-center centering */
+  justify-self: stretch !important;
+  display: grid !important;         /* grid for bulletproof equal columns */
+  grid-template-columns: 1fr 1fr !important;
+  gap: 12px !important;
+}
+
+/* Make each button fill its grid cell and look consistent */
+#claimBtn, #shareBtn{
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  flex: initial !important;         /* grid now handles sizing */
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  min-height: 48px !important;
+  white-space: nowrap !important;
+}
+
+/* If only one button is visible, let it span two columns automatically */
+:where(.flex, .inline-flex, .block, .contents):has(> #claimBtn):has(> #shareBtn) > :only-child{
+  grid-column: 1 / -1 !important;
+}
+
+/* Small devices fallback: stack vertically if extremely narrow */
+@media (max-width: 360px){
+  :where(.flex, .inline-flex, .block, .contents):has(> #claimBtn):has(> #shareBtn){
+    grid-template-columns: 1fr !important;
+  }
+}
+</style>
+
 </body>
 </link></html>
 <script>
