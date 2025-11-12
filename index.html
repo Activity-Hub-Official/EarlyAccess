@@ -41,72 +41,58 @@ if (typeof window.esc !== 'function') {
   }
 </style>
 
-<!-- Edge-to-edge patch v2 (targets actual OG selectors) -->
-<style id="edge-to-edge-patch-v2">
-:root{ --topbar: 0px; --bottom-bar: 56px; }
-/* Safe padding helpers */
-.px-safe{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right));}
-.px-safe-y{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right));padding-bottom:max(16px,env(safe-area-inset-bottom));}
-
-/* 1) Make the outer container full-bleed */
-#view-detail > .mx-auto{ max-width:100% !important; }
-#view-detail > .mx-auto{ padding-left:0 !important; padding-right:0 !important; }
-#view-detail > .mx-auto{ padding-left:max(16px,env(safe-area-inset-left)) !important; padding-right:max(16px,env(safe-area-inset-right)) !important; }
-
-/* 2) Kill the card chrome on the article */
-#view-detail article{ background:transparent !important; border:0 !important; border-radius:0 !important; box-shadow:none !important; }
-
-/* 3) Flatten the article's inner padding wrapper */
-#view-detail article > .p-6, 
-#view-detail article > .md\:p-8{ padding:0 !important; }
-#view-detail article > div:first-child{ 
-  padding-left:max(16px,env(safe-area-inset-left)); 
-  padding-right:max(16px,env(safe-area-inset-right));
-  padding-top:12px; padding-bottom:12px;
+<!-- Detail Fullscreen Overlay Patch -->
+<style id="detail-overlay-patch">
+.detail-overlay #view-detail,
+#view-detail.detail-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 50 !important;
+  background: #fff;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
-
-/* 4) Sticky flat tab bar (existing role=tablist) */
-#view-detail [role="tablist"]{
-  position:sticky; top:var(--topbar); z-index:10;
-  background:#fff;
-  border-top:1px solid #e5e7eb; border-bottom:1px solid #e5e7eb;
-  margin-left:0 !important; margin-right:0 !important;
-  padding-left:max(16px,env(safe-area-inset-left));
-  padding-right:max(16px,env(safe-area-inset-right));
-}
-#view-detail .tab-btn{ 
-  background:transparent !important; 
-  border:0 !important; 
-  border-radius:0 !important; 
-  box-shadow:none !important;
-  color:#4b5563; /* gray-600 */
-  height:40px; padding:0 .75rem; font-size:.875rem;
-}
-#view-detail .tab-btn[aria-selected="true"]{ color:#111827; /* gray-900 */ }
-#view-detail .tab-btn[aria-selected="true"]::after{
-  content:""; display:block; height:2px; background:#111827; position:relative; top:8px;
-}
-
-/* 5) Convert overview/events/ai sections into flat blocks with native dividers */
-#view-detail #panel-overview > .space-y-6 > section,
-#view-detail #panel-events > .space-y-6 > section,
-#view-detail #panel-ai > .space-y-6 > section{
-  margin:0 !important;
-  padding-top:16px; padding-bottom:16px;
-  padding-left:max(16px,env(safe-area-inset-left));
-  padding-right:max(16px,env(safe-area-inset-right));
-  background:transparent !important;
-  border:0 !important; border-radius:0 !important; box-shadow:none !important;
-}
-#view-detail #panel-overview > .space-y-6 > section + section,
-#view-detail #panel-events  > .space-y-6 > section + section,
-#view-detail #panel-ai       > .space-y-6 > section + section{
-  border-top:1px solid #e5e7eb;
-}
-
-/* 6) Bottom spacing for fixed bottom bar */
-#view-detail{ padding-bottom:calc(16px + var(--bottom-bar)); }
+.detail-overlay body, body.detail-overlay { overflow: hidden; }
+#view-detail.detail-overlay > .mx-auto { max-width: 100% !important; }
 </style>
+<script id="detail-overlay-boot">
+(function(){
+  function isVisible(el){
+    if(!el) return false;
+    const style = window.getComputedStyle(el);
+    return style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
+  }
+  function enableDetailOverlay(){
+    const root = document.documentElement;
+    const detailView = document.getElementById('view-detail');
+    if(detailView){ detailView.classList.add('detail-overlay'); }
+    root.classList.add('detail-overlay');
+    document.body.classList.add('detail-overlay');
+  }
+  function disableDetailOverlay(){
+    const root = document.documentElement;
+    const detailView = document.getElementById('view-detail');
+    if(detailView){ detailView.classList.remove('detail-overlay'); }
+    root.classList.remove('detail-overlay');
+    document.body.classList.remove('detail-overlay');
+  }
+  function watchDetailVisibility(){
+    const detailView = document.getElementById('view-detail');
+    if(!detailView) return;
+    const obs = new MutationObserver(()=>{
+      if(isVisible(detailView)) enableDetailOverlay();
+      else disableDetailOverlay();
+    });
+    obs.observe(detailView, { attributes:true, attributeFilter:['style','class'] });
+    if(isVisible(detailView)) enableDetailOverlay();
+  }
+  document.addEventListener('DOMContentLoaded', function(){
+    watchDetailVisibility();
+    var back = document.getElementById('back-link') || document.querySelector('[data-back], a[href="#"][data-role="back"]');
+    if(back){ back.addEventListener('click', function(){ disableDetailOverlay(); }); }
+  });
+})();
+</script>
 
 </head>
 <style>
