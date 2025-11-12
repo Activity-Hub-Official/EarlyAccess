@@ -40,6 +40,88 @@ if (typeof window.esc !== 'function') {
     padding-left: calc(var(--search-icon-left) + var(--search-icon-size) + var(--search-icon-gap)) !important;
   }
 </style>
+
+<!-- Edge-to-edge detail view patch -->
+<style id="edge-to-edge-patch">
+:root{
+  --topbar: 0px;
+  --bottom-bar: 56px;
+}
+.px-safe{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right));}
+.px-safe-y{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right));padding-bottom:max(16px,env(safe-area-inset-bottom));}
+
+#detail.detail-edge{background:#fff;}
+#detail.detail-edge > header{
+  padding-top:1rem; padding-bottom:.75rem;
+  border:0; border-radius:0; box-shadow:none; background:#fff;
+}
+
+/* Make tab bar sticky/flat regardless of original markup */
+#detail.detail-edge [role="tablist"]{
+  position: sticky; top: var(--topbar); z-index: 10;
+  background:#fff; border-top:1px solid #e5e7eb; border-bottom:1px solid #e5e7eb;
+}
+#detail.detail-edge [role="tab"]{
+  height:40px; padding:0 .75rem; font-size:.875rem; color:#4b5563;
+}
+#detail.detail-edge [role="tab"][aria-selected="true"]{ color:#111827; }
+#detail.detail-edge [role="tab"][aria-selected="true"]::after{
+  content:""; display:block; height:2px; background:#111827; position:relative; top:8px;
+}
+
+/* Flatten top-level sections and add native dividers */
+#detail.detail-edge #panel-overview, 
+#detail.detail-edge #panel-events, 
+#detail.detail-edge #panel-ai { background:#fff; }
+
+#detail.detail-edge #panel-overview > *,
+#detail.detail-edge #panel-events > *,
+#detail.detail-edge #panel-ai > *{
+  padding:1rem 0;
+  background:transparent !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+}
+
+#detail.detail-edge #panel-overview > * + *,
+#detail.detail-edge #panel-events > * + *,
+#detail.detail-edge #panel-ai > * + *{
+  border-top:1px solid #e5e7eb;
+}
+
+/* Horizontal safe padding for blocks and header children */
+#detail.detail-edge #panel-overview > *,
+#detail.detail-edge #panel-events > *,
+#detail.detail-edge #panel-ai > *,
+#detail.detail-edge > header > *,
+#detail.detail-edge .detail-section-px { 
+  padding-left:max(16px,env(safe-area-inset-left));
+  padding-right:max(16px,env(safe-area-inset-right));
+}
+
+/* Ensure bottom spacing so content doesn't hide behind fixed bottom bar */
+#detail.detail-edge{padding-bottom:calc(16px + var(--bottom-bar));}
+
+/* About clamp/fade helpers (only if used) */
+#detail .about-wrap{ position:relative; }
+#detail .about-text[data-clamped="true"]{
+  display:-webkit-box; -webkit-line-clamp:6; -webkit-box-orient:vertical; overflow:hidden;
+}
+#detail .about-fade{
+  position:absolute; left:0; right:0; bottom:0; height:3.25rem;
+  background:linear-gradient(to bottom, rgba(255,255,255,0), #fff); pointer-events:none;
+}
+</style>
+<script id="edge-to-edge-boot">
+document.addEventListener('DOMContentLoaded', function(){
+  var detail = document.getElementById('detail');
+  if(detail && !detail.classList.contains('detail-edge')){
+    detail.classList.add('detail-edge','px-safe-y');
+  }
+});
+</script>
+
 </head>
 <style>
 /* Bottom footer link for interstitial */
