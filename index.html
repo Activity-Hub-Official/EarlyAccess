@@ -41,58 +41,140 @@ if (typeof window.esc !== 'function') {
   }
 </style>
 
-<!-- Detail Fullscreen Overlay Patch -->
-<style id="detail-overlay-patch">
-.detail-overlay #view-detail,
-#view-detail.detail-overlay {
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: 50 !important;
-  background: #fff;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+<!-- Edge-to-edge patch v2 (targets actual OG selectors) -->
+<style id="edge-to-edge-patch-v2">
+:root{ --topbar: 0px; --bottom-bar: 56px; }
+/* Safe padding helpers */
+.px-safe{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right));}
+.px-safe-y{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right));padding-bottom:max(16px,env(safe-area-inset-bottom));}
+
+/* 1) Make the outer container full-bleed */
+#view-detail > .mx-auto{ max-width:100% !important; }
+#view-detail > .mx-auto{ padding-left:0 !important; padding-right:0 !important; }
+#view-detail > .mx-auto{ padding-left:max(16px,env(safe-area-inset-left)) !important; padding-right:max(16px,env(safe-area-inset-right)) !important; }
+
+/* 2) Kill the card chrome on the article */
+#view-detail article{ background:transparent !important; border:0 !important; border-radius:0 !important; box-shadow:none !important; }
+
+/* 3) Flatten the article's inner padding wrapper */
+#view-detail article > .p-6, 
+#view-detail article > .md\:p-8{ padding:0 !important; }
+#view-detail article > div:first-child{ 
+  padding-left:max(16px,env(safe-area-inset-left)); 
+  padding-right:max(16px,env(safe-area-inset-right));
+  padding-top:12px; padding-bottom:12px;
 }
-.detail-overlay body, body.detail-overlay { overflow: hidden; }
-#view-detail.detail-overlay > .mx-auto { max-width: 100% !important; }
+
+/* 4) Sticky flat tab bar (existing role=tablist) */
+#view-detail [role="tablist"]{
+  position:sticky; top:var(--topbar); z-index:10;
+  background:#fff;
+  border-top:1px solid #e5e7eb; border-bottom:1px solid #e5e7eb;
+  margin-left:0 !important; margin-right:0 !important;
+  padding-left:max(16px,env(safe-area-inset-left));
+  padding-right:max(16px,env(safe-area-inset-right));
+}
+#view-detail .tab-btn{ 
+  background:transparent !important; 
+  border:0 !important; 
+  border-radius:0 !important; 
+  box-shadow:none !important;
+  color:#4b5563; /* gray-600 */
+  height:40px; padding:0 .75rem; font-size:.875rem;
+}
+#view-detail .tab-btn[aria-selected="true"]{ color:#111827; /* gray-900 */ }
+#view-detail .tab-btn[aria-selected="true"]::after{
+  content:""; display:block; height:2px; background:#111827; position:relative; top:8px;
+}
+
+/* 5) Convert overview/events/ai sections into flat blocks with native dividers */
+#view-detail #panel-overview > .space-y-6 > section,
+#view-detail #panel-events > .space-y-6 > section,
+#view-detail #panel-ai > .space-y-6 > section{
+  margin:0 !important;
+  padding-top:16px; padding-bottom:16px;
+  padding-left:max(16px,env(safe-area-inset-left));
+  padding-right:max(16px,env(safe-area-inset-right));
+  background:transparent !important;
+  border:0 !important; border-radius:0 !important; box-shadow:none !important;
+}
+#view-detail #panel-overview > .space-y-6 > section + section,
+#view-detail #panel-events  > .space-y-6 > section + section,
+#view-detail #panel-ai       > .space-y-6 > section + section{
+  border-top:1px solid #e5e7eb;
+}
+
+/* 6) Bottom spacing for fixed bottom bar */
+#view-detail{ padding-bottom:calc(16px + var(--bottom-bar)); }
 </style>
-<script id="detail-overlay-boot">
-(function(){
-  function isVisible(el){
-    if(!el) return false;
-    const style = window.getComputedStyle(el);
-    return style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
-  }
-  function enableDetailOverlay(){
-    const root = document.documentElement;
-    const detailView = document.getElementById('view-detail');
-    if(detailView){ detailView.classList.add('detail-overlay'); }
-    root.classList.add('detail-overlay');
-    document.body.classList.add('detail-overlay');
-  }
-  function disableDetailOverlay(){
-    const root = document.documentElement;
-    const detailView = document.getElementById('view-detail');
-    if(detailView){ detailView.classList.remove('detail-overlay'); }
-    root.classList.remove('detail-overlay');
-    document.body.classList.remove('detail-overlay');
-  }
-  function watchDetailVisibility(){
-    const detailView = document.getElementById('view-detail');
-    if(!detailView) return;
-    const obs = new MutationObserver(()=>{
-      if(isVisible(detailView)) enableDetailOverlay();
-      else disableDetailOverlay();
-    });
-    obs.observe(detailView, { attributes:true, attributeFilter:['style','class'] });
-    if(isVisible(detailView)) enableDetailOverlay();
-  }
-  document.addEventListener('DOMContentLoaded', function(){
-    watchDetailVisibility();
-    var back = document.getElementById('back-link') || document.querySelector('[data-back], a[href="#"][data-role="back"]');
-    if(back){ back.addEventListener('click', function(){ disableDetailOverlay(); }); }
-  });
-})();
-</script>
+
+
+<style id="detail-mode-patch">
+/* === Detail Mode (listing takes over screen) === */
+:root{
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Hide chrome in detail mode */
+html.detail-mode #topbar,
+html.detail-mode header#topbar,
+html.detail-mode header.topbar,
+html.detail-mode [data-topbar],
+html.detail-mode .app-topbar,
+html.detail-mode #bottom-bar,
+html.detail-mode nav#bottom-bar,
+html.detail-mode .bottom-bar,
+html.detail-mode [data-bottombar],
+html.detail-mode nav[role="navigation"][data-bottom],
+html.detail-mode header[role="banner"].topbar {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Reclaim space & ensure full-bleed */
+html.detail-mode body {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+html.detail-mode { --bbh: 0px !important; }
+
+/* Make detail view edge-to-edge and safe-area aware */
+html.detail-mode #view-detail {
+  position: relative;
+  z-index: 1;
+  padding-top: var(--safe-top);
+  padding-bottom: var(--safe-bottom);
+}
+html.detail-mode #view-detail > .mx-auto { max-width: 100% !important; }
+
+/* Remove card chrome */
+html.detail-mode #view-detail article {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Flatten common section blocks into clean rows */
+html.detail-mode #panel-overview > .space-y-6 > section,
+html.detail-mode #panel-events   > .space-y-6 > section,
+html.detail-mode #panel-ai       > .space-y-6 > section {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Optional: keep tabs visible but flat; delete if you want tabs hidden too */
+html.detail-mode [role="tablist"] {
+  position: sticky;
+  top: 0;
+  background: transparent;
+  backdrop-filter: none;
+}
+</style>
 
 </head>
 <style>
@@ -6472,6 +6554,66 @@ document.addEventListener('DOMContentLoaded', function(){
 })();
 </script>
 <!-- unified-email-render: end -->
+
+<script id="detail-mode-toggle">
+(function () {
+  const ROOT = document.documentElement;
+
+  function findTopbar() {
+    return document.getElementById('topbar')
+        || document.querySelector('[data-topbar]')
+        || document.querySelector('header.topbar')
+        || document.querySelector('.app-topbar')
+        || document.querySelector('header[role="banner"].topbar');
+  }
+  function findBottombar() {
+    return document.getElementById('bottom-bar')
+        || document.querySelector('[data-bottombar]')
+        || document.querySelector('.bottom-bar')
+        || document.querySelector('nav#bottom-bar')
+        || document.querySelector('nav[role="navigation"][data-bottom]');
+  }
+
+  function isDetailView() {
+    const p = new URLSearchParams(location.search);
+    if (p.has('org')) return true;
+    const detail = document.getElementById('view-detail');
+    return !!(detail && detail.offsetParent !== null); // visible in layout
+  }
+
+  function setDetailMode(on) {
+    ROOT.classList.toggle('detail-mode', !!on);
+    const TOP = findTopbar();
+    const BOTTOM = findBottombar();
+    if (TOP) TOP.setAttribute('aria-hidden', on ? 'true' : 'false');
+    if (BOTTOM) BOTTOM.setAttribute('aria-hidden', on ? 'true' : 'false');
+
+    // If your app reserves space for bottom bar via body.has-bottom-bar, cancel it in detail mode
+    document.body.classList.toggle('has-bottom-bar', !on);
+  }
+
+  function refresh() { setDetailMode(isDetailView()); }
+
+  // Initial
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', refresh, { once: true });
+  } else {
+    refresh();
+  }
+
+  // Back/forward
+  window.addEventListener('popstate', refresh);
+
+  // Intercept pushState & replaceState to react to in-app navigation
+  const _push = history.pushState, _replace = history.replaceState;
+  history.pushState = function () { _push.apply(this, arguments); refresh(); };
+  history.replaceState = function () { _replace.apply(this, arguments); refresh(); };
+
+  // If your app uses custom events after view switches, listen here too:
+  window.addEventListener('ah:viewchange', refresh);
+})();
+</script>
+
 </body>
 </link></html>
 <script>
