@@ -240,6 +240,39 @@ html.detail-mode #view-detail [role="tablist"] [role="tab"] svg{
 }
 </style>
 
+
+<style id="detail-mode-tabbar-fa-fix">
+/* Make Font Awesome icons follow tab color (including duotone) */
+html.detail-mode #view-detail [role="tablist"] [role="tab"] {
+  --fa-primary-color: currentColor;
+  --fa-secondary-color: currentColor;
+}
+html.detail-mode #view-detail [role="tablist"] [role="tab"] .fa,
+html.detail-mode #view-detail [role="tablist"] [role="tab"] .fas,
+html.detail-mode #view-detail [role="tablist"] [role="tab"] .far,
+html.detail-mode #view-detail [role="tablist"] [role="tab"] .fal,
+html.detail-mode #view-detail [role="tablist"] [role="tab"] .fat,
+html.detail-mode #view-detail [role="tablist"] [role="tab"] .fa-solid,
+html.detail-mode #view-detail [role="tablist"] [role="tab"] .fa-regular,
+html.detail-mode #view-detail [role="tablist"] [role="tab"] .fa-light,
+html.detail-mode #view-detail [role="tablist"] [role="tab"] .fa-thin,
+html.detail-mode #view-detail [role="tablist"] [role="tab"] .fa-duotone {
+  color: currentColor !important;
+}
+
+/* Ensure a clear blue underline under the selected tab */
+html.detail-mode #view-detail [role="tablist"] [role="tab"] {
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+}
+html.detail-mode #view-detail [role="tablist"] [role="tab"][aria-selected="true"] {
+  border-bottom-color: var(--ah-blue) !important;
+}
+html.detail-mode #view-detail [role="tablist"] [role="tab"]:not([aria-selected="true"]) {
+  border-bottom-color: transparent !important;
+}
+</style>
+
 </head>
 <style>
 /* Bottom footer link for interstitial */
