@@ -109,70 +109,41 @@ if (typeof window.esc !== 'function') {
 </style>
 
 
-<style id="detail-mode-patch">
-/* === Detail Mode (listing takes over screen) === */
-:root{
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
-}
+<style id="detail-mode-patch-v2">
+/* === Detail Mode v2: listing view takes over the screen === */
+:root{ --safe-top: env(safe-area-inset-top, 0px); --safe-bottom: env(safe-area-inset-bottom, 0px); }
 
-/* Hide chrome in detail mode */
-html.detail-mode #topbar,
-html.detail-mode header#topbar,
-html.detail-mode header.topbar,
+/* Hide top & bottom chrome ONLY in detail mode */
+html.detail-mode #appTopBar,
+html.detail-mode .topbar,
 html.detail-mode [data-topbar],
-html.detail-mode .app-topbar,
-html.detail-mode #bottom-bar,
-html.detail-mode nav#bottom-bar,
-html.detail-mode .bottom-bar,
-html.detail-mode [data-bottombar],
-html.detail-mode nav[role="navigation"][data-bottom],
-html.detail-mode header[role="banner"].topbar {
+html.detail-mode #bottom-bar {
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
 }
 
-/* Reclaim space & ensure full-bleed */
-html.detail-mode body {
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-}
+/* Reclaim any reserved space in detail mode */
+html.detail-mode body { padding-top: 0 !important; padding-bottom: 0 !important; }
 html.detail-mode { --bbh: 0px !important; }
 
-/* Make detail view edge-to-edge and safe-area aware */
-html.detail-mode #view-detail {
-  position: relative;
-  z-index: 1;
-  padding-top: var(--safe-top);
-  padding-bottom: var(--safe-bottom);
-}
+/* Make the detail view full-bleed */
+html.detail-mode #view-detail { position: relative; z-index: 1; padding-top: var(--safe-top); padding-bottom: var(--safe-bottom); }
 html.detail-mode #view-detail > .mx-auto { max-width: 100% !important; }
+html.detail-mode #view-detail article { background: transparent !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; }
 
-/* Remove card chrome */
-html.detail-mode #view-detail article {
-  background: transparent !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-}
-
-/* Flatten common section blocks into clean rows */
+/* Flatten section blocks */
 html.detail-mode #panel-overview > .space-y-6 > section,
 html.detail-mode #panel-events   > .space-y-6 > section,
 html.detail-mode #panel-ai       > .space-y-6 > section {
-  background: transparent !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
+  background: transparent !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important;
 }
 
-/* Optional: keep tabs visible but flat; delete if you want tabs hidden too */
-html.detail-mode [role="tablist"] {
-  position: sticky;
-  top: 0;
-  background: transparent;
-  backdrop-filter: none;
+/* Ensure bottom bar is visible outside detail mode (guard against any accidental hides) */
+html:not(.detail-mode) #bottom-bar {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
 }
 </style>
 
@@ -6555,62 +6526,59 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 <!-- unified-email-render: end -->
 
-<script id="detail-mode-toggle">
+<script id="detail-mode-toggle-v2">
 (function () {
   const ROOT = document.documentElement;
 
-  function findTopbar() {
-    return document.getElementById('topbar')
-        || document.querySelector('[data-topbar]')
-        || document.querySelector('header.topbar')
-        || document.querySelector('.app-topbar')
-        || document.querySelector('header[role="banner"].topbar');
-  }
-  function findBottombar() {
-    return document.getElementById('bottom-bar')
-        || document.querySelector('[data-bottombar]')
-        || document.querySelector('.bottom-bar')
-        || document.querySelector('nav#bottom-bar')
-        || document.querySelector('nav[role="navigation"][data-bottom]');
+  function isElementVisible(el){
+    if(!el) return false;
+    const style = window.getComputedStyle(el);
+    if(style.display === 'none' || style.visibility === 'hidden') return false;
+    return el.offsetParent !== null || style.position === 'fixed';
   }
 
-  function isDetailView() {
-    const p = new URLSearchParams(location.search);
-    if (p.has('org')) return true;
+  function isDetailView(){
+    // v2: trust the DOM, not the URL param (?org= can linger)
     const detail = document.getElementById('view-detail');
-    return !!(detail && detail.offsetParent !== null); // visible in layout
+    return isElementVisible(detail);
   }
 
-  function setDetailMode(on) {
+  function setDetailMode(on){
     ROOT.classList.toggle('detail-mode', !!on);
-    const TOP = findTopbar();
-    const BOTTOM = findBottombar();
-    if (TOP) TOP.setAttribute('aria-hidden', on ? 'true' : 'false');
-    if (BOTTOM) BOTTOM.setAttribute('aria-hidden', on ? 'true' : 'false');
+    // aria hygiene
+    const topEl = document.getElementById('appTopBar') || document.querySelector('.topbar,[data-topbar]');
+    const bottomEl = document.getElementById('bottom-bar');
+    if(topEl)   topEl.setAttribute('aria-hidden', on ? 'true' : 'false');
+    if(bottomEl)bottomEl.setAttribute('aria-hidden', on ? 'true' : 'false');
 
-    // If your app reserves space for bottom bar via body.has-bottom-bar, cancel it in detail mode
+    // revert any bottom-bar padding reservation when in detail mode
     document.body.classList.toggle('has-bottom-bar', !on);
   }
 
-  function refresh() { setDetailMode(isDetailView()); }
+  function refresh(){ setDetailMode(isDetailView()); }
 
   // Initial
-  if (document.readyState === 'loading') {
+  if(document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded', refresh, { once: true });
-  } else {
-    refresh();
+  }else{ refresh(); }
+
+  // In case the app flips the view by toggling classes
+  const detail = document.getElementById('view-detail');
+  if(detail){
+    const mo = new MutationObserver(refresh);
+    mo.observe(detail, { attributes: true, attributeFilter: ['class','style'] });
   }
 
-  // Back/forward
+  // Router changes
   window.addEventListener('popstate', refresh);
-
-  // Intercept pushState & replaceState to react to in-app navigation
+  window.addEventListener('hashchange', refresh);
   const _push = history.pushState, _replace = history.replaceState;
-  history.pushState = function () { _push.apply(this, arguments); refresh(); };
-  history.replaceState = function () { _replace.apply(this, arguments); refresh(); };
+  history.pushState = function(){ _push.apply(this, arguments); refresh(); };
+  history.replaceState = function(){ _replace.apply(this, arguments); refresh(); };
 
-  // If your app uses custom events after view switches, listen here too:
-  window.addEventListener('ah:viewchange', refresh);
+  // Fallback: re-check shortly after load (fonts/layout settle)
+  setTimeout(refresh, 150);
+  setTimeout(refresh, 600);
 })();
 </script>
 
