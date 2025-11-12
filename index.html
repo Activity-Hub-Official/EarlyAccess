@@ -6706,65 +6706,37 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
 <style id="cta-equal-width-patch">
-/* Equal-width CTAs (Claim + Share) — last-wins patch */
+/* Equal-width CTAs (Claim + Share) */
 #claimBtn, #shareBtn{
-  /* make each button take equal share of the row */
   flex: 1 1 0% !important;
   width: auto !important;
   max-width: none !important;
   min-width: 0 !important;
-
-  /* center contents and unify size */
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   gap: 8px !important;
   min-height: 48px !important;
   padding-inline: 12px !important;
-  white-space: nowrap !important; /* avoid awkward wraps */
-}
-
-/* If only one button remains visible, it'll still expand to full width via flex:1 */
-/* Optional: slight tweak to the parent row if needed */
-#claimBtn, #shareBtn{
-  /* prevent inherited 'shrink-0' from fighting the flex grow */
+  white-space: nowrap !important;
   flex-shrink: 1 !important;
 }
 </style>
 
-
 <style id="cta-equal-width-patch-v2">
-/* Force the parent row that contains both buttons to fill the full width */
+/* Force the parent row to fill full width and split into two equal columns */
 :where(.flex, .inline-flex, .block, .contents):has(> #claimBtn):has(> #shareBtn){
   width: 100% !important;
   max-width: none !important;
-  align-self: stretch !important;   /* override parent items-center centering */
+  align-self: stretch !important;
   justify-self: stretch !important;
-  display: grid !important;         /* grid for bulletproof equal columns */
+  display: grid !important;
   grid-template-columns: 1fr 1fr !important;
   gap: 12px !important;
 }
-
-/* Make each button fill its grid cell and look consistent */
-#claimBtn, #shareBtn{
-  width: 100% !important;
-  max-width: none !important;
-  min-width: 0 !important;
-  flex: initial !important;         /* grid now handles sizing */
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 8px !important;
-  min-height: 48px !important;
-  white-space: nowrap !important;
-}
-
-/* If only one button is visible, let it span two columns automatically */
 :where(.flex, .inline-flex, .block, .contents):has(> #claimBtn):has(> #shareBtn) > :only-child{
   grid-column: 1 / -1 !important;
 }
-
-/* Small devices fallback: stack vertically if extremely narrow */
 @media (max-width: 360px){
   :where(.flex, .inline-flex, .block, .contents):has(> #claimBtn):has(> #shareBtn){
     grid-template-columns: 1fr !important;
@@ -6772,52 +6744,44 @@ document.addEventListener('DOMContentLoaded', function(){
 }
 </style>
 
-
 <style id="detail-top-gap-fix">
-/* Make the dedicated view start closer to the very top (while respecting notches) */
-html.detail-mode {
-  --detail-top-gap: max(8px, env(safe-area-inset-top, 0px));
-}
-
-/* 1) Remove any reserved top space for the hidden header */
-html.detail-mode #view-detail{
-  padding-top: var(--detail-top-gap) !important;
-}
-
-/* 2) Kill any spacer elements that were used for the top bar */
+/* Baseline: shrink the page's top padding in detail mode and remove header spacers */
+html.detail-mode { --detail-top-gap: max(8px, env(safe-area-inset-top, 0px)); }
+html.detail-mode #view-detail{ padding-top: var(--detail-top-gap) !important; }
 html.detail-mode .topbar-spacer,
 html.detail-mode [data-topbar-spacer],
-html.detail-mode .app-topbar-spacer{
-  display:none !important;
-  height:0 !important;
-}
-
-/* 3) Neutralize large first-child margins (common on the 'All listings' link/hero block) */
-html.detail-mode #view-detail > :first-child{
-  margin-top: 0 !important;
-}
-
-/* 4) Safety: if the first element is a wrapper with its own first child, flatten that too */
-html.detail-mode #view-detail > :first-child > :first-child{
-  margin-top: 0 !important;
-}
+html.detail-mode .app-topbar-spacer{ display:none !important; height:0 !important; }
+html.detail-mode #view-detail > :first-child{ margin-top: 0 !important; }
+html.detail-mode #view-detail > :first-child > :first-child{ margin-top: 0 !important; }
 </style>
 
-
 <style id="detail-top-gap-fix-v4">
-/* Hard override the inner page wrapper that currently has Tailwind 'py-6' */
+/* Target the inner wrapper that had py-6 */
 html.detail-mode #view-detail > .mx-auto{
-  padding-top: max(4px, env(safe-area-inset-top, 0px)) !important;
+  padding-top: max(2px, env(safe-area-inset-top, 0px)) !important;
 }
+html.detail-mode #view-detail > .mx-auto > :first-child{ margin-top: 0 !important; }
+html.detail-mode #view-detail nav{ margin-bottom: 8px !important; }
+</style>
 
-/* Remove any extra margin on the first visible block (the back-link <nav>) */
-html.detail-mode #view-detail > .mx-auto > :first-child{
+<style id="detail-hero-tighten-and-logo-enlarge-v5">
+/* Pull the hero block (logo + title) closer to top, but keep the back link in place */
+html.detail-mode #view-detail > .mx-auto{ padding-top: env(safe-area-inset-top, 0px) !important; }
+html.detail-mode #view-detail > .mx-auto > :not(nav):first-child{
+  margin-top: -14px !important;
+}
+/* Enlarge the logo roughly 2x, with a responsive clamp */
+html.detail-mode #view-detail > .mx-auto > :not(nav):first-child img{
+  width: min(52vw, 192px) !important;
+  height: auto !important;
+  max-width: none !important;
+}
+/* Slightly reduce spacing from logo to org name */
+html.detail-mode #view-detail > .mx-auto > :not(nav):first-child h1:first-of-type{
+  margin-top: 10px !important;
+}
+html.detail-mode #view-detail > .mx-auto > :not(nav):first-child > :first-child{
   margin-top: 0 !important;
-}
-
-/* Optional: tighten the spacing between the back-link and the hero block */
-html.detail-mode #view-detail nav{
-  margin-bottom: 8px !important; /* from mb-4 (~16px) to 8px */
 }
 </style>
 
