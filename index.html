@@ -6772,6 +6772,37 @@ document.addEventListener('DOMContentLoaded', function(){
 }
 </style>
 
+
+<style id="detail-top-gap-fix">
+/* Make the dedicated view start closer to the very top (while respecting notches) */
+html.detail-mode {
+  --detail-top-gap: max(8px, env(safe-area-inset-top, 0px));
+}
+
+/* 1) Remove any reserved top space for the hidden header */
+html.detail-mode #view-detail{
+  padding-top: var(--detail-top-gap) !important;
+}
+
+/* 2) Kill any spacer elements that were used for the top bar */
+html.detail-mode .topbar-spacer,
+html.detail-mode [data-topbar-spacer],
+html.detail-mode .app-topbar-spacer{
+  display:none !important;
+  height:0 !important;
+}
+
+/* 3) Neutralize large first-child margins (common on the 'All listings' link/hero block) */
+html.detail-mode #view-detail > :first-child{
+  margin-top: 0 !important;
+}
+
+/* 4) Safety: if the first element is a wrapper with its own first child, flatten that too */
+html.detail-mode #view-detail > :first-child > :first-child{
+  margin-top: 0 !important;
+}
+</style>
+
 </body>
 </link></html>
 <script>
