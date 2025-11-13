@@ -1724,7 +1724,7 @@ html.ah-modal-open, body.ah-modal-open { overflow: hidden !important; height: 10
 <div class="min-w-0">
 <h1 class="text-2xl font-semibold tracking-tight" id="d_name"></h1>
 <p class="mt-1 text-[13px] text-gray-500" id="d_meta"></p>
-<div class="mt-2 flex flex-wrap gap-2 justify-start md:justify-start">
+<div class="mt-2 flex flex-wrap gap-2 justify-center md:justify-center">
 <span class="hidden inline-flex items-center text-[11px] px-2.5 py-1 rounded-full bg-gray-100 border border-gray-200" id="d_theme"></span>
 <span class="hidden inline-flex items-center text-[11px] px-2.5 py-1 rounded-full bg-gray-100 border border-gray-200" id="d_industry"></span>
 </div>
@@ -1974,7 +1974,7 @@ function cardHTML(o){
             <div class="min-w-0">
               <h3 class="text-[15px] font-semibold tracking-tight truncate">${o.name}${verified}</h3>
               ${o.tagline ? `<p class="text-[13px] text-gray-500 mt-0.5 line-clamp-2">${o.tagline}</p>` : ''}
-              <div class="mt-2 flex flex-wrap gap-2 justify-start md:justify-start">
+              <div class="mt-2 flex flex-wrap gap-2 justify-center md:justify-center">
                 ${o.theme ? token(o.theme) : ''} ${o.industry ? token(o.industry) : ''} ${(()=>{let parts=[];if(school){parts.push(`<span class=\"inline-flex items-center gap-1 text-[12px] text-gray-700\"><i class=\"fa-solid fa-location-dot text-gray-500\"></i><span class=\"truncate max-w-[20ch]\">${school}</span></span>`);}if(school && members!=null){parts.push(`<span class=\"mx-1.5 text-gray-300\">&middot;</span>`);}if(members!=null){const n=Number(members)||0;parts.push(`<span class=\"inline-flex items-center gap-1 text-[12px] text-gray-700\"><span class=\"inline-block w-2 h-2 rounded-full bg-green-500\"></span><span>${n.toLocaleString()} ${n===1?'member':'members'}</span></span>`);}return parts.join('');})()}
               </div>
             </div>
@@ -1999,7 +1999,7 @@ function cardHTML(o){
             <div class="min-w-0 flex-1">
               <h3 class="text-[15px] font-semibold tracking-tight truncate">${o.name}${verified}</h3>
               ${o.tagline ? `<p class="text-[13px] text-gray-500 mt-0.5 line-clamp-2">${o.tagline}</p>` : ''}
-              <div class="mt-2 flex flex-wrap gap-2 justify-start md:justify-start">
+              <div class="mt-2 flex flex-wrap gap-2 justify-center md:justify-center">
                 ${o.theme ? token(o.theme) : ''} ${o.industry ? token(o.industry) : ''}
               </div>
               <div class="mt-3 space-y-1.5 text-[13px] text-gray-700">
