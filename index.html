@@ -421,6 +421,18 @@ html.detail-mode #view-detail :is(#detail-logo, .detail-logo, .logo, .org-logo, 
     }
   }
 </style>
+
+<!-- PWA: iOS system splash + required metas -->
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="default" name="apple-mobile-web-app-status-bar-style"/>
+<meta name="theme-color" content="#f7f8fa"/>
+<!-- Startup images for common iPhones (portrait) -->
+<link href="https://i.imgur.com/4QZU5pe.png" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" rel="apple-touch-startup-image"/>
+<link href="https://i.imgur.com/u51sv1r.png" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" rel="apple-touch-startup-image"/>
+<link href="https://i.imgur.com/ptKMkaV.png" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" rel="apple-touch-startup-image"/>
+<link href="https://i.imgur.com/HcPLzqL.png" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" rel="apple-touch-startup-image"/>
+<link href="https://i.imgur.com/5x08eAG.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" rel="apple-touch-startup-image"/>
+
 </head>
 <style>
 /* Bottom footer link for interstitial */
@@ -1210,16 +1222,6 @@ html.is-mobile-browser .site-header{
 /* Hardened scroll lock to prevent double scrollbars when modal is open */
 html.ah-modal-open, body.ah-modal-open { overflow: hidden !important; height: 100% !important; }
 </style>
-<!-- PWA: iOS system splash + required metas -->
-<meta content="yes" name="apple-mobile-web-app-capable"/>
-<meta content="default" name="apple-mobile-web-app-status-bar-style"/>
-<meta name="theme-color" content="#f7f8fa"/>
-<!-- Startup images for common iPhones (portrait) -->
-<link href="https://i.imgur.com/4QZU5pe.png" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" rel="apple-touch-startup-image"/>
-<link href="https://i.imgur.com/u51sv1r.png" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" rel="apple-touch-startup-image"/>
-<link href="https://i.imgur.com/ptKMkaV.png" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" rel="apple-touch-startup-image"/>
-<link href="https://i.imgur.com/HcPLzqL.png" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" rel="apple-touch-startup-image"/>
-<link href="https://i.imgur.com/5x08eAG.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" rel="apple-touch-startup-image"/>
 <body class="has-bottom-bar min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
 <script id="ah-form-bootstrap-early">
 (function(){
