@@ -1704,12 +1704,12 @@ html.ah-modal-open, body.ah-modal-open { overflow: hidden !important; height: 10
 
     <!-- Dropdown menu -->
     <div id="detail-kebab-menu"
-         class="hidden absolute right-0 mt-2 w-40 rounded-lg border border-gray-200 bg-white shadow-lg py-1 text-sm z-30">
+         class="hidden kebab-menu-dropdown w-40 rounded-lg border border-gray-200 bg-white shadow-lg py-1 text-sm z-50">
       <button type="button"
               id="detail-report-btn"
               class="w-full text-left px-3 py-2 hover:bg-gray-50 text-red-600 flex items-center gap-2">
         <i class="fa-solid fa-flag"></i>
-        <span>Report listing</span>
+        <span>Report</span>
       </button>
     </div>
   </div>
@@ -6907,6 +6907,17 @@ html.detail-mode #view-detail nav{
 }
 </style>
 
+<style id="detail-kebab-menu-position">
+/* Position kebab dropdown as a fixed overlay in detail view to avoid clipping in PWA */
+html.detail-mode #detail-kebab-menu.kebab-menu-dropdown{
+  position: fixed;
+  top: calc(max(env(safe-area-inset-top, 0px), 8px) + 32px);
+  right: max(16px, env(safe-area-inset-right, 0px));
+  max-width: 80vw;
+}
+</style>
+
+
 
 <script>
 (function () {
@@ -6952,7 +6963,7 @@ html.detail-mode #view-detail nav{
     reportBtn.addEventListener('click', function () {
       closeMenu();
       // TODO: wire this up to the real report flow (modal, endpoint, etc.)
-      alert('Report listing clicked');
+      alert('Report clicked');
     });
   }
 })();
