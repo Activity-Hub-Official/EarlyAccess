@@ -273,6 +273,43 @@ html.detail-mode #view-detail [role="tablist"] [role="tab"]:not([aria-selected="
 }
 </style>
 
+<style id="patch-2025-11-12-logo-2x">
+/* --- Dedicated view: make the logo exactly 2x and keep the top tight --- */
+
+/* 2x logo size for common logo selectors */
+html.detail-mode #view-detail :is(#detail-logo, .detail-logo, .logo, .org-logo, .hero-logo, [data-role="logo"]) {
+  height: 96px !important;           /* assuming original ≈48px */
+  width: auto !important;
+  display: block !important;
+  margin: 0 !important;               /* avoid reintroducing a top gap */
+  object-fit: contain !important;
+}
+
+/* Fallback: if no explicit logo selector, use the first image in the article as the hero/logo */
+html.detail-mode #view-detail article img:first-of-type {
+  height: 96px !important;
+  width: auto !important;
+  display: block !important;
+  margin: 0 !important;
+  object-fit: contain !important;
+}
+
+/* Minimize top gap in dedicated view */
+html.detail-mode #view-detail {
+  padding-top: max(env(safe-area-inset-top, 0px), 0px) !important;
+}
+
+/* Remove any first-child padding/margin that could create a visible gap above the logo */
+html.detail-mode #view-detail article > div:first-child {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+/* Keep everything else spaced gently below the logo */
+html.detail-mode #view-detail :is(#detail-logo, .detail-logo, .logo, .org-logo, .hero-logo, [data-role="logo"]) ~ * {
+  margin-top: 8px !important;
+}
+</style>
 </head>
 <style>
 /* Bottom footer link for interstitial */
