@@ -197,6 +197,7 @@ html.detail-mode #view-detail [role="tablist"]{
   display: flex;
   gap: 8px;
   align-items: center;
+  justify-content: center;
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
@@ -238,6 +239,11 @@ html.detail-mode #view-detail [role="tablist"] [role="tab"] svg{
   width: 18px; height: 18px;
   color: currentColor; fill: currentColor; stroke: currentColor;
 }
+/* Disable legacy ::after underline in detail-mode so layout stays perfectly stable */
+html.detail-mode #view-detail .tab-btn[aria-selected="true"]::after{
+  content: none !important;
+}
+
 </style>
 
 
