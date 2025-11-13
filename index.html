@@ -320,6 +320,21 @@ html.detail-mode #view-detail :is(#detail-logo, .detail-logo, .logo, .org-logo, 
   }
 </style>
 
+
+<style>
+  /* Kebab menu visibility: only in dedicated detail-mode on mobile */
+  #detail-kebab-wrapper {
+    display: none;
+  }
+  html.detail-mode #detail-kebab-wrapper {
+    display: inline-flex;
+  }
+  @media (min-width: 768px) {
+    html.detail-mode #detail-kebab-wrapper {
+      display: none;
+    }
+  }
+</style>
 </head>
 <style>
 /* Bottom footer link for interstitial */
@@ -1670,10 +1685,34 @@ html.ah-modal-open, body.ah-modal-open { overflow: hidden !important; height: 10
 <!-- ====== FULLPAGE DETAIL VIEW ====== -->
 <div class="hidden" id="view-detail">
 <div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-6">
-<nav class="mb-4 text-sm">
-<a class="inline-flex items-center gap-1 text-ah-700 hover:underline" href="./" id="back">
-<i class="fa-solid fa-arrow-left"></i> All listings
-            </a>
+<nav class="mb-4 text-sm flex items-center justify-between gap-2">
+  <!-- Left: Back to all listings -->
+  <a class="inline-flex items-center gap-1 text-ah-700 hover:underline" href="./" id="back">
+    <i class="fa-solid fa-arrow-left"></i> All listings
+  </a>
+
+  <!-- Right: 3-dot menu (kebab) -->
+  <div class="relative" id="detail-kebab-wrapper">
+    <button type="button"
+            id="detail-kebab-btn"
+            class="inline-flex items-center justify-center h-9 w-9 rounded-full border border-gray-200 hover:bg-gray-50 bg-white"
+            aria-label="More options"
+            aria-haspopup="menu"
+            aria-expanded="false">
+      <i class="fa-solid fa-ellipsis-vertical text-gray-500"></i>
+    </button>
+
+    <!-- Dropdown menu -->
+    <div id="detail-kebab-menu"
+         class="hidden absolute right-0 mt-2 w-40 rounded-lg border border-gray-200 bg-white shadow-lg py-1 text-sm z-30">
+      <button type="button"
+              id="detail-report-btn"
+              class="w-full text-left px-3 py-2 hover:bg-gray-50 text-red-600 flex items-center gap-2">
+        <i class="fa-solid fa-flag"></i>
+        <span>Report listing</span>
+      </button>
+    </div>
+  </div>
 </nav>
 <article class="rounded-xl border border-gray-200 bg-white">
 <div class="p-6 md:p-8">
@@ -6868,6 +6907,56 @@ html.detail-mode #view-detail nav{
 }
 </style>
 
+
+<script>
+(function () {
+  var kebabBtn = document.getElementById('detail-kebab-btn');
+  var kebabMenu = document.getElementById('detail-kebab-menu');
+  var reportBtn = document.getElementById('detail-report-btn');
+  var wrapper = document.getElementById('detail-kebab-wrapper');
+
+  if (!kebabBtn || !kebabMenu || !wrapper) return;
+
+  function closeMenu() {
+    kebabMenu.classList.add('hidden');
+    kebabBtn.setAttribute('aria-expanded', 'false');
+  }
+
+  function toggleMenu(e) {
+    e.stopPropagation();
+    var isOpen = !kebabMenu.classList.contains('hidden');
+    if (isOpen) {
+      closeMenu();
+    } else {
+      kebabMenu.classList.remove('hidden');
+      kebabBtn.setAttribute('aria-expanded', 'true');
+    }
+  }
+
+  kebabBtn.addEventListener('click', toggleMenu);
+
+  document.addEventListener('click', function (e) {
+    if (kebabMenu.classList.contains('hidden')) return;
+    if (!wrapper.contains(e.target)) {
+      closeMenu();
+    }
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' || e.key === 'Esc') {
+      closeMenu();
+    }
+  });
+
+  if (reportBtn) {
+    reportBtn.addEventListener('click', function () {
+      closeMenu();
+      // TODO: wire this up to the real report flow (modal, endpoint, etc.)
+      alert('Report listing clicked');
+    });
+  }
+})();
+</script>
 </body>
 </link></html>
 <script>
