@@ -310,54 +310,6 @@ html.detail-mode #view-detail :is(#detail-logo, .detail-logo, .logo, .org-logo, 
   margin-top: 8px !important;
 }
 </style>
-<style id="patch-2025-11-12-logo-4x">
-/* --- Dedicated view: make the logo 4x original (2x again from current 2x) --- */
-html.detail-mode #view-detail :is(#detail-logo, .detail-logo, .logo, .org-logo, .hero-logo, [data-role="logo"]) {
-  height: 192px !important;          /* 4x original (~48px) */
-  width: auto !important;
-  display: block !important;
-  margin: 0 !important;
-  object-fit: contain !important;
-}
-
-/* Fallback: if no explicit logo selector, use the first image in the article as the hero/logo */
-html.detail-mode #view-detail article img:first-of-type {
-  height: 192px !important;
-  width: auto !important;
-  display: block !important;
-  margin: 0 !important;
-  object-fit: contain !important;
-}
-
-/* Keep spacing tight below the larger logo */
-html.detail-mode #view-detail :is(#detail-logo, .detail-logo, .logo, .org-logo, .hero-logo, [data-role="logo"]) ~ * {
-  margin-top: 8px !important;
-}
-</style>
-<style id="patch-2025-11-12-logo-3x">
-/* --- Dedicated view: make the logo ~3x original (≈144px) --- */
-html.detail-mode #view-detail :is(#detail-logo, .detail-logo, .logo, .org-logo, .hero-logo, [data-role="logo"]) {
-  height: 144px !important;          /* 3x original (~48px) */
-  width: auto !important;
-  display: block !important;
-  margin: 0 !important;
-  object-fit: contain !important;
-}
-
-/* Fallback: if no explicit logo selector, use the first image in the article as the hero/logo */
-html.detail-mode #view-detail article img:first-of-type {
-  height: 144px !important;
-  width: auto !important;
-  display: block !important;
-  margin: 0 !important;
-  object-fit: contain !important;
-}
-
-/* Keep spacing tidy below the logo */
-html.detail-mode #view-detail :is(#detail-logo, .detail-logo, .logo, .org-logo, .hero-logo, [data-role="logo"]) ~ * {
-  margin-top: 8px !important;
-}
-</style>
 </head>
 <style>
 /* Bottom footer link for interstitial */
