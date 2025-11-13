@@ -1,479 +1,14 @@
-<head>
-<script>
-// Global HTML escaper (idempotent, tiny)
-if (typeof window.esc !== 'function') {
-  window.esc = function (s) {
-    s = (s ?? '').toString();
-    return s
-      .replace(/&/g,'&amp;')
-      .replace(/</g,'&lt;')
-      .replace(/>/g,'&gt;')
-      .replace(/"/g,'&quot;')
-      .replace(/'/g,'&#39;');
-  };
-}
-</script>
-<script>
-// Emoji/diacritics-insensitive normalizer for facet labels (global)
-if (typeof window.foldFacet !== 'function') {
-  window.foldFacet = function(s){
-    s = String(s || '').toLowerCase();
-    try {
-      s = s.replace(/\p{Extended_Pictographic}|\p{Emoji_Component}|\p{Emoji_Presentation}|\uFE0F/ug, '');
-    } catch(e) {
-      // Fallback for environments without Unicode property escapes
-      s = s.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g,'');
-    }
-    s = s.normalize('NFKD')
-         .replace(/[\u0300-\u036f]/g,'')
-         .replace(/[^a-z0-9]+/g,' ')
-         .trim();
-    return s;
-  };
-}
-</script>
-
-
-  <meta name="twitter:image" content="https://i.imgur.com/ZivX6GV.png">
-  <meta name="twitter:description" content="Discover campus clubs, events, and student projects in one place.">
-  <meta name="twitter:title" content="Activity Hub — Explore clubs & events near you">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:site_name" content="Activity Hub">
-  <meta property="og:image" content="https://i.imgur.com/ZivX6GV.png">
-  <meta property="og:description" content="Discover campus clubs, events, and student projects in one place.">
-  <meta property="og:title" content="Activity Hub — Explore clubs & events near you">
-  <meta property="og:url" content="https://activityhub.org/">
-  <meta property="og:type" content="website">
-  <meta name="description" content="Discover campus clubs, events, and student projects in one place. Follow what interests you and never miss what’s happening.">
-  <link rel="canonical" href="https://activityhub.org/">
-<style id="search-padding-patch">
-  :root {
-    --search-icon-left: 12px;   /* distance from left edge to icon */
-    --search-icon-size: 18px;   /* icon box size */
-    --search-icon-gap: 10px;    /* space between icon and text */
-  }
-  /* Ensure placeholder and typed text don't overlap the icon */
-  #global-search,
-  #mobile-global-search {
-    padding-left: calc(var(--search-icon-left) + var(--search-icon-size) + var(--search-icon-gap)) !important;
-  }
-</style>
-
-<!-- Edge-to-edge patch v2 (targets actual OG selectors) -->
-<style id="edge-to-edge-patch-v2">
-:root{ --topbar: 0px; --bottom-bar: 56px; }
-/* Safe padding helpers */
-.px-safe{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right));}
-.px-safe-y{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right));padding-bottom:max(16px,env(safe-area-inset-bottom));}
-
-/* 1) Make the outer container full-bleed */
-#view-detail > .mx-auto{ max-width:100% !important; }
-#view-detail > .mx-auto{ padding-left:0 !important; padding-right:0 !important; }
-#view-detail > .mx-auto{ padding-left:max(16px,env(safe-area-inset-left)) !important; padding-right:max(16px,env(safe-area-inset-right)) !important; }
-
-/* 2) Kill the card chrome on the article */
-#view-detail article{ background:transparent !important; border:0 !important; border-radius:0 !important; box-shadow:none !important; }
-
-/* 3) Flatten the article's inner padding wrapper */
-#view-detail article > .p-6, 
-#view-detail article > .md\:p-8{ padding:0 !important; }
-#view-detail article > div:first-child{ 
-  padding-left:max(16px,env(safe-area-inset-left)); 
-  padding-right:max(16px,env(safe-area-inset-right));
-  padding-top:12px; padding-bottom:12px;
-}
-
-/* 4) Sticky flat tab bar (existing role=tablist) */
-#view-detail [role="tablist"]{
-  position:sticky; top:var(--topbar); z-index:10;
-  background:#fff;
-  border-top:1px solid #e5e7eb; border-bottom:1px solid #e5e7eb;
-  margin-left:0 !important; margin-right:0 !important;
-  padding-left:max(16px,env(safe-area-inset-left));
-  padding-right:max(16px,env(safe-area-inset-right));
-}
-#view-detail .tab-btn{ 
-  background:transparent !important; 
-  border:0 !important; 
-  border-radius:0 !important; 
-  box-shadow:none !important;
-  color:#4b5563; /* gray-600 */
-  height:40px; padding:0 .75rem; font-size:.875rem;
-}
-#view-detail .tab-btn[aria-selected="true"]{ color:#111827; /* gray-900 */ }
-#view-detail .tab-btn[aria-selected="true"]::after{
-  content:""; display:block; height:2px; background:#111827; position:relative; top:8px;
-}
-
-/* 5) Convert overview/events/ai sections into flat blocks with native dividers */
-#view-detail #panel-overview > .space-y-6 > section,
-#view-detail #panel-events > .space-y-6 > section,
-#view-detail #panel-ai > .space-y-6 > section{
-  margin:0 !important;
-  padding-top:16px; padding-bottom:16px;
-  padding-left:max(16px,env(safe-area-inset-left));
-  padding-right:max(16px,env(safe-area-inset-right));
-  background:transparent !important;
-  border:0 !important; border-radius:0 !important; box-shadow:none !important;
-}
-#view-detail #panel-overview > .space-y-6 > section + section,
-#view-detail #panel-events  > .space-y-6 > section + section,
-#view-detail #panel-ai       > .space-y-6 > section + section{
-  border-top:1px solid #e5e7eb;
-}
-
-/* 6) Bottom spacing for fixed bottom bar */
-#view-detail{ padding-bottom:calc(16px + var(--bottom-bar)); }
-</style>
-
-
-<style id="detail-mode-complete-v1">
-:root{
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
-
-  /* Unified blue palette */
-  --ah-blue-50:  #EAF4FF;
-  --ah-blue-100: #D6E8FF;
-  --ah-blue-200: #B0D4FF;
-  --ah-blue-300: #8FBCFF;
-  --ah-blue-400: #679FFF;
-  --ah-blue-500: #3F8EF7; /* primary brand blue */
-  --ah-blue-600: #2F74E4;
-  --ah-blue-700: #2259C2;
-  --ah-blue-800: #193F92;
-  --ah-blue-900: #122B63;
-
-  /* Semantic tokens */
-  --ah-primary:        var(--ah-blue-500);
-  --ah-primary-strong: var(--ah-blue-600);
-  --ah-primary-active: var(--ah-blue-700);
-  --ah-primary-soft:   var(--ah-blue-50);
-  --ah-focus-ring:     rgba(63,142,247,0.25);
-
-  /* Legacy aliases */
-  --ah-blue: var(--ah-primary);
-
-  --ah-gray: #6b7280;       /* gray-500 */
-  --ah-ink:  #374151;       /* gray-700 */
-  --bbh: 0px;
-}
-
-/* ===== 1) Hide chrome in detail mode; reclaim space ===== */
-html.detail-mode #appTopBar,
-html.detail-mode .topbar,
-html.detail-mode [data-topbar]{
-  display: none !important;          /* collapse height so content starts higher */
-}
-html.detail-mode #bottom-bar{
-  opacity: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-}
-
-/* Make sure bottom bar is visible outside detail mode */
-html:not(.detail-mode) #bottom-bar{
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-html.detail-mode #appTopBar,
-html.detail-mode .topbar,
-html.detail-mode [data-topbar]{
-  display: none !important;          /* collapse height so content starts higher */
-}
-html.detail-mode #bottom-bar{
-  opacity: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-}
-
-/* Make sure bottom bar is visible outside detail mode */
-html:not(.detail-mode) #bottom-bar{
-  opacity: 1 !important;
-  visibility: visible !important;
-  pointer-events: auto !important;
-}
-
-/* Cancel any reserved paddings in detail mode */
-html.detail-mode body,
-html.detail-mode main,
-html.detail-mode #app,
-html.detail-mode #content,
-html.detail-mode .page,
-html.detail-mode .page-content,
-html.detail-mode #view-detail{
-  padding-top: 0 !important;
-  margin-top: 0 !important;
-  scroll-margin-top: 0 !important;
-}
-html.detail-mode{ --bbh: 0px !important; }
-
-/* ===== 2) Full-bleed detail content ===== */
-html.detail-mode #view-detail{
-  position: relative;
-  z-index: 1;
-  padding-top: max(var(--safe-top), 8px);
-  padding-bottom: var(--safe-bottom);
-}
-html.detail-mode #view-detail > .mx-auto{ max-width: 100% !important; }
-html.detail-mode #view-detail article{
-  background: transparent !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-}
-
-/* Flatten common section cards inside panels */
-html.detail-mode #panel-overview > .space-y-6 > section,
-html.detail-mode #panel-events   > .space-y-6 > section,
-html.detail-mode #panel-ai       > .space-y-6 > section{
-  background: transparent !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-}
-
-/* Fallback: be aggressive in detail mode so everything looks flush */
-html.detail-mode #view-detail section{
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-/* ===== 3) Tabbar: flush, blue active tab + underline ===== */
-
-/* Flatten any container that holds the tablist (kills white tile) */
-html.detail-mode #view-detail :has(> [role="tablist"]){
-  background: transparent !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-}
-
-html.detail-mode #view-detail [role="tablist"]{
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  justify-content: center;
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-  padding: 0 16px;
-  border-bottom: 1px solid rgba(0,0,0,.06); /* hairline across page */
-}
-
-html.detail-mode #view-detail [role="tablist"] [role="tab"]{
-  -webkit-appearance: none;
-  appearance: none;
-  background: transparent;
-  border: 0;
-  padding: 12px 10px;
-  margin: 0;
-  font-weight: 600;
-  color: var(--ah-ink);
-  border-bottom: 2px solid transparent;
-  outline: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-}
-
-/* inactive */
-html.detail-mode #view-detail [role="tablist"] [role="tab"][aria-selected="false"],
-html.detail-mode #view-detail [role="tablist"] [role="tab"]:not([aria-selected="true"]){
-  color: var(--ah-gray);
-}
-
-/* active: blue text + underline */
-html.detail-mode #view-detail [role="tablist"] [role="tab"][aria-selected="true"]{
-  color: var(--ah-blue);
-  border-bottom-color: var(--ah-blue);
-}
-
-/* icons follow color */
-html.detail-mode #view-detail [role="tablist"] [role="tab"] svg{
-  width: 18px; height: 18px;
-  color: currentColor; fill: currentColor; stroke: currentColor;
-}
-/* Disable legacy ::after underline in detail-mode so layout stays perfectly stable */
-html.detail-mode #view-detail .tab-btn[aria-selected="true"]::after{
-  content: none !important;
-}
-
-</style>
-
-
-<style id="detail-mode-tabbar-fa-fix">
-/* Make Font Awesome icons follow tab color (including duotone) */
-html.detail-mode #view-detail [role="tablist"] [role="tab"] {
-  --fa-primary-color: currentColor;
-  --fa-secondary-color: currentColor;
-}
-html.detail-mode #view-detail [role="tablist"] [role="tab"] .fa,
-html.detail-mode #view-detail [role="tablist"] [role="tab"] .fas,
-html.detail-mode #view-detail [role="tablist"] [role="tab"] .far,
-html.detail-mode #view-detail [role="tablist"] [role="tab"] .fal,
-html.detail-mode #view-detail [role="tablist"] [role="tab"] .fat,
-html.detail-mode #view-detail [role="tablist"] [role="tab"] .fa-solid,
-html.detail-mode #view-detail [role="tablist"] [role="tab"] .fa-regular,
-html.detail-mode #view-detail [role="tablist"] [role="tab"] .fa-light,
-html.detail-mode #view-detail [role="tablist"] [role="tab"] .fa-thin,
-html.detail-mode #view-detail [role="tablist"] [role="tab"] .fa-duotone {
-  color: currentColor !important;
-}
-
-/* Ensure a clear blue underline under the selected tab */
-html.detail-mode #view-detail [role="tablist"] [role="tab"] {
-  border-bottom-width: 2px;
-  border-bottom-style: solid;
-}
-html.detail-mode #view-detail [role="tablist"] [role="tab"][aria-selected="true"] {
-  border-bottom-color: var(--ah-blue) !important;
-}
-html.detail-mode #view-detail [role="tablist"] [role="tab"]:not([aria-selected="true"]) {
-  border-bottom-color: transparent !important;
-}
-</style>
-
-<style id="patch-2025-11-12-logo-2x">
-/* --- Dedicated view: make the logo exactly 2x and keep the top tight --- */
-
-/* 2x logo size for common logo selectors */
-html.detail-mode #view-detail :is(#detail-logo, .detail-logo, .org-logo, .hero-logo) {
-  height: 96px !important;           /* assuming original ≈48px */
-  width: auto !important;
-  display: block !important;
-  margin: 0 !important;               /* avoid reintroducing a top gap */
-  object-fit: contain !important;
-}
-
-/* Fallback: if no explicit logo selector, use the first image in the article as the hero/logo */
-html.detail-mode #view-detail article img:first-of-type {
-  height: 96px !important;
-  width: auto !important;
-  display: block !important;
-  margin: 0 !important;
-  object-fit: contain !important;
-}
-
-/* Minimize top gap in dedicated view */
-html.detail-mode #view-detail {
-  padding-top: max(env(safe-area-inset-top, 0px), 0px) !important;
-}
-
-/* Remove any first-child padding/margin that could create a visible gap above the logo */
-html.detail-mode #view-detail article > div:first-child {
-  padding-top: 0 !important;
-  margin-top: 0 !important;
-}
-
-/* Keep everything else spaced gently below the logo */
-html.detail-mode #view-detail :is(#detail-logo, .detail-logo, .logo, .org-logo, .hero-logo, [data-role="logo"]) ~ * {
-  margin-top: 8px !important;
-}
-</style>
-
-<style id="patch-2025-11-12-lynx-pill-fix">
-  /* Ensure Lynx link icons stay compact in dedicated view */
-  html.detail-mode #view-detail #d_links img {
-    width: 18px !important;
-    height: 18px !important;
-    object-fit: cover;
-  }
-</style>
-
-
-<style>
-  /* Kebab menu visibility: only in dedicated detail-mode on mobile */
-  #detail-kebab-wrapper {
-    display: none;
-  }
-  html.detail-mode #detail-kebab-wrapper {
-    display: inline-flex;
-  }
-  @media (min-width: 768px) {
-    html.detail-mode #detail-kebab-wrapper {
-      display: none;
-    }
-  }
-</style>
-
-<style id="pwa-topbar-safe-area-v1">
-  /* Tweak nav vertical padding only for standalone PWA so extra safe-area doesn't make it feel too tall */
-  html.is-pwa {
-    --nav-pad-y: 4px;
-  }
-
-  /* Make the mobile PWA top bar visually extend into the iOS status bar safe-area */
-  @supports (padding-top: env(safe-area-inset-top)) {
-    html.is-pwa #appTopBar {
-      padding-top: env(safe-area-inset-top, 0px);
-      padding-top: constant(safe-area-inset-top, 0px); /* older iOS fallback */
-
-      /* Ensure the header background is what appears behind the status bar icons */
-      background-color: #ffffff;
-    }
-
-    html.is-pwa #appTopBar > .mx-auto {
-      height: 3.5rem !important; /* same as Tailwind h-14 */
-      display: flex;
-      align-items: center;
-    }
-  }
-</style>
-
-</head>
-<style>
-/* Bottom footer link for interstitial */
-#mobile-browser-interstitial .interstitial-footer {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
-  display: flex;
-  justify-content: center;
-  pointer-events: none; /* only the link is clickable */
-  z-index: 2147483647; /* above the interstitial card */
-}
-#mobile-browser-interstitial .interstitial-continue-link {
-  pointer-events: auto;
-  font-size: 0.875rem;           /* ~14px */
-  text-decoration: underline;
-  opacity: 0.7;                   /* low emphasis */
-  color: currentColor;            /* adapts to light/dark */
-  padding: 6px 10px;
-  border-radius: 10px;
-}
-#mobile-browser-interstitial .interstitial-continue-link:focus-visible {
-  outline: 2px solid currentColor;
-  outline-offset: 2px;
-  opacity: 0.9;
-}
-@supports (height: 100svh) {
-  #mobile-browser-interstitial .interstitial-footer {
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
-  }
-}
-</style>
 <!DOCTYPE html>
 
 <html lang="en">
-<!-- UNGATED: Users can browse without creating an account -->
-<script>
-  window.AH_REQUIRE_ONBOARDING = false;
-</script>
+<head>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" name="viewport"/>
-<meta content="Activity Hub" name="apple-mobile-web-app-title"/>
-<link href="./manifest.activityhub.v2.webmanifest?v=2" rel="manifest"/>
-<title>Activity Hub — Explore clubs & events near you</title>
+<title>Activity Hub – Explore (v25)</title>
 <!-- App & site icons -->
 <link href="https://i.imgur.com/7dO0mhL.png" rel="apple-touch-icon" sizes="180x180"/>
-<link href="https://i.imgur.com/SeNBgAx.png" rel="icon" type="image/png">
+<link href="https://i.imgur.com/SeNBgAx.png" rel="icon" type="image/png"/>
 <link href="https://i.imgur.com/SeNBgAx.png" rel="shortcut icon"/>
 <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.basic.min.js"></script>
@@ -490,14 +25,112 @@ html.detail-mode #view-detail :is(#detail-logo, .detail-logo, .logo, .org-logo, 
   } catch(e) { console.warn('WordPOS loader failed', e); }
 })();
 </script>
+<script>
+// --- DuckDuckGo favicon helpers (GLOBAL). Must load before renderDetail ---
+(function(){
+  if (window.__duckFaviconInit) return; window.__duckFaviconInit = true;
+
+  window.esc = window.esc || function(s=''){
+    return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;')
+      .replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
+  };
+  // Emoji/diacritics-insensitive normalizer for facet labels (global)
+  window.foldFacet = window.foldFacet || function(s){
+    s = String(s||'').toLowerCase();
+    try { s = s.replace(/\p{Extended_Pictographic}|\p{Emoji_Component}|\p{Emoji_Presentation}|\uFE0F/ug, ''); }
+    catch(e) { s = s.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g,''); }
+    s = s.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+    return s;
+  };
+
+
+  window.normPlatform = window.normPlatform || function(platform, raw){
+    if (!raw) return '';
+    let v = String(raw).trim();
+    if (!v || v.toLowerCase() == 'n/a') return '';
+
+    if (platform === 'email') {
+      if (/^mailto:/i.test(v)) return v;
+      if (/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)) return `mailto:${v}`;
+    }
+
+    const handle = v.startsWith('@') ? v.slice(1) : null;
+    const ensureHTTP = (u) => /^https?:\/\//i.test(u) ? u : 'https://' + u;
+
+    switch(platform){
+      case 'instagram': return ensureHTTP(handle ? `instagram.com/${handle}` : v);
+      case 'x':
+        if (handle) return `https://x.com/${handle}`;
+        return ensureHTTP(v.replace(/^https?:\/\/(www\.)?twitter\.com/i,'https://x.com'));
+      case 'facebook':
+      case 'linkedin':
+      case 'youtube':
+        return ensureHTTP(v);
+      case 'tiktok':
+        return ensureHTTP(handle ? `tiktok.com/@${handle}` : v);
+      case 'discord':
+        if (/^[A-Za-z0-9]{6,}$/i.test(v)) return `https://discord.gg/${v}`;
+        return ensureHTTP(v.replace(/^discord\.com\/invite\//i,'discord.gg/'));
+      case 'groupme':
+        return ensureHTTP(v);
+      case 'linktree':
+        return ensureHTTP(handle ? `linktr.ee/${handle}` : v);
+      case 'website':
+      default:
+        return ensureHTTP(v);
+    }
+  };
+
+  window.DDG_ICON = window.DDG_ICON || (host => `https://icons.duckduckgo.com/ip3/${host}.ico`);
+  window.getHostname = window.getHostname || function(u){
+    try { return new URL(u).hostname.replace(/^www\./,''); } catch { return ''; }
+  };
+  window.faviconFor = window.faviconFor || function(platform, href){
+    switch(platform){
+      case 'website':   return DDG_ICON(getHostname(href) || 'example.com');
+      case 'instagram': return DDG_ICON('instagram.com');
+      case 'x':         return DDG_ICON('x.com');
+      case 'facebook':  return DDG_ICON('facebook.com');
+      case 'linkedin':  return DDG_ICON('linkedin.com');
+      case 'youtube':   return DDG_ICON('youtube.com');
+      case 'tiktok':    return DDG_ICON('tiktok.com');
+      case 'discord':   return DDG_ICON('discord.gg');
+      case 'groupme':   return DDG_ICON('groupme.com');
+      case 'linktree':  return DDG_ICON('linktr.ee');
+      case 'email':     return DDG_ICON('gmail.com');
+      default:          return DDG_ICON('example.com');
+    }
+  };
+  window.makeLink = window.makeLink || function(platform, raw){
+    const href = window.normPlatform(platform, raw);
+    return href ? { platform, href, icon: window.faviconFor(platform, href) } : null;
+  };
+})();
+</script>
 <script src="https://cdn.tailwindcss.com"></script>
-<!-- zoom-blocking script removed -->
+<script>
+// --- Prevent pinch/tap zoom (fallback for browsers that ignore viewport flags) ---
+['gesturestart','gesturechange','gestureend'].forEach(evt => {
+  document.addEventListener(evt, function(e){ e.preventDefault(); }, { passive: false });
+});
+// Prevent Ctrl/Cmd + wheel zoom
+document.addEventListener('wheel', function(e){
+  if (e.ctrlKey) { e.preventDefault(); }
+}, { passive: false });
+// Prevent double-tap to zoom (iOS fallback)
+let __lastTouchEnd = 0;
+document.addEventListener('touchend', function(e){
+  const now = Date.now();
+  if (now - __lastTouchEnd <= 350) { e.preventDefault(); }
+  __lastTouchEnd = now;
+}, { passive: false });
+</script>
 <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            ah: {50:'var(--ah-blue-50)',100:'var(--ah-blue-200)',200:'#bfdbfe',300:'#93c5fd',400:'var(--ah-blue-400)',500:'var(--ah-primary)',600:'var(--ah-primary-strong)',700:'#1d4ed8',800:'var(--ah-blue-800)',900:'var(--ah-blue-900)'},
+            ah: {50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a'},
           },
           boxShadow:{ card:'0 4px 16px rgba(17,24,39,0.05)'},
           fontFamily:{ sans:["Plus Jakarta Sans", 'Inter','ui-sans-serif','system-ui','Segoe UI','Helvetica','Arial','Apple Color Emoji','Segoe UI Emoji'] }
@@ -506,7 +139,7 @@ html.detail-mode #view-detail :is(#detail-logo, .detail-logo, .logo, .org-logo, 
     }
   </script>
 <style>
-    .ah-grad{background-image:linear-gradient(135deg,var(--ah-primary-strong) 0%,#14b8a6 100%)}
+    .ah-grad{background-image:linear-gradient(135deg,#2563eb 0%,#14b8a6 100%)}
     .ah-chip[data-selected="true"]{background:#111827;color:#fff;border-color:#111827}
     .no-scrollbar::-webkit-scrollbar{display:none}.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
     .line-clamp-2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -543,7 +176,7 @@ input, textarea, select { font-size: 16px; }
 }
 .fade-in{opacity:0;transform:translateY(6px);transition:opacity .3s cubic-bezier(.4,0,.2,1),transform .3s cubic-bezier(.4,0,.2,1)}
 .fade-in.show{opacity:1;transform:none}
-.nav-active{background:#e5f0ff !important; color:var(--ah-primary-strong) !important; font-weight:600}
+.nav-active{background:#e5f0ff !important; color:#0b4be0 !important; font-weight:600}
 .topbar{backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
 .search-soft{
   background:#f3f6fa !important;
@@ -718,7 +351,7 @@ input, textarea, select { font-size: 16px; }
 
 /* Active: no bg, no pill, no shadow */
 #bottom-bar a[aria-current="page"]{
-  color:var(--ah-primary-strong) !important;
+  color:#0B4BE0 !important;
   font-weight:600 !important;
   background: transparent !important;
   border-color: transparent !important;
@@ -788,7 +421,7 @@ body.has-bottom-bar main{
   .about-fade{background:linear-gradient(to bottom, rgba(17,24,39,0), rgba(17,24,39,.95));}
 }
 .about-toggle{display:inline-block;margin-top:var(--about-gap);background:transparent;border:none;padding:6px 0;
-  font:inherit;color:var(--ah-primary-strong);cursor:pointer;}
+  font:inherit;color:#2563eb;cursor:pointer;}
 .about-block.is-expanded .about-fade{display:none;}
 @media (max-width:640px){.about-block{--about-lines:5;}}
 </style>
@@ -826,7 +459,7 @@ body.onboarding-mode {
   cursor: pointer;
 }
 .create-btn:hover { background: #f9fafb; }
-.create-btn:focus-visible { outline: 2px solid var(--ah-primary-strong); outline-offset: 2px; }
+.create-btn:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
 .create-btn .chev { width: 16px; height: 16px; opacity: .7; }
 .create-menu {
   position: absolute; top: calc(100% + 8px); right: 0;
@@ -849,7 +482,7 @@ body.onboarding-mode {
 }
 .create-menu a[role="menuitem"]:hover { background: #f3f4f6; }
 .create-menu a[role="menuitem"]:focus-visible {
-  outline: 2px solid var(--ah-primary-strong); outline-offset: 2px;
+  outline: 2px solid #2563eb; outline-offset: 2px;
 }
 </style><style>
 /* --- Create menu consolidated styles --- */
@@ -883,8 +516,8 @@ body.onboarding-mode {
   .auth-grid{grid-template-columns:1.1fr 0.9fr;}
   .auth-art{display:block;}
 }
-.auth-art{display:none; background: radial-gradient(1200px 600px at -10% -10%, var(--ah-blue-100) 0%, rgba(224,231,255,0) 50%), radial-gradient(800px 500px at 120% 120%, #cffafe 0%, rgba(207,250,254,0) 55%), linear-gradient(135deg,var(--ah-blue-100) 0%,var(--ah-blue-50) 45%,#ecfeff 100%); padding:48px;}
-.auth-art .hero{height:100%; border-radius:16px; background:linear-gradient(135deg,var(--ah-blue-200),#ede9fe); display:grid; place-items:center;}
+.auth-art{display:none; background: radial-gradient(1200px 600px at -10% -10%, #e0e7ff 0%, rgba(224,231,255,0) 50%), radial-gradient(800px 500px at 120% 120%, #cffafe 0%, rgba(207,250,254,0) 55%), linear-gradient(135deg,#e0e7ff 0%,#f0f9ff 45%,#ecfeff 100%); padding:48px;}
+.auth-art .hero{height:100%; border-radius:16px; background:linear-gradient(135deg,#dbeafe,#ede9fe); display:grid; place-items:center;}
 .auth-art h2{font-size:28px; line-height:1.2; color:#0f172a; letter-spacing:.2px;}
 .auth-art p{margin-top:8px; color:#334155;}
 .auth-form{height:100%; display:flex; flex-direction:column; justify-content:center; padding:32px 28px;}
@@ -892,16 +525,16 @@ body.onboarding-mode {
 .tabbar{display:flex; gap:24px; align-items:center; margin-bottom:16px;}
 .tabbar button{background:none; border:0; font-weight:700; color:#475569; padding:6px 2px; position:relative;}
 .tabbar button[aria-selected="true"]{color:#0f172a;}
-.tabbar button[aria-selected="true"]::after{content:""; position:absolute; left:0; right:0; bottom:-4px; height:4px; border-radius:999px; background:linear-gradient(90deg,var(--ah-primary-strong),#22d3ee);}
+.tabbar button[aria-selected="true"]::after{content:""; position:absolute; left:0; right:0; bottom:-4px; height:4px; border-radius:999px; background:linear-gradient(90deg,#6366f1,#22d3ee);}
 .social-btn{display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:999px; border:1px solid #e5e7eb; background:#f8fafc; font-weight:600; color:#0f172a;}
 .social-stack{display:grid; gap:10px;}
 .field{display:grid; gap:6px;}
 .label{font-size:.88rem; color:#334155; font-weight:600;}
 .input{border:1px solid #e5e7eb; border-radius:12px; padding:10px 12px; outline:0;}
-.input:focus{border-color:var(--ah-primary-strong); }
+.input:focus{border-color:#6366f1; }
 .auth-actions{display:grid; gap:10px; margin-top:12px;}
-.auth-primary{height:44px; border-radius:12px; background:var(--ah-primary); color:#fff; font-weight:700; display:flex; align-items:center; justify-content:center;}
-.auth-primary:hover{background:var(--ah-primary-strong);}
+.auth-primary{height:44px; border-radius:12px; background:#3b82f6; color:#fff; font-weight:700; display:flex; align-items:center; justify-content:center;}
+.auth-primary:hover{background:#2563eb;}
 .auth-footer{margin-top:10px; font-size:.9rem; color:#475569;}
 .auth-close{position:absolute; top:14px; right:14px; width:40px; height:40px; display:grid; place-items:center; border-radius:999px; background:rgba(255,255,255,.85); border:1px solid rgba(15,23,42,.08);}
 </style>
@@ -933,11 +566,12 @@ body.onboarding-mode {
   background:
     radial-gradient(700px 400px at -10% -10%, rgba(99,102,241,.18), rgba(99,102,241,0)),
     radial-gradient(500px 300px at 120% 120%, rgba(34,211,238,.18), rgba(34,211,238,0)),
-    linear-gradient(135deg,var(--ah-blue-100),#ecfeff);
+    linear-gradient(135deg,#eef2ff,#ecfeff);
   padding:48px;
 }
 #authModal .auth-form{display:flex;flex-direction:column;justify-content:center;padding:40px 48px;}
 </style>
+
 <style>
 /* ---------- Tokens ---------- */
 :root{
@@ -945,9 +579,9 @@ body.onboarding-mode {
   --card-border: rgba(15,23,42,.10);
   --card-border-w: 2px;
   --card-radius: 14px;
-  --card-hover-bg: var(--ah-blue-50);
-  --card-focus-ring: var(--ah-focus-ring);
-  --card-accent: var(--ah-primary);
+  --card-hover-bg: #f7f9ff;
+  --card-focus-ring: rgba(59,130,246,.22);
+  --card-accent: #3b82f6;
 
   --field-bg: var(--card-bg);
   --field-border: var(--card-border);
@@ -1144,131 +778,9 @@ input:invalid, select:invalid, textarea:invalid {
 /* Last-resort kill for stray inline shadows */
 *[style*="box-shadow"] { box-shadow: none !important; }
 </style>
-<style>
-/* Target only mobile widths and PWA mode */
-@media (max-width: 767px){
-  html.is-pwa #open-sidebar-btn,
-  html.is-pwa #mobile-brand-logo { display: none !important; }
-}
-/* Interstitial visibility + lock scroll when in mobile browser mode */
-html.is-mobile-browser #mobile-browser-interstitial { display: flex !important; }
-html.is-mobile-browser, html.is-mobile-browser body { overflow: hidden; height: 100%; }
-</style>
-<style id="mobile-interstitial-fixes">
-/* Cover full viewport, respect notches, sit above all fixed headers */
-html.is-mobile-browser #mobile-browser-interstitial{
-  padding-top: max(env(safe-area-inset-top), 0px);
-  padding-bottom: max(env(safe-area-inset-bottom), 0px);
-  min-height: 100vh;
-}
-@supports (height: 100svh){
-  html.is-mobile-browser #mobile-browser-interstitial{ min-height: 100svh; }
-}
-@supports (height: 100dvh){
-  html.is-mobile-browser #mobile-browser-interstitial{ min-height: 100dvh; }
-}
-/* If any fixed/sticky header/nav has higher z-index, hide it in mobile-browser mode */
-html.is-mobile-browser header, 
-html.is-mobile-browser .top-nav, 
-html.is-mobile-browser #topbar, 
-html.is-mobile-browser .site-header{
-  visibility: hidden !important;
-}
-</style>
-<style id="search-always-fullwidth-mobile">
-  /* Navbar search always visible and fills center lane */
-  #navbar { display:flex; align-items:center; gap:.5rem; overflow: visible !important; }
-  #searchbox { flex: 1 1 auto !important; display: flex !important; align-items:center; gap:.5rem; }
-  #searchbox input { min-width: 0; }
 
-  /* Hide stray magnifying-glass triggers inside navbar */
-  @media (max-width: 9999px) {
-    #navbar button:has(i.fa-magnifying-glass),
-    #navbar a:has(i.fa-magnifying-glass) { display:none !important; }
-  }
-
-  /* Full-viewport dropdown on mobile */
-  @media (max-width: 767px) {
-    #search-menu, #m-search-menu {
-      position: fixed !important;
-      left: 0 !important;
-      right: 0 !important;
-      width: 100vw !important;
-      top: calc(var(--nvh, 56px) + env(safe-area-inset-top, 0px)) !important;
-      max-height: calc(100dvh - var(--nvh, 56px) - env(safe-area-inset-top, 0px)) !important;
-      margin: 0 !important;
-      border-radius: 0 !important;
-      border-top: 1px solid #e5e7eb !important;
-      background: #fff !important;
-      z-index: 1000 !important;
-      box-shadow: 0 10px 15px -3px rgba(0,0,0,.1),
-                  0  4px  6px -2px rgba(0,0,0,.05) !important;
-    }
-    #searchbox[aria-expanded="true"] {
-      border-bottom-left-radius: 0 !important;
-      border-bottom-right-radius: 0 !important;
-    }
-  }
-</style>
-<style id="ah-scrolllock-style">
-/* Hardened scroll lock to prevent double scrollbars when modal is open */
-html.ah-modal-open, body.ah-modal-open { overflow: hidden !important; height: 100% !important; }
-</style>
-<!-- PWA: iOS system splash + required metas -->
-<meta content="yes" name="apple-mobile-web-app-capable"/>
-<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
-<!-- Startup images for common iPhones (portrait) -->
-<link href="https://i.imgur.com/4QZU5pe.png" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" rel="apple-touch-startup-image"/>
-<link href="https://i.imgur.com/u51sv1r.png" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" rel="apple-touch-startup-image"/>
-<link href="https://i.imgur.com/ptKMkaV.png" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" rel="apple-touch-startup-image"/>
-<link href="https://i.imgur.com/HcPLzqL.png" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" rel="apple-touch-startup-image"/>
-<link href="https://i.imgur.com/5x08eAG.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" rel="apple-touch-startup-image"/>
+</head>
 <body class="has-bottom-bar min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
-<script id="ah-form-bootstrap-early">
-(function(){
-  // Ensure endpoint and field map exist before any submit logic runs.
-  if (typeof window.FORM_ENDPOINT === 'undefined' || !window.FORM_ENDPOINT) {
-    window.FORM_ENDPOINT = "https://docs.google.com/forms/d/e/1FAIpQLSfEwvKZjMFpCBFEfjN4aXjfQ50Tq3djKs9iOHfg_ohwB7D0Yw/formResponse";
-  }
-  if (!window.FIELD_MAP) {
-    window.FIELD_MAP = {
-      fullname:   "entry.1890826348",
-      email:      "entry.2086925124",
-      password:   "entry.483309031",
-      uni_email:  "entry.412189969",
-      year:       "entry.1336126874",
-      major:      "entry.1715561455",
-      interests:  "entry.913456439",
-      school:     "entry.1904025125",
-      pfp_url:    "entry.592106457"
-    };
-  }
-})();
-</script>
-<!-- Mobile Browser Interstitial (shown when NOT in PWA standalone) -->
-<div class="fixed inset-0 z-[9999] hidden items-center justify-center bg-white" id="mobile-browser-interstitial">
-<div class="w-full max-w-sm mx-auto px-6 text-center">
-<div class="mx-auto w-20 h-20 rounded-2xl overflow-hidden mb-4">
-<img alt="Activity Hub" class="w-full h-full object-cover select-none" loading="lazy" src="https://i.imgur.com/7dO0mhL.png"/>
-
-<!-- Footer link: subtle, bottom-pinned -->
-    <div class="interstitial-footer" aria-hidden="false">
-      <a id="interstitial-continue" href="#" class="interstitial-continue-link">
-        Continue in browser
-      </a>
-    </div>
-</div>
-<h1 class="text-2xl font-semibold mb-2">Use the early beta mobile app</h1>
-<p class="text-gray-600 mb-6">Add Activity Hub to your Home Screen to get the best experience on mobile.</p>
-<div class="space-y-2 text-sm text-gray-700">
-<p><strong>iOS (Safari):</strong> Tap <span aria-label="Share">Share</span> → <em>Add to Home Screen</em>.</p>
-<p><strong>Android (Chrome/Brave):</strong> Tap <em>⋮</em> → <em>Add to Home screen</em>.</p>
-</div>
-<div class="mt-6">
-<button class="px-4 py-2 rounded-xl border text-gray-700" id="continue-in-browser">Continue in browser</button>
-</div>
-</div>
-</div>
 <div class="flex w-full">
 <!-- ====== SIDEBAR ====== -->
 <aside class="hidden lg:flex lg:w-64 xl:w-72 lg:shrink-0 lg:sticky lg:top-0 lg:self-start lg:h-[100dvh] lg:overflow-y-auto border-r border-gray-200 sidebar-grad flex-col">
@@ -1286,6 +798,10 @@ html.ah-modal-open, body.ah-modal-open { overflow: hidden !important; height: 10
 <a aria-current="page" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" href="#"><i class="fa-solid fa-graduation-cap text-[18px]"></i> Schools</a>
 </nav>
 <div class="mt-auto p-4">
+<div class="rounded-xl border border-gray-200 p-4">
+<div class="text-sm text-gray-700 font-medium">1 profile view</div>
+<div class="text-xs text-gray-500">in the past 90 days</div>
+</div>
 <button class="w-full mt-3 flex items-center gap-2 rounded-xl border border-gray-200/70 bg-white px-4 py-3 text-[15px] font-medium text-gray-800 hover:bg-gray-50 active:scale-[.99]" id="getAppBtn"><i class="fa-solid fa-qrcode text-[18px]"></i><span>Get the app</span></button>
 </div>
 </aside>
@@ -1331,7 +847,7 @@ html.ah-modal-open, body.ah-modal-open { overflow: hidden !important; height: 10
 <i class="fa-solid fa-bars text-[20px]"></i>
 </button>
 <!-- Brand logo (mobile only) -->
-<div class="w-8 h-8 rounded-xl overflow-hidden md:hidden" id="mobile-brand-logo">
+<div class="w-8 h-8 rounded-xl overflow-hidden md:hidden">
 <img alt="Activity Hub" class="w-full h-full object-cover pointer-events-none select-none" loading="lazy" src="https://i.imgur.com/7dO0mhL.png"/>
 </div>
 <!-- Current view label (desktop only) -->
@@ -1341,14 +857,14 @@ html.ah-modal-open, body.ah-modal-open { overflow: hidden !important; height: 10
 </div>
 </div>
 <!-- MIDDLE: global search (desktop only) -->
-<div class="flex-1 mx-2 flex justify-start min-w-0">
+<div class="flex-1 mx-2 hidden md:flex justify-start min-w-0">
 <div aria-expanded="false" aria-haspopup="listbox" aria-owns="search-menu" class="relative w-full max-w-lg" id="searchbox" role="combobox">
 <!-- magnifying glass icon -->
 <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[14px]"></i>
 <!-- dynamic scope pill -->
 <span class="hidden absolute left-8 top-1/2 -translate-y-1/2" id="scope-pill"></span>
 <!-- search input -->
-<input aria-autocomplete="list" aria-controls="search-menu" autocomplete="off" class="w-full rounded-full bg-gray-50 border border-gray-300 pl-8 pr-10 py-1.5 text-[13px] text-gray-900 placeholder-gray-400 focus:bg-white focus:border-ah-500 focus:ring-2 focus:ring-ah-500/20 outline-none transition search-soft" enterkeyhint="search" id="global-search" inputmode="search" placeholder="Search clubs, businesses, projects…" type="search"/>
+<input aria-autocomplete="list" aria-controls="search-menu" class="w-full rounded-full bg-gray-50 border border-gray-300 pl-8 pr-10 py-1.5 text-[13px] text-gray-900 placeholder-gray-400 focus:bg-white focus:border-ah-500 focus:ring-2 focus:ring-ah-500/20 outline-none transition search-soft" id="global-search" placeholder="Search clubs, businesses, projects…" type="search"/>
 <!-- clear search button -->
 <button aria-label="Clear" class="hidden absolute right-8 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-[12px]" id="clear-search">
 <i class="fa-solid fa-xmark"></i>
@@ -1383,6 +899,9 @@ html.ah-modal-open, body.ah-modal-open { overflow: hidden !important; height: 10
 <!-- RIGHT: mobile search trigger + login CTA -->
 <div class="ml-auto flex items-center gap-2">
 <!-- mobile / small-screen search button -->
+<button aria-label="Search" class="md:hidden h-9 w-9 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 active:bg-gray-100" id="mobile-search-btn">
+<i class="fa-solid fa-magnifying-glass text-[18px]"></i>
+</button>
 <!-- login button (all breakpoints) -->
 <!-- Create menu (desktop only) -->
 <div class="create-menu-wrap">
@@ -1421,7 +940,7 @@ html.ah-modal-open, body.ah-modal-open { overflow: hidden !important; height: 10
 <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[14px]"></i>
 <!-- mobile scope pill -->
 <span class="hidden absolute left-8 top-1/2 -translate-y-1/2" id="m-scope-pill"></span>
-<input autocomplete="off" class="w-full rounded-full bg-gray-50 border border-gray-300 pl-8 pr-3 py-2 text-[14px] text-gray-900 placeholder-gray-400 focus:bg-white focus:border-ah-500 focus:ring-2 focus:ring-ah-500/20 outline-none transition search-soft" enterkeyhint="search" id="mobile-global-search" inputmode="search" placeholder="Search clubs, businesses, projects…" type="search"/>
+<input class="w-full rounded-full bg-gray-50 border border-gray-300 pl-8 pr-3 py-2 text-[14px] text-gray-900 placeholder-gray-400 focus:bg-white focus:border-ah-500 focus:ring-2 focus:ring-ah-500/20 outline-none transition search-soft" id="mobile-global-search" placeholder="Search clubs, businesses, projects…" type="search"/>
 <!-- Mobile dropdown (same structure) -->
 <div class="search-menu hidden" id="m-search-menu">
 <div class="rounded-xl border border-gray-200 bg-white overflow-hidden">
@@ -1475,15 +994,15 @@ html.ah-modal-open, body.ah-modal-open { overflow: hidden !important; height: 10
 <form class="space-y-4 max-w-sm w-full mx-auto">
 <div>
 <label class="block text-sm font-medium text-gray-700 mb-1">Full name</label>
-<input class="w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500" enterkeyhint="next" id="ob-fullname" placeholder="Your name" type="text"/>
+<input class="w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500" id="ob-fullname" placeholder="Your name" type="text"/>
 </div>
 <div>
 <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-<input class="w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500" enterkeyhint="next" id="ob-email" placeholder="you@example.com" type="email"/>
+<input class="w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500" id="ob-email" placeholder="you@example.com" type="email"/>
 </div>
 <div>
 <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-<input class="w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500" enterkeyhint="next" id="ob-password" placeholder="••••••••" type="password"/>
+<input class="w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500" id="ob-password" placeholder="••••••••" type="password"/>
 <p class="text-[12px] text-gray-400 mt-1">No worries, this is just a demo ✌️</p>
 </div>
 <button class="w-full mt-6 bg-ah-600 text-white rounded-lg font-medium hover:bg-ah-700 active:bg-ah-800 transition active:scale-[.99]" onclick="nextOnboardingStep('school')" type="button">
@@ -1507,7 +1026,7 @@ html.ah-modal-open, body.ah-modal-open { overflow: hidden !important; height: 10
 <div class="space-y-4 max-w-sm w-full mx-auto">
 <div>
 <label class="block text-sm font-medium text-gray-700 mb-1">University email</label>
-<input class="w-full rounded-lg border border-gray-300 ...outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500" enterkeyhint="done" id="ob-school-email" placeholder="name@stjohns.edu" type="email"/>
+<input class="w-full rounded-lg border border-gray-300 ...outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500" id="ob-school-email" placeholder="name@stjohns.edu" type="email"/>
 </div>
 <div class="hidden" id="school-detect-wrapper">
 <label class="block text-sm font-medium text-gray-700 mb-1">Matched school</label>
@@ -1626,6 +1145,8 @@ html.ah-modal-open, body.ah-modal-open { overflow: hidden !important; height: 10
 </div>
 <!-- Only on Explore -->
 <div class="space-y-6" id="explore-bars">
+
+
 </div>
 <!-- Browse -->
 <section>
@@ -1775,46 +1296,22 @@ html.ah-modal-open, body.ah-modal-open { overflow: hidden !important; height: 10
 <!-- ====== FULLPAGE DETAIL VIEW ====== -->
 <div class="hidden" id="view-detail">
 <div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-6">
-<nav class="mb-4 text-sm flex items-center justify-between gap-2">
-  <!-- Left: Back to all listings -->
-  <a class="inline-flex items-center gap-1 text-ah-700 hover:underline" href="./" id="back">
-    <i class="fa-solid fa-arrow-left"></i> All listings
-  </a>
-
-  <!-- Right: 3-dot menu (kebab) -->
-  <div class="relative" id="detail-kebab-wrapper">
-    <button type="button"
-            id="detail-kebab-btn"
-            class="inline-flex items-center justify-center h-9 w-9 rounded-full border border-gray-200 hover:bg-gray-50 bg-white"
-            aria-label="More options"
-            aria-haspopup="menu"
-            aria-expanded="false">
-      <i class="fa-solid fa-ellipsis-vertical text-gray-500"></i>
-    </button>
-
-    <!-- Dropdown menu -->
-    <div id="detail-kebab-menu"
-         class="hidden kebab-menu-dropdown w-40 rounded-lg border border-gray-200 bg-white shadow-lg py-1 text-sm z-50">
-      <button type="button"
-              id="detail-report-btn"
-              class="w-full text-left px-3 py-2 hover:bg-gray-50 text-red-600 flex items-center gap-2">
-        <i class="fa-solid fa-flag"></i>
-        <span>Report</span>
-      </button>
-    </div>
-  </div>
+<nav class="mb-4 text-sm">
+<a class="inline-flex items-center gap-1 text-ah-700 hover:underline" href="./" id="back">
+<i class="fa-solid fa-arrow-left"></i> All listings
+            </a>
 </nav>
 <article class="rounded-xl border border-gray-200 bg-white">
-<div class="pt-3 pb-6 px-6 md:pt-4 md:pb-8 md:px-8">
+<div class="p-6 md:p-8">
 <div class="flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-5">
-<img alt="" class="w-24 h-24 rounded-2xl object-contain hidden" id="d_logo"/>
-<div class="w-24 h-24 rounded-2xl grid place-items-center text-white text-lg font-semibold bg-gray-900/80" id="d_fallback"></div>
+<img alt="" class="w-20 h-20 rounded-xl object-contain bg-white p-1 ring-1 ring-gray-200 hidden" id="d_logo"/>
+<div class="w-20 h-20 rounded-xl grid place-items-center text-white text-lg font-semibold ring-1 ring-gray-200" id="d_fallback"></div>
 <div class="min-w-0 flex-1">
 <div class="flex flex-col md:flex-row items-center md:items-start justify-between gap-3 text-center md:text-left">
 <div class="min-w-0">
 <h1 class="text-2xl font-semibold tracking-tight" id="d_name"></h1>
 <p class="mt-1 text-[13px] text-gray-500" id="d_meta"></p>
-<div class="mt-2 flex flex-wrap gap-2 justify-center md:justify-center">
+<div class="mt-2 flex flex-wrap gap-2 justify-start md:justify-start">
 <span class="hidden inline-flex items-center text-[11px] px-2.5 py-1 rounded-full bg-gray-100 border border-gray-200" id="d_theme"></span>
 <span class="hidden inline-flex items-center text-[11px] px-2.5 py-1 rounded-full bg-gray-100 border border-gray-200" id="d_industry"></span>
 </div>
@@ -1854,8 +1351,8 @@ html.ah-modal-open, body.ah-modal-open { overflow: hidden !important; height: 10
 </div>
 </section>
 <section class="py-6" id="overview-contact-inline">
-<h2 class="text-lg font-semibold mb-2">Contact Info</h2>
-<div id="overview-emails" class="mt-2 flex flex-wrap gap-2"></div>
+  <h2 class="text-lg font-semibold mb-2">Contact Info</h2>
+  <div class="flex flex-wrap gap-2" id="overview-emails"></div>
 </section>
 <section class="py-6">
 <h2 class="text-lg font-semibold mb-2">Links</h2>
@@ -1924,7 +1421,7 @@ html.ah-modal-open, body.ah-modal-open { overflow: hidden !important; height: 10
 </div>
 </div>
 <div class="mt-4 flex items-center gap-2">
-<input class="flex-1 h-11 rounded-lg border border-gray-200 px-3" enterkeyhint="go" id="shareUrl" inputmode="url" readonly="readonly" type="url"/>
+<input class="flex-1 h-11 rounded-lg border border-gray-200 px-3" id="shareUrl" readonly=""/>
 <button class="h-11 px-4 rounded-lg bg-ah-600 text-white hover:bg-ah-700" id="copyShare">Copy</button>
 </div>
 <div class="mt-3 text-emerald-600 text-sm hidden" id="copied">Copied!</div>
@@ -1952,8 +1449,8 @@ html.ah-modal-open, body.ah-modal-open { overflow: hidden !important; height: 10
     const isHttp = (u)=>{try{const x=new URL(u);return x.protocol==='http:'||x.protocol==='https:';}catch(e){return false;}};
     const slugify = s => safe(s).toLowerCase().replace(/&/g,' and ').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'') || ('id-'+Math.random().toString(36).slice(2));
 
-    const BG=['var(--ah-blue-200)','#FCE7F3','#EDE9FE','#FEE2E2','#DCFCE7','#FEF3C7','#F1F5F9'];
-    const FG=['var(--ah-blue-800)','#9D174D','#5B21B6','#991B1B','#065F46','#92400E','#334155'];
+    const BG=['#DBEAFE','#FCE7F3','#EDE9FE','#FEE2E2','#DCFCE7','#FEF3C7','#F1F5F9'];
+    const FG=['#1E40AF','#9D174D','#5B21B6','#991B1B','#065F46','#92400E','#334155'];
     const hash=s=>Array.from(s).reduce((a,c)=>((a<<5)-a+c.charCodeAt(0))|0,0)>>>0;
     const colorsFor=name=>{const i=hash(name||'AH')%BG.length;return{bg:BG[i],fg:FG[i]}};
     const initials=name=> (safe(name).split(/\s+/).slice(0,2).map(p=>p[0]||'').join('')||'AH').toUpperCase();
@@ -1976,7 +1473,8 @@ html.ah-modal-open, body.ah-modal-open { overflow: hidden !important; height: 10
       const name = safe(row.org_name || row.name);
       if(!name) return null;
       return {
-        slug: slugify(name),
+        email: safe(row.email || row.emails),
+    slug: slugify(name),
         name,
         kind: kindOf(row.page_type || row.type || 'org'),
         logo: safe(row.logo_url),
@@ -2064,7 +1562,7 @@ function cardHTML(o){
             <div class="min-w-0">
               <h3 class="text-[15px] font-semibold tracking-tight truncate">${o.name}${verified}</h3>
               ${o.tagline ? `<p class="text-[13px] text-gray-500 mt-0.5 line-clamp-2">${o.tagline}</p>` : ''}
-              <div class="mt-2 flex flex-wrap gap-2 justify-center md:justify-center">
+              <div class="mt-2 flex flex-wrap gap-2 justify-start md:justify-start">
                 ${o.theme ? token(o.theme) : ''} ${o.industry ? token(o.industry) : ''} ${(()=>{let parts=[];if(school){parts.push(`<span class=\"inline-flex items-center gap-1 text-[12px] text-gray-700\"><i class=\"fa-solid fa-location-dot text-gray-500\"></i><span class=\"truncate max-w-[20ch]\">${school}</span></span>`);}if(school && members!=null){parts.push(`<span class=\"mx-1.5 text-gray-300\">&middot;</span>`);}if(members!=null){const n=Number(members)||0;parts.push(`<span class=\"inline-flex items-center gap-1 text-[12px] text-gray-700\"><span class=\"inline-block w-2 h-2 rounded-full bg-green-500\"></span><span>${n.toLocaleString()} ${n===1?'member':'members'}</span></span>`);}return parts.join('');})()}
               </div>
             </div>
@@ -2089,7 +1587,7 @@ function cardHTML(o){
             <div class="min-w-0 flex-1">
               <h3 class="text-[15px] font-semibold tracking-tight truncate">${o.name}${verified}</h3>
               ${o.tagline ? `<p class="text-[13px] text-gray-500 mt-0.5 line-clamp-2">${o.tagline}</p>` : ''}
-              <div class="mt-2 flex flex-wrap gap-2 justify-center md:justify-center">
+              <div class="mt-2 flex flex-wrap gap-2 justify-start md:justify-start">
                 ${o.theme ? token(o.theme) : ''} ${o.industry ? token(o.industry) : ''}
               </div>
               <div class="mt-3 space-y-1.5 text-[13px] text-gray-700">
@@ -3796,8 +3294,10 @@ async function routeFromURL(){
     (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
     (window.navigator.standalone === true);
 
-  // UNGATED v4: standalone PWA must NOT auto-onboard.
-// (was: if (isStandalone && !hasCompletedOnboarding()) { enterOnboarding(); return; })
+  if (isStandalone && !hasCompletedOnboarding()){
+    enterOnboarding();
+    return;
+  }
 
   // normal entry point
   routeFromURL();
@@ -4097,7 +3597,7 @@ document.addEventListener('click', function(e){
 <img alt="QR code for Activity Hub beta link" class="h-[240px] w-[240px] rounded-xl ring-1 ring-gray-200" decoding="async" id="qrImg" loading="lazy" src=""/>
 </div>
 <div class="mt-5 flex items-center gap-2">
-<input class="flex-1 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-[14px] text-gray-800" enterkeyhint="go" id="qrUrl" inputmode="url" readonly="readonly" type="url"/>
+<input class="flex-1 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-[14px] text-gray-800" id="qrUrl" readonly=""/>
 <button class="rounded-lg bg-gray-900 px-3.5 py-2 text-[14px] font-medium text-white hover:bg-gray-800 active:translate-y-[1px]" id="qrCopy">Copy link</button>
 </div>
 <p class="mt-2 hidden text-sm text-green-600" id="qrCopied">Link copied ✓</p>
@@ -4353,24 +3853,24 @@ document.addEventListener('click', function(e){
 </script>
 <!-- Mobile Bottom Bar -->
 <nav class="fixed inset-x-0 bottom-0 z-[45] md:hidden bg-white/95 backdrop-blur border-t border-gray-200 py-2" id="bottom-bar">
-<div class="h-16 flex items-center pt-[env(safe-area-inset-top)] pb-[calc(env(safe-area-inset-bottom))]">
-<a aria-current="page" class="bb-item flex-1 flex flex-col items-center justify-center gap-1 text-xs text-gray-600 aria-[current=page]:text-black min-h-[44px] py-2" data-route="home" href="?view=home">
+<div class="h-16 flex items-center justify-around pt-[env(safe-area-inset-top)] pb-[calc(env(safe-area-inset-bottom))]">
+<a aria-current="page" class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 aria-[current=page]:text-black min-h-[44px] px-4 py-2" data-route="home" href="?view=home">
 <i class="fa-solid fa-house text-[18px]"></i>
 <span>Home</span>
 </a>
-<a class="bb-item flex-1 flex flex-col items-center justify-center gap-1 text-xs text-gray-600 min-h-[44px] py-2" data-route="orgs" href="?view=orgs">
+<a class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 min-h-[44px] px-4 py-2" data-route="orgs" href="?view=orgs">
 <i class="fa-solid fa-users text-[18px]"></i>
 <span>Organizations</span>
 </a>
-<a class="bb-item flex-1 flex flex-col items-center justify-center gap-1 text-xs text-gray-600 min-h-[44px] py-2" data-route="businesses" href="?view=businesses">
+<a class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 min-h-[44px] px-4 py-2" data-route="businesses" href="?view=businesses">
 <i class="fa-solid fa-briefcase text-[18px]"></i>
 <span>Businesses</span>
 </a>
-<a class="bb-item flex-1 flex flex-col items-center justify-center gap-1 text-xs text-gray-600 min-h-[44px] py-2" data-route="projects" href="?view=projects">
+<a class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 min-h-[44px] px-4 py-2" data-route="projects" href="?view=projects">
 <i class="fa-solid fa-diagram-project text-[18px]"></i>
 <span>Projects</span>
 </a>
-<a class="bb-item flex-1 flex flex-col items-center justify-center gap-1 text-xs text-gray-600 min-h-[44px] py-2" data-route="events" href="?view=events">
+<a class="bb-item flex flex-col items-center justify-start gap-1 text-xs text-gray-600 min-h-[44px] px-4 py-2" data-route="events" href="?view=events">
 <i class="fa-solid fa-calendar-days text-[18px]"></i>
 <span>Events</span>
 </a>
@@ -4448,7 +3948,88 @@ document.addEventListener('DOMContentLoaded', function(){
   }catch(e){ /* noop */ }
 });
 </script>
-<!-- removed contact-email-populator (merged into main render) -->
+<script id="contact-email-populator">
+(function(){
+  if (window.__contactEmailInit) return; window.__contactEmailInit = true;
+
+  function slug(s){ return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,''); }
+  function parseEmails(v){
+    v = String(v||'').trim();
+    if(!v) return [];
+    // Some rows contain "https://email@domain.com/" -> strip scheme/trailing slash
+    v = v.replace(/https?:\/\//gi,'').replace(/\/+/g,'/').replace(/\/$/,'');
+    // Split by | , ; or whitespace blocks
+    const parts = v.split(/[|,;\s]+/g).map(s => s.trim()).filter(Boolean);
+    // Keep only valid-looking emails
+    const emails = parts.filter(x => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(x.toLowerCase()));
+    // De-dupe (case-insensitive)
+    return Array.from(new Set(emails.map(e => e.toLowerCase())));
+  }
+  function emailChip(addr){
+    const href = `mailto:${addr}`;
+    return `<a class="contact-item px-3 py-2 rounded-full bg-gray-100 border border-gray-200 hover:bg-gray-200 transition" href="${href}" rel="nofollow noopener" target="_self">
+      <i class="fa-solid fa-envelope"></i><span>${addr}</span>
+    </a>`;
+  }
+  function setContact(el, emails){
+    if(!el) return;
+    if(!emails || !emails.length){
+      el.innerHTML = '<div class="text-gray-500">No email provided.</div>';
+      return;
+    }
+    el.innerHTML = emails.map(emailChip).join('');
+  }
+
+  async function loadAndRender(){
+    try{
+      // Re-use global API_URL if available
+      var url = (typeof API_URL !== 'undefined' && API_URL) ? API_URL : "https://sheet2api.com/v1/ubMLioGAT8Gm/updated-listings";
+      const u = new URL(window.location.href);
+      const orgSlug = u.searchParams.get('org');
+      if(!orgSlug) return; // Not on a detail page
+
+      const res = await fetch(url, { cache: 'no-store' });
+      const raw = await res.json();
+      const rows = Array.isArray(raw) ? raw : (raw.data || []);
+
+      // Normalize rows and locate the one matching the slug
+      let hit = null;
+      for(const r of rows){
+        const name = (r.name || r.Name || '').toString();
+        const s = slug(name);
+        if(s === orgSlug){ hit = r; break; }
+      }
+      const container = document.querySelector('#overview-emails');
+      if(!hit){ setContact(container, []); return; }
+
+      // Primary: r.emails (string). Fallback: scrape r.other_links for embedded email-like tokens.
+      let emails = parseEmails(hit.emails || hit.email || '');
+      if(!emails.length && hit.other_links){
+        // pull anything that looks like an email from other_links
+        const m = String(hit.other_links||'').match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi);
+        if(m) emails = parseEmails(m.join(' '));
+      }
+      setContact(container, emails);
+    }catch(e){
+      const container = document.querySelector('#overview-emails');
+      if(container){
+        container.innerHTML = '<div class="text-red-600">Failed to load contact info.</div>';
+      }
+      console.error('Contact email render error:', e);
+    }
+  }
+
+  // Run on first load and also on history changes (if app uses SPA nav)
+  document.addEventListener('DOMContentLoaded', loadAndRender);
+  window.addEventListener('popstate', loadAndRender);
+  window.addEventListener('hashchange', loadAndRender);
+  // Also refresh when user switches to the Contact tab (if tabs are buttons)
+  document.body.addEventListener('click', function(ev){
+    const t = ev.target.closest && ev.target.closest('[data-tab="ai"], #tab-overview, [href="#overview"]');
+    if(t) setTimeout(loadAndRender, 0);
+  }, { passive: true });
+})();
+</script>
 <script id="no-hscroll-detail-script">
 (function(){
   function isDetail(){
@@ -4760,7 +4341,8 @@ document.addEventListener('DOMContentLoaded', function(){
 </div>
 <div class="text-sm text-white/90 text-center px-8 leading-tight" id="onboarding-loading-message"></div>
 </div>
-</div>
+</div>&gt;
+
 <script>
 (function(){
   const btn  = document.getElementById('createMenuBtn');
@@ -4824,7 +4406,7 @@ document.addEventListener('DOMContentLoaded', function(){
 })();
 </script>
 <!-- === AUTH MODAL === -->
-<div aria-hidden="true" aria-labelledby="authTitle" aria-modal="true" data-open="false" id="authModal" role="dialog">
+<div aria-hidden="true" aria-labelledby="authTitle" aria-modal="true" data-open="false" data-state="open" id="authModal" role="dialog">
 <div class="backdrop" data-close="true"></div>
 <div aria-live="polite" class="panel-wrap">
 <div class="panel auth-grid" role="document">
@@ -4855,18 +4437,18 @@ document.addEventListener('DOMContentLoaded', function(){
 </div>
 <div class="field">
 <label class="label" for="auth-email">Email</label>
-<input autocomplete="username" class="input" enterkeyhint="next" id="auth-email" placeholder="Enter your email address or username" type="email"/>
+<input autocomplete="username" class="input" id="auth-email" placeholder="Enter your email address or username" type="email"/>
 </div>
 <div class="field" style="margin-top:10px;">
 <div style="display:flex; justify-content:space-between; align-items:center;">
 <label class="label" for="auth-pass">Password</label>
-<a href="#" style="font-size:.86rem; color:var(--ah-primary-strong);">Forgot password</a>
+<a href="#" style="font-size:.86rem; color:#2563eb;">Forgot password</a>
 </div>
-<input autocomplete="current-password" class="input" enterkeyhint="done" id="auth-pass" placeholder="Enter your password" type="password"/>
+<input autocomplete="current-password" class="input" id="auth-pass" placeholder="Enter your password" type="password"/>
 </div>
 <div class="auth-actions">
 <button class="auth-primary" id="authLoginBtn" type="button">Log in</button>
-<div class="auth-footer">By clicking Log in, you accept Activity Hub’s <a href="#" style="color:var(--ah-primary-strong);">Terms of Service</a> and <a href="#" style="color:var(--ah-primary-strong);">Privacy Policy</a>.</div>
+<div class="auth-footer">By clicking Log in, you accept Activity Hub’s <a href="#" style="color:#2563eb;">Terms of Service</a> and <a href="#" style="color:#2563eb;">Privacy Policy</a>.</div>
 </div>
 </section>
 <div aria-labelledby="tab-signup" id="panel-signup" role="tabpanel">
@@ -4874,36 +4456,25 @@ document.addEventListener('DOMContentLoaded', function(){
 <div class="w-full max-w-[560px] mx-auto">
 <form class="space-y-5" id="dsu-form" novalidate="">
 <!-- STEP: Account -->
-<section class="space-y-3" data-step-panel="account"><!-- Avatar uploader (tap/click to pick) -->
-<div class="w-full flex items-center justify-center mb-4">
-<label class="relative grid place-items-center rounded-full shadow-xl cursor-pointer" for="dsu-pfp-file" id="dsu-pfp-uploader" style="width:132px;height:132px;background: radial-gradient(72% 72% at 50% 50%, var(--ah-blue-400), #1d4ed8);">
-<img alt="" class="hidden absolute inset-0 w-full h-full object-cover rounded-full" id="dsu-pfp-img"/>
-<i class="fa-solid fa-user text-white/95 text-6xl"></i>
-<div class="absolute -right-1 -bottom-1 w-9 h-9 rounded-full bg-white grid place-items-center shadow-lg">
-<i class="fa-solid fa-pen text-blue-600 text-base"></i>
-</div>
-</label>
-<input accept="image/*" class="hidden" id="dsu-pfp-file" type="file"/>
-</div>
+<section class="space-y-3" data-step-panel="account">
 <div>
 <label class="block text-[15px] font-medium text-gray-800 mb-2" for="dsu-fullname">Full name</label>
-<input autocomplete="name" class="w-full h-12 rounded-2xl bg-gray-50 border border-gray-200 px-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400" enterkeyhint="next" id="dsu-fullname" placeholder="Jane Doe" required="" type="text"/>
+<input autocomplete="name" class="w-full h-12 rounded-2xl bg-gray-50 border border-gray-200 px-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400" id="dsu-fullname" placeholder="Jane Doe" required="" type="text"/>
 </div>
 <div>
 <label class="block text-[15px] font-medium text-gray-800 mb-2" for="dsu-email">Email</label>
-<input autocomplete="email" class="w-full h-12 rounded-2xl bg-gray-50 border border-gray-200 px-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400" enterkeyhint="next" id="dsu-email" placeholder="name@gmail.com" required="" type="email"/>
+<input autocomplete="email" class="w-full h-12 rounded-2xl bg-gray-50 border border-gray-200 px-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400" id="dsu-email" placeholder="name@gmail.com" required="" type="email"/>
 </div>
 <div>
 <label class="block text-[15px] font-medium text-gray-800 mb-2" for="dsu-password">Password</label>
-<input autocomplete="new-password" class="w-full h-12 rounded-2xl bg-gray-50 border border-gray-200 px-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400" enterkeyhint="next" id="dsu-password" placeholder="Create a password" required="" type="password"/>
+<input autocomplete="new-password" class="w-full h-12 rounded-2xl bg-gray-50 border border-gray-200 px-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400" id="dsu-password" placeholder="Create a password" required="" type="password"/>
 </div>
 </section>
 <!-- STEP: School -->
 <section class="space-y-3 hidden" data-step-panel="school">
 <div>
 <label class="block text-[15px] font-medium text-gray-800 mb-2" for="dsu-school-email">University email</label>
-<input autocomplete="email" class="w-full h-12 rounded-2xl bg-gray-50 border border-gray-200 px-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400" enterkeyhint="done" id="dsu-school-email" placeholder="name@stjohns.edu" required="" type="email"/>
-<div aria-live="polite" class="mt-1 text-sm hidden" id="uni-email-note"></div>
+<input autocomplete="email" class="w-full h-12 rounded-2xl bg-gray-50 border border-gray-200 px-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400" id="dsu-school-email" placeholder="name@stjohns.edu" required="" type="email"/>
 <p class="text-xs text-gray-500 mt-1" id="dsu-school-hint">Use your @stjohns.edu email to verify your school.</p>
 </div>
 <div class="hidden rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm" id="dsu-school-detect">
@@ -5031,17 +4602,18 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 <script>
 (function(){
-  const IMGUR_UPLOAD_URL = "https://api.imgur.com/3/image";
-const IMGUR_CLIENT_ID = "4693c5376af54cb";
+  const FORM_ENDPOINT = "https://docs.google.com/forms/d/e/1FAIpQLSfEwvKZjMFpCBFEfjN4aXjfQ50Tq3djKs9iOHfg_ohwB7D0Yw/formResponse";
 
-
-  // Ensure FIELD_MAP exists and add pfp_url key safely
-  try {
-    window.FIELD_MAP = Object.assign({}, window.FIELD_MAP || {});
-    if (!window.FIELD_MAP.pfp_url) {
-      window.FIELD_MAP.pfp_url = "entry.592106457";
-    }
-  } catch(e) {}
+  const FIELD_MAP = {
+    fullname:  "entry.1890826348",
+    email:     "entry.2086925124",
+    password:  "entry.483309031",
+    uni_email: "entry.412189969",
+    year:      "entry.1336126874",
+    major:     "entry.1715561455",
+    interests: "entry.913456439",
+    school:    "entry.1904025125",
+  };
 
   const ONBOARDING_INTERESTS = [
     "Academic", "Cultural & Identity", "Arts & Media", "Tech & Engineering",
@@ -5089,7 +4661,7 @@ const IMGUR_CLIENT_ID = "4693c5376af54cb";
   const schoolDetectBox = signupPanel.querySelector('#dsu-school-detect');
   function updateSchoolDetector() {
     const v = (schoolInput?.value || "").trim().toLowerCase();
-    const ok = (/\.edu$/i).test(v);
+    const ok = v.endsWith("@stjohns.edu");
     if (schoolDetectBox) schoolDetectBox.classList.toggle('hidden', !ok);
     return ok;
   }
@@ -5150,7 +4722,7 @@ const IMGUR_CLIENT_ID = "4693c5376af54cb";
 
   prevBtn.addEventListener('click', ()=> showStep(stepIdx-1));
   nextBtn.addEventListener('click', ()=> { if (validateStep()) showStep(stepIdx+1); });
-  // finishBtn.addEventListener('click', handleFinish); // disabled to prevent duplicate submits
+  finishBtn.addEventListener('click', handleFinish);
 
   function collectPayload(){
     const fullname = signupPanel.querySelector('#dsu-fullname')?.value.trim() || "";
@@ -5159,14 +4731,7 @@ const IMGUR_CLIENT_ID = "4693c5376af54cb";
     const uniEmail = signupPanel.querySelector('#dsu-school-email')?.value.trim() || "";
     const year     = signupPanel.querySelector('#dsu-year')?.value || "";
     const major    = signupPanel.querySelector('#dsu-major')?.value || "";
-    const interestsCsv = (function(){
-      const root = signupPanel.querySelector('#dsu-interests');
-      if (root){
-        const labels = Array.from(root.querySelectorAll('button[data-sel="true"]')).map(b=>b.textContent.trim());
-        if (labels.length) return labels.join(", ");
-      }
-      try { return Array.from(selectedInterests).join(", "); } catch(_){ return ""; }
-    })();
+    const interestsCsv = Array.from(selectedInterests).join(", ");
 
     const school = "St. John's University";
 
@@ -5183,52 +4748,9 @@ const IMGUR_CLIENT_ID = "4693c5376af54cb";
     return {formData, school};
   }
 
-  // === Avatar upload/preview ===
-let dsuSelectedPfpFile = null;
-(function(){
-  const shell = document.getElementById('dsu-pfp-uploader');
-  const file  = document.getElementById('dsu-pfp-file');
-  const img   = document.getElementById('dsu-pfp-img');
-  if (!shell || !file) return;
-  const openPicker = ()=> file.click();
-  shell.addEventListener('click', openPicker);
-  shell.addEventListener('keydown', (e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openPicker(); }});
-  file.addEventListener('change', ()=>{
-    const f = file.files && file.files[0];
-    if(!f) return;
-    dsuSelectedPfpFile = f;
-    const reader = new FileReader();
-    reader.onload = (ev)=>{
-      img.src = ev.target.result;
-      img.classList.remove('hidden');
-    };
-    reader.readAsDataURL(f);
-  });
-})();
-
-async function uploadImageToImgur(file){
-  const fd = new FormData();
-  fd.append('image', file);
-  const res = await fetch(IMGUR_UPLOAD_URL, {
-    method: 'POST',
-    headers: { Authorization: 'Client-ID ' + IMGUR_CLIENT_ID },
-    body: fd
-  });
-  if (!res.ok) throw new Error('Imgur upload failed: ' + res.status);
-  const data = await res.json();
-  if (!data?.success || !data?.data?.link) throw new Error('Imgur response missing link');
-  return data.data.link;
-}
-
-async function handleFinish(){
-    if (window.__ahSubmitting) return; window.__ahSubmitting = true;
+  async function handleFinish(){
     if (!validateStep()) return;
-    let uploadedPfpUrl = '';
-    if (dsuSelectedPfpFile) {
-      try { uploadedPfpUrl = await uploadImageToImgur(dsuSelectedPfpFile); } catch(e) { console.warn('Imgur upload failed:', e); }
-    }
     const {formData} = collectPayload();
-    if (uploadedPfpUrl) { try { formData.append(FIELD_MAP.pfp_url, uploadedPfpUrl); } catch(_){} }
 
     try {
       await fetch(FORM_ENDPOINT, { method: "POST", mode: "no-cors", body: formData });
@@ -5315,26 +4837,16 @@ window.setActiveBottomBar = window.setActiveBottomBar || function(){ /* no-op */
 <!-- AUTH_PATCH_SIGNIN_JSON_SHEET2API -->
 <script>
 (() => {
-  // --- Multi-source endpoints (new first) ---
-  const API_URLS = [
-    'https://sheet2api.com/v1/6ZHKuaw2RnaO/created_accounts',
-    'https://sheet2api.com/v1/6ZHKuaw2RnaO/legacy-accounts'
-  ];
-
+  const API_URL = 'https://sheet2api.com/v1/6ZHKuaw2RnaO/legacy-accounts'; // JSON rows
   const loginBtn   = document.getElementById('loginBtn');
   const avatarBtn  = document.getElementById('avatarBtn');
   const emailEl    = document.getElementById('auth-email');
   const passEl     = document.getElementById('auth-pass');
-  let submitEl     = document.getElementById('authLoginBtn');
+  const submitEl   = document.getElementById('authLoginBtn');
   const errEl      = document.getElementById('auth-error');
 
   // ---------- Utilities ----------
-  const normEmail = s => String(s || '').trim().toLowerCase();
-  const cleanPwd = s => String(s ?? '')
-    .normalize('NFKC')
-    .replace(/[\u200B-\u200D\uFEFF]/g, '') // zero-widths
-    .replace(/\u00A0/g, ' ')               // NBSP -> space
-    .trim();
+  const normEmail = s => (s || '').trim().toLowerCase();
 
   function setError(msg) {
     if (!errEl) return;
@@ -5358,6 +4870,7 @@ window.setActiveBottomBar = window.setActiveBottomBar || function(){ /* no-op */
   }
 
   function closeAuthModal() {
+    // If you have a modal helper, call it instead.
     const modal = document.getElementById('authModal');
     if (modal) {
       modal.setAttribute('aria-hidden','true');
@@ -5385,38 +4898,20 @@ window.setActiveBottomBar = window.setActiveBottomBar || function(){ /* no-op */
     loginBtn?.classList.remove('hidden');
   }
 
-  // ---------- Fetch + validate (merge both sources) ----------
-  async function fetchRowsFrom(url) {
-    const res = await fetch(url, { cache: 'no-store' });
-    const status = res.status;
-    let data = [];
-    try { data = await res.json(); } catch (_) {}
-    const rows = Array.isArray(data) ? data : (data?.data || []);
-    console.log('[Auth] source', url.split('/').pop(), 'rows:', rows.length, 'status:', status);
-    return rows;
-  }
-
-  async function fetchAllRows() {
-    const all = await Promise.allSettled(API_URLS.map(fetchRowsFrom));
-    const rows = [];
-    for (const r of all) { if (r.status === 'fulfilled') rows.push(...r.value); }
-    return rows;
-  }
-
-  function normalizeRow(r){
-    return {
-      ...r,
-      Email: normEmail(r.Email || r.email),
-      Password: cleanPwd(r.Password || r.password),
-    };
+  // ---------- Fetch + validate ----------
+  async function fetchRows() {
+    const res = await fetch(API_URL, { cache: 'no-store' });
+    if (!res.ok) throw new Error('Unable to reach accounts API.');
+    const json = await res.json();
+    return Array.isArray(json) ? json : (json?.data || []);
   }
 
   async function validateCredentials(email, password) {
-    const rows = (await fetchAllRows()).map(normalizeRow);
-    const emailKey = normEmail(email);
-    const passKey  = cleanPwd(password);
-    // Prefer new source when duplicates exist: keep first occurrence (created_accounts comes first)
-    const hit = rows.find(r => r.Email === emailKey && r.Password === passKey);
+    const rows = await fetchRows();
+    const hit = rows.find(r =>
+      normEmail(r.Email) === normEmail(email) &&
+      String(r.Password) === String(password)
+    );
     return hit || null;
   }
 
@@ -5446,6 +4941,7 @@ window.setActiveBottomBar = window.setActiveBottomBar || function(){ /* no-op */
       setCurrentUser(user);
       renderAvatar(user['Profile Image URL'] || '');
       closeAuthModal();
+      // TODO: update any other UI with user data if needed
     } catch (err) {
       setError(err?.message || 'Something went wrong signing you in.');
       console.error(err);
@@ -5455,12 +4951,6 @@ window.setActiveBottomBar = window.setActiveBottomBar || function(){ /* no-op */
     }
   }
 
-  // ---------- Rebind handler to avoid old single-source handler ----------
-  if (submitEl) {
-    const clone = submitEl.cloneNode(true);
-    submitEl.parentNode.replaceChild(clone, submitEl);
-    submitEl = clone;
-  }
   submitEl?.addEventListener('click', handleLogin);
   [emailEl, passEl].forEach(el => el?.addEventListener('keydown', ev => {
     if (ev.key === 'Enter') handleLogin(ev);
@@ -5482,6 +4972,12 @@ window.setActiveBottomBar = window.setActiveBottomBar || function(){ /* no-op */
     if (!newUserRow) return;
     setCurrentUser(newUserRow);
     renderAvatar(newUserRow['Profile Image URL'] || '');
+  };
+
+  // ---------- Optional: Sign out ----------
+  window.ahSignOut = function() {
+    clearCurrentUser();
+    hideAvatarShowLogin();
   };
 })();
 </script>
@@ -5528,6 +5024,8 @@ window.setActiveBottomBar = window.setActiveBottomBar || function(){ /* no-op */
   });
 })();
 </script>
+
+
 <!-- AH Auth/Persistence Patch BEGIN -->
 <script>
 (function(){
@@ -5612,1575 +5110,7 @@ window.setActiveBottomBar = window.setActiveBottomBar || function(){ /* no-op */
 })();
 </script>
 <!-- AH Auth/Persistence Patch END -->
-<script>
-(function(){
-  function isStandalone(){
-    return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || (window.navigator && window.navigator.standalone === true);
-  }
-  function isMobile(){
-    return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-  }
-  function apply(){
-    var root = document.documentElement;
-    var pwa = isStandalone();
-    var mobile = isMobile();
-    if(pwa && mobile){
-      root.classList.add('is-pwa');
-      root.classList.remove('is-mobile-browser');
-    } else if(mobile){
-      root.classList.add('is-mobile-browser');
-      root.classList.remove('is-pwa');
-    } else {
-      root.classList.remove('is-pwa');
-      root.classList.remove('is-mobile-browser');
-    }
-  }
-  apply();
-  window.addEventListener('resize', apply, {passive:true});
-  document.addEventListener('visibilitychange', apply);
-  document.addEventListener('click', function(e){
-    var btn = e.target.closest && e.target.closest('#continue-in-browser');
-    if(btn){
-      document.documentElement.classList.remove('is-mobile-browser');
-      var inter = document.getElementById('mobile-browser-interstitial');
-      if(inter) inter.style.display = 'none';
-    }
-  });
-})();
-</script>
-<script id="search-open-on-focus">
-(function(){
-  try {
-    function setNavH(){
-      var nav = document.getElementById('navbar') || document.querySelector('nav');
-      if (!nav) return;
-      var h = nav.offsetHeight || 56;
-      document.documentElement.style.setProperty('--nvh', h + 'px');
-    }
-    setNavH(); addEventListener('resize', setNavH);
 
-    var box  = document.getElementById('searchbox');
-    var menu = document.getElementById('search-menu') || document.getElementById('m-search-menu');
-    var input = box ? (box.querySelector('#q') || box.querySelector('input[type="search"], input')) : null;
-    var clear = box ? box.querySelector('#clear-q') : null;
-    if (!box || !menu || !input) return;
 
-    function openMenu(){
-      box.setAttribute('aria-expanded','true');
-      menu.classList.remove('invisible','opacity-0');
-      if (typeof window.renderSearchEmpty === 'function' && !input.value) {
-        window.renderSearchEmpty({ mobile: matchMedia('(max-width: 767px)').matches, menuEl: menu });
-      }
-    }
-    function closeMenu(){
-      box.setAttribute('aria-expanded','false');
-      menu.classList.add('invisible','opacity-0');
-    }
-    input.addEventListener('focus', openMenu);
-    input.addEventListener('input', function(){
-      if (typeof window.renderSearchResults === 'function') {
-        window.renderSearchResults(this.value || '', { mobile: matchMedia('(max-width: 767px)').matches, menuEl: menu });
-      }
-      openMenu();
-      if (clear) clear.classList.toggle('invisible', this.value.length === 0);
-    });
-    input.addEventListener('keydown', function(e){
-      if (e.key === 'Escape'){ e.preventDefault(); closeMenu(); }
-    });
-    if (clear){
-      clear.addEventListener('click', function(){ input.value=''; input.focus(); openMenu(); });
-    }
-    document.addEventListener('click', function(e){
-      if (!box.contains(e.target) && !menu.contains(e.target)) closeMenu();
-    }, true);
-  } catch(e){ console.warn('search-open-on-focus error', e); }
-})();
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', function(){
-  try {
-    var ids = ['view-directory','view-search','view-detail','bottom-bar','topbar'];
-    ids.forEach(function(id){
-      var el = document.getElementById(id);
-      if (el) { el.classList && el.classList.remove('hidden'); el.removeAttribute && el.removeAttribute('aria-hidden'); }
-    });
-    document.body && document.body.classList && document.body.classList.remove('onboarding-mode');
-  } catch(e){}
-});
-</script>
-<script>
-(function(){
-  try {
-    var _enter = window.enterOnboarding;
-    window.enterOnboarding = function(){
-      document.body && document.body.classList && document.body.classList.add('onboarding-mode');
-      if (typeof _enter === 'function') return _enter.apply(this, arguments);
-    };
-  } catch(e){}
-  try {
-    var _exit = window.exitOnboarding;
-    window.exitOnboarding = function(){
-      document.body && document.body.classList && document.body.classList.remove('onboarding-mode');
-      if (typeof _exit === 'function') return _exit.apply(this, arguments);
-    };
-  } catch(e){}
-})();
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', function(){
-  try {
-    // Force-visible main app chrome and views
-    ['view-directory','view-search','view-detail','bottom-bar','topbar'].forEach(function(id){
-      var el = document.getElementById(id);
-      if (el){ el.classList && el.classList.remove('hidden'); el.removeAttribute && el.removeAttribute('aria-hidden'); }
-    });
-    document.body && document.body.classList && document.body.classList.remove('onboarding-mode');
-
-    // Hide any onboarding-only containers by default (still callable explicitly)
-    var ob = document.querySelectorAll('[id*="onboard" i], [class*="onboard" i], [data-onboarding], [data-view="onboarding"]');
-    ob.forEach(function(node){
-      // Only hide top-level onboarding screens, not buttons
-      if (node.tagName && /DIV|SECTION|ASIDE|MAIN|DIALOG/.test(node.tagName)){
-        node.setAttribute('hidden','');
-        node.classList && node.classList.add('hidden');
-        node.style && (node.style.display = 'none');
-      }
-    });
-
-    // Safety: If any script tries to auto-open onboarding within the first tick, close it.
-    setTimeout(function(){
-      document.body && document.body.classList && document.body.classList.remove('onboarding-mode');
-      var ob2 = document.querySelectorAll('[id*="onboard" i], [class*="onboard" i], [data-onboarding], [data-view="onboarding"]');
-      ob2.forEach(function(node){ 
-        if (node && node.offsetParent !== null) {
-          node.setAttribute('hidden','');
-          node.classList && node.classList.add('hidden');
-          node.style && (node.style.display = 'none');
-        }
-      });
-    }, 0);
-  } catch(e){}
-});
-</script>
-<script>
-(function(){
-  // Keep functions callable but never block the app.
-  var _enter = window.enterOnboarding;
-  window.enterOnboarding = function(){
-    if (window.AH_ONBOARDING_DISABLED) {
-      // If disabled, just no-op and ensure UI remains usable.
-      document.body && document.body.classList && document.body.classList.remove('onboarding-mode');
-      return; // don't open onboarding
-    }
-    if (typeof _enter === 'function') return _enter.apply(this, arguments);
-  };
-  var _exit = window.exitOnboarding;
-  window.exitOnboarding = function(){
-    document.body && document.body.classList && document.body.classList.remove('onboarding-mode');
-    if (typeof _exit === 'function') return _exit.apply(this, arguments);
-  };
-})();
-</script>
-<script>
-(function(){
-  const modal = document.getElementById('authModal');
-  if (!modal) return;
-
-  function setTab(view){
-    const loginView = (view !== 'signup');
-    const tabLogin    = document.getElementById('tab-login');
-    const tabSignup   = document.getElementById('tab-signup');
-    const panelLogin  = document.getElementById('panel-login');
-    const panelSignup = document.getElementById('panel-signup');
-    tabLogin && tabLogin.setAttribute('aria-selected', String(loginView));
-    tabSignup && tabSignup.setAttribute('aria-selected', String(!loginView));
-    if (panelLogin)  panelLogin.hidden  = !loginView;
-    if (panelSignup) panelSignup.hidden =  loginView;
-  }
-
-  function openModal(view='login'){
-    modal.setAttribute('data-open','true');
-    modal.setAttribute('data-state','open');
-    modal.removeAttribute('aria-hidden');
-    document.body.style.overflow = 'hidden';
-    setTab(view);
-    const focusEl = view === 'login' ? document.getElementById('auth-email')
-                                     : document.getElementById('tab-signup');
-    setTimeout(()=>{ focusEl && focusEl.focus && focusEl.focus({preventScroll:true}); }, 60);
-  }
-
-  // Delegated click: ensures newly created/replaced #loginBtn always works
-  document.addEventListener('click', (e) => {
-    const trigger = e.target.closest && e.target.closest('#loginBtn');
-    if (!trigger) return;
-    e.preventDefault();
-    openModal('login');
-  });
-
-  // Optional: harden logout to reset UI + modal state
-  const origSignOut = window.ahSignOut;
-  window.ahSignOut = function(){
-    try { localStorage.removeItem('ah_user_v1'); } catch(e) {}
-    const lb = document.getElementById('loginBtn');
-    const ab = document.getElementById('avatarBtn');
-    if (lb) lb.classList.remove('hidden');
-    if (ab) ab.classList.add('hidden');
-    if (typeof origSignOut === 'function') { try { origSignOut(); } catch(e) {} }
-
-    // Reset modal state
-    const m = document.getElementById('authModal');
-    if (m) {
-      m.setAttribute('data-open','false');
-      m.setAttribute('aria-hidden','true');
-      m.removeAttribute('data-state');
-    }
-    document.body && (document.body.style.overflow = '');
-  };
-})();
-</script>
-<script id="ah-auth-controller">
-(function(){
-  if (window.__ah_modal_wired) return;
-  window.__ah_modal_wired = true;
-
-  var modal = document.getElementById('authModal');
-  if (!modal) return;
-
-  function setTab(view){
-    var loginView = (view !== 'signup');
-    var tabLogin    = document.getElementById('tab-login');
-    var tabSignup   = document.getElementById('tab-signup');
-    var panelLogin  = document.getElementById('panel-login');
-    var panelSignup = document.getElementById('panel-signup');
-    if (tabLogin)  tabLogin.setAttribute('aria-selected', String(loginView));
-    if (tabSignup) tabSignup.setAttribute('aria-selected', String(!loginView));
-    if (panelLogin)  panelLogin.hidden  = !loginView;
-    if (panelSignup) panelSignup.hidden =  loginView;
-  }
-
-  function lockScroll(){
-    try {
-      document.documentElement.classList.add('ah-modal-open');
-      document.body.classList.add('ah-modal-open');
-      document.body.style.overflow = 'hidden';
-    } catch(e){}
-  }
-
-  function unlockScroll(){
-    try {
-      document.body.style.overflow = '';
-      document.documentElement.classList.remove('ah-modal-open');
-      document.body.classList.remove('ah-modal-open');
-    } catch(e){}
-  }
-
-  
-  function reallyShowModal(){
-    // Remove any "hidden" class and force display
-    modal.classList.remove('hidden');
-    if (modal.style) {
-      modal.style.display = 'block';
-      modal.style.zIndex = '9999';
-      modal.style.position = 'fixed';
-      modal.style.inset = '0';
-    }
-  }
-
-  function openAuthModal(view){
-    if (!view) view = 'login';
-    reallyShowModal();
-    modal.setAttribute('data-open','true');
-    modal.removeAttribute('aria-hidden');
-    modal.setAttribute('data-state','open');
-    lockScroll();
-    setTab(view);
-    // If any script flips it back to display:none, fix it for a short window
-    try {
-      var t0 = Date.now();
-      var mo = new MutationObserver(function(){
-        // Keep it open for ~800ms after open click
-        if (Date.now() - t0 > 800) { try{ mo.disconnect(); }catch(e){} return; }
-        var cs = window.getComputedStyle ? getComputedStyle(modal) : null;
-        if (!cs || cs.display === 'none' || modal.getAttribute('data-open') !== 'true') {
-          reallyShowModal();
-          modal.setAttribute('data-open','true');
-          modal.removeAttribute('aria-hidden');
-          modal.setAttribute('data-state','open');
-        }
-      });
-      mo.observe(modal, { attributes: true, attributeFilter: ['class','style','data-open','aria-hidden','data-state'] });
-      setTimeout(function(){ try{ mo.disconnect(); }catch(e){} }, 1200);
-    } catch(e){}
-    var focusEl = (view === 'login')
-      ? document.getElementById('auth-email')
-      : document.getElementById('tab-signup');
-    setTimeout(function(){ if (focusEl && focusEl.focus) focusEl.focus({preventScroll:true}); }, 30);
-  }
-
-  function closeAuthModal(){
-    modal.setAttribute('data-open','false');
-    modal.setAttribute('aria-hidden','true');
-    modal.removeAttribute('data-state');
-    if (modal.style) modal.style.display = 'none';
-    unlockScroll();
-  }
-
-  // Expose globally so any legacy code can reuse
-  window.ahOpenAuth = openAuthModal;
-  window.ahCloseAuth = closeAuthModal;
-
-  // Delegated login button handler (works after DOM swaps)
-  document.addEventListener('click', function(e){
-    var btn = e.target && e.target.closest && e.target.closest('#loginBtn');
-    if (btn){
-      e.preventDefault();
-      openAuthModal('login');
-    }
-  });
-
-  // Close on ESC anywhere
-  document.addEventListener('keydown', function(e){
-    if (e.key === 'Escape' || e.keyCode === 27){
-      // Only close if actually open
-      if (modal.getAttribute('data-open') === 'true'){
-        e.preventDefault();
-        closeAuthModal();
-      }
-    }
-  });
-
-  // Close on any element carrying data-close="true"
-  document.addEventListener('click', function(e){
-    var closer = e.target && e.target.closest && e.target.closest('[data-close="true"]');
-    if (closer){
-      e.preventDefault();
-      closeAuthModal();
-    }
-  });
-
-  // Ensure logout always resets UI and modal state
-  var originalSignOut = window.ahSignOut;
-  window.ahSignOut = function(){
-    try { localStorage.removeItem('ah_user_v1'); } catch(e){}
-    var lb = document.getElementById('loginBtn');
-    var ab = document.getElementById('avatarBtn');
-    if (lb) lb.classList.remove('hidden');
-    if (ab) ab.classList.add('hidden');
-    closeAuthModal();
-    if (typeof originalSignOut === 'function'){
-      try { originalSignOut(); } catch(e){}
-    }
-  };
-
-  // Defensive: If modal somehow starts half-open, force closed state.
-  // (prevents double scrollbars on initial render or after SPA transitions)
-  setTimeout(function(){
-    if (modal.getAttribute('data-open') !== 'true'){
-      closeAuthModal();
-    }
-  }, 10);
-})();
-</script>
-<script>
-// Independent, safe wiring for avatar + submit (runs even if earlier scripts failed).
-(function(){
-  const IMGUR_UPLOAD_URL = "https://api.imgur.com/3/image";
-  const IMGUR_CLIENT_ID = "4693c5376af54cb";
-  window.FORM_ENDPOINT = window.FORM_ENDPOINT || "https://docs.google.com/forms/d/e/1FAIpQLSfEwvKZjMFpCBFEfjN4aXjfQ50Tq3djKs9iOHfg_ohwB7D0Yw/formResponse";
-
-  window.FIELD_MAP = Object.assign({}, window.FIELD_MAP || {}, {
-    fullname:   (window.FIELD_MAP && window.FIELD_MAP.fullname)   || "entry.1890826348",
-    email:      (window.FIELD_MAP && window.FIELD_MAP.email)      || "entry.2086925124",
-    password:   (window.FIELD_MAP && window.FIELD_MAP.password)   || "entry.483309031",
-    uni_email:  (window.FIELD_MAP && window.FIELD_MAP.uni_email)  || "entry.412189969",
-    year:       (window.FIELD_MAP && window.FIELD_MAP.year)       || "entry.1336126874",
-    major:      (window.FIELD_MAP && window.FIELD_MAP.major)      || "entry.1715561455",
-    interests:  (window.FIELD_MAP && window.FIELD_MAP.interests)  || "entry.913456439",
-    school:     (window.FIELD_MAP && window.FIELD_MAP.school)     || "entry.1904025125",
-    pfp_url:    (window.FIELD_MAP && window.FIELD_MAP.pfp_url)    || "entry.592106457"
-  });
-
-  // Avatar preview
-  const fileInput = document.getElementById('dsu-pfp-file');
-  const imgPrev   = document.getElementById('dsu-pfp-img');
-  if (fileInput){
-    fileInput.addEventListener('change', () => {
-      const f = fileInput.files && fileInput.files[0];
-      if(!f) return;
-      const reader = new FileReader();
-      reader.onload = ev => {
-        if (imgPrev) { imgPrev.src = ev.target.result; imgPrev.classList.remove('hidden'); }
-      };
-      reader.readAsDataURL(f);
-    });
-  }
-
-  // Helper: upload to Imgur
-  async function uploadToImgur(file){
-    const fd = new FormData();
-    fd.append('image', file);
-    const res = await fetch(IMGUR_UPLOAD_URL, {
-      method: 'POST',
-      headers: { Authorization: 'Client-ID ' + IMGUR_CLIENT_ID },
-      body: fd
-    });
-    if (!res.ok) throw new Error('Imgur HTTP ' + res.status);
-    const data = await res.json();
-    if (!data || !data.success || !data.data || !data.data.link) throw new Error('Bad Imgur response');
-    return data.data.link;
-  }
-
-  // Helper: collect values
-  function v(id){ const el = document.getElementById(id); return (el && (el.value||"").trim()) || ""; }
-  function collect(){
-    // interests: try chips state, otherwise read any checked items
-    let interests = [];
-    document.querySelectorAll('#dsu-interests button[data-sel="true"]').forEach(el=> interests.push(el.textContent.trim()));
-    if (!interests.length) {
-      document.querySelectorAll('input[name="interests[]"]:checked').forEach(el=> interests.push(el.value));
-    }
-    return {
-      fullname: v('dsu-fullname') || v('signup-fullname'),
-      email: v('dsu-email') || v('signup-email'),
-      password: v('dsu-password') || v('signup-password'),
-      uni_email: v('dsu-school-email') || v('signup-uni-email'),
-      year: v('dsu-year') || v('signup-year'),
-      major: v('dsu-major') || v('signup-major'),
-      interests: interests.join(', '),
-      school: v('dsu-school') || "St. John's University"
-    };
-  }
-
-  async function safeSubmit(){
-    if (window.__ahSubmitting) return; window.__ahSubmitting = true;
-    const btn = document.getElementById('dsu-finish') || document.getElementById('btn-finish');
-    if (btn){ btn.disabled = true; btn.textContent = 'Submitting…'; }
-    try {
-      // Upload pfp if selected
-      let pfpUrl = "";
-      if (fileInput && fileInput.files && fileInput.files[0]) {
-        pfpUrl = await uploadToImgur(fileInput.files[0]);
-      }
-
-      const vals = collect();
-      const formData = new FormData();
-      for (const [k,v] of Object.entries(vals)){
-        if (FIELD_MAP[k]) formData.append(FIELD_MAP[k], v);
-      }
-      if (pfpUrl) formData.append(FIELD_MAP.pfp_url, pfpUrl);
-
-      const endpoint = FORM_ENDPOINT || (window.FORM_ENDPOINT || "");
-      if (!endpoint) { console.warn('FORM_ENDPOINT missing'); }
-      await fetch(endpoint, { method:'POST', mode:'no-cors', body: formData });
-
-      if (btn){ btn.textContent = 'Done!'; }
-    } catch (e){
-      console.error(e);
-      if (btn){ btn.textContent = 'Finish'; btn.disabled = false; }
-      alert('Submit failed: ' + e.message);
-    }
-  }
-
-  const finishBtn = document.getElementById('dsu-finish') || document.getElementById('btn-finish');
-  if (finishBtn){
-    // Attach a parallel handler that works even if earlier scripts errored
-    finishBtn.addEventListener('click', (e)=>{
-      e.preventDefault(); // ensure we control the flow
-      safeSubmit();
-    }, { once:false });
-  }
-})();
-</script>
-<script>
-(function(){
-  // Close modal + mark as logged-in after successful submit
-  window.__ah_loginFinalize = function(profile){
-    try { localStorage.setItem('ah_onboarded_v1','true'); } catch(e){}
-    try { localStorage.setItem('ah_is_logged_in','true'); } catch(e){}
-    try { if (profile && profile.email) localStorage.setItem('ah_user_email', profile.email); } catch(e){}
-    try { if (profile && profile.fullname) localStorage.setItem('ah_user_name', profile.fullname); } catch(e){}
-    try { if (profile && profile.pfp_url) localStorage.setItem('ah_user_pfp', profile.pfp_url); } catch(e){}
-
-    // Close any auth modal
-    const modal = document.getElementById('authModal');
-    if (modal){ modal.setAttribute('data-open','false'); modal.classList.add('hidden'); }
-    // Hide any loading overlay
-    const ov = document.getElementById('ah-loading-overlay');
-    if (ov){ ov.classList.add('hidden'); }
-
-    // Release scroll locks
-    document.documentElement.classList.remove('ah-modal-open');
-    document.body.classList.remove('ah-modal-open');
-
-    // Swap login to avatar (fallback if app helper absent)
-    if (typeof window.ahSwapLoginToAvatar === 'function'){
-      try { window.ahSwapLoginToAvatar(); } catch(e){}
-    } else {
-      const nav = document.getElementById('navbar') || document.querySelector('[data-nav]') || document.body;
-      let slot = nav.querySelector('#nav-auth-slot') || nav.querySelector('[data-auth-slot]');
-      if (!slot){
-        // try to hijack any "Log in" button
-        slot = Array.from(nav.querySelectorAll('button, a')).find(el => /log\s*in|sign\s*in/i.test(el.textContent||""));
-      }
-      if (slot){
-        const pfp = (profile && profile.pfp_url) || localStorage.getItem('ah_user_pfp') || '';
-        const name = (profile && profile.fullname) || localStorage.getItem('ah_user_name') || 'You';
-        const btn = document.createElement('button');
-        btn.className = 'w-9 h-9 rounded-full overflow-hidden ring-2 ring-blue-500/50';
-        if (pfp){
-          btn.innerHTML = '<img alt="avatar" src="'+pfp+'" class="w-full h-full object-cover">';
-        } else {
-          btn.innerHTML = '<i class="fa-solid fa-user text-lg"></i>';
-        }
-        try { slot.replaceWith(btn); } catch(e) { slot.parentNode && slot.parentNode.replaceChild(btn, slot); }
-      }
-    }
-    // Mark body for CSS
-    document.body.classList.add('is-authenticated');
-  };
-
-  // Patch our independent finish handler to call finalize
-  const finishBtn = document.getElementById('dsu-finish') || document.getElementById('btn-finish');
-  if (finishBtn){
-    finishBtn.addEventListener('click', function finalizeHookOnce(){
-      // The fallback submitter defined earlier will run; we also hook into a global promise if present.
-      // As a safety, after a short delay, finalize UI regardless (since Google Form POST is no-cors).
-      setTimeout(function(){
-        const prof = {
-          fullname: document.getElementById('dsu-fullname')?.value?.trim() || document.getElementById('signup-fullname')?.value?.trim() || '',
-          email: document.getElementById('dsu-email')?.value?.trim() || document.getElementById('signup-email')?.value?.trim() || '',
-          pfp_url: (document.getElementById('dsu-pfp-img')?.src && !document.getElementById('dsu-pfp-img').classList.contains('hidden'))
-                    ? localStorage.getItem('ah_user_pfp') || '' : (localStorage.getItem('ah_user_pfp') || '')
-        };
-        window.__ah_loginFinalize(prof);
-      }, 1000);
-    }, { once:false });
-  }
-})();
-</script>
-<script>
-(function() {
-  const uniInput = document.getElementById('dsu-school-email');
-  const note = document.getElementById('uni-email-note');
-
-  function isValidEdu(email) {
-    if (!email) return false;
-    email = String(email).trim().toLowerCase();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return false;
-    return email.endsWith('.edu');
-  }
-
-  function getDomain(email) {
-    if (!email) return '';
-    const at = email.indexOf('@');
-    return at === -1 ? '' : email.slice(at + 1).toLowerCase();
-  }
-
-  function updateUniversityNotice() {
-    if (!uniInput || !note) return;
-    const val = uniInput.value.trim();
-    const domain = getDomain(val);
-
-    if (!val) {
-      note.classList.add('hidden');
-      note.textContent = '';
-      return;
-    }
-
-    if (isValidEdu(val)) {
-      if (domain === 'stjohns.edu' || domain === 'my.stjohns.edu') {
-        note.textContent = "We’ve matched your email address to St. John’s University.";
-        note.classList.remove('hidden');
-        note.classList.remove('text-amber-600','text-red-600');
-        note.classList.add('text-green-600');
-        uniInput.setAttribute('data-uni-match', 'stjohns');
-      } else {
-        note.textContent = "We couldn’t find your university.";
-        note.classList.remove('hidden');
-        note.classList.remove('text-green-600','text-red-600');
-        note.classList.add('text-amber-600');
-        uniInput.setAttribute('data-uni-match', 'unknown');
-      }
-    } else {
-      note.textContent = "";
-      note.classList.add('hidden');
-      uniInput.removeAttribute('data-uni-match');
-    }
-
-    try {
-      if (typeof validateStep === 'function') validateStep();
-      if (typeof syncButtons === 'function') syncButtons();
-    } catch (e) {}
-  }
-
-  if (uniInput) {
-    ['input','change','blur'].forEach(evt => uniInput.addEventListener(evt, updateUniversityNotice));
-    setTimeout(updateUniversityNotice, 0);
-  }
-
-  try {
-    if (typeof window.updateSchoolDetector === 'function') {
-      const originalDetector = window.updateSchoolDetector;
-      window.updateSchoolDetector = function() {
-        const val = uniInput ? uniInput.value : '';
-        const ok = isValidEdu(val);
-        try { originalDetector.apply(this, arguments); } catch(e) {}
-        return ok;
-      }
-    }
-  } catch (e) {}
-})();
-</script>
-<script>
-// Signup Back Button Fix + Robust Step Controller (v2) — recognizes [data-step-panel]
-(function() {
-  function ready(fn){ if(document.readyState!=='loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }
-
-  function getSteps(panel) {
-    if (!panel) return [];
-    // Primary selector for your markup:
-    let steps = Array.from(panel.querySelectorAll('[data-step-panel]'));
-    if (steps.length === 0) {
-      // Fallbacks
-      steps = Array.from(panel.querySelectorAll('[data-dsu-step], .dsu-step, [id^="dsu-step-"], section[data-step], .signup-step'));
-    }
-    return steps;
-  }
-
-  function firstFocusable(root) {
-    if (!root) return null;
-    const sel = [
-      'input:not([disabled])',
-      'select:not([disabled])',
-      'textarea:not([disabled])',
-      'button:not([disabled])',
-      '[tabindex]:not([tabindex="-1"])',
-      'a[href]'
-    ].join(',');
-    return root.querySelector(sel);
-  }
-
-  function syncProgress(stepEl) {
-    // Optional: highlight progress pill matching this step
-    try {
-      const key = stepEl?.getAttribute('data-step-panel');
-      const pills = document.querySelectorAll('#dsu-progress [data-step]');
-      pills.forEach(li => {
-        if (li.getAttribute('data-step') === key) {
-          li.classList.add('bg-blue-600','text-white');
-          li.classList.remove('bg-gray-100','text-gray-700');
-        } else {
-          li.classList.remove('bg-blue-600','text-white');
-          li.classList.add('bg-gray-100','text-gray-700');
-        }
-      });
-    } catch(e){}
-  }
-
-  function gotoStep(panel, steps, idx) {
-    if (!panel || !steps.length) return;
-    const clamped = Math.max(0, Math.min(idx, steps.length - 1));
-    steps.forEach((el, i) => {
-      const on = i === clamped;
-      el.classList.toggle('hidden', !on);
-      el.setAttribute('aria-hidden', on ? 'false' : 'true');
-    });
-    panel.dataset.stepIndex = String(clamped);
-
-    const prevBtn = document.getElementById('dsu-prev');
-    const nextBtn = document.getElementById('dsu-next');
-    if (prevBtn) prevBtn.disabled = clamped === 0;
-    if (nextBtn) nextBtn.disabled = false;
-
-    const focusEl = firstFocusable(steps[clamped]);
-    if (focusEl) { try { focusEl.focus({preventScroll:true}); } catch(e) {} }
-
-    syncProgress(steps[clamped]);
-
-    try {
-      if (typeof validateStep === 'function') validateStep();
-      if (typeof syncButtons === 'function') syncButtons();
-    } catch(e) {}
-  }
-
-  function findCurrentIndex(steps) {
-    if (!steps.length) return 0;
-    for (let i = 0; i < steps.length; i++) {
-      const el = steps[i];
-      if (!el.classList.contains('hidden') && el.getAttribute('aria-hidden') !== 'true') {
-        return i;
-      }
-    }
-    return 0;
-  }
-
-  function initSignupController() {
-    const panel = document.getElementById('panel-signup');
-    if (!panel) return;
-    const steps = getSteps(panel);
-    if (!steps.length) return;
-
-    let idx = parseInt(panel.dataset.stepIndex || '', 10);
-    if (Number.isNaN(idx)) idx = findCurrentIndex(steps);
-    gotoStep(panel, steps, idx);
-
-    const prevBtn = document.getElementById('dsu-prev');
-    if (prevBtn && !prevBtn.dataset._wired) {
-      prevBtn.dataset._wired = '1';
-      prevBtn.addEventListener('click', function(ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-        let current = parseInt(panel.dataset.stepIndex || '0', 10) || 0;
-        gotoStep(panel, steps, current - 1);
-      });
-      prevBtn.addEventListener('keydown', function(e){
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); prevBtn.click(); }
-      });
-    }
-
-    const nextBtn = document.getElementById('dsu-next');
-    if (nextBtn && !nextBtn.dataset._wired) {
-      nextBtn.dataset._wired = '1';
-      nextBtn.addEventListener('click', function() {
-        const before = parseInt(panel.dataset.stepIndex || '0', 10) || 0;
-        setTimeout(function() {
-          let current = parseInt(panel.dataset.stepIndex || String(before), 10) || before;
-          if (current === before) {
-            try {
-              if (typeof validateStep === 'function' && !validateStep()) return;
-            } catch(e) {}
-            gotoStep(panel, steps, before + 1);
-          }
-        }, 0);
-      });
-    }
-  }
-
-  function patchSetTab() {
-    try {
-      const orig = window.setTab;
-      if (typeof orig === 'function' && !orig._patched_for_signup_steps) {
-        window.setTab = function(view) {
-          const result = orig.apply(this, arguments);
-          if (String(view).toLowerCase() === 'signup') {
-            setTimeout(initSignupController, 0);
-          }
-          return result;
-        };
-        window.setTab._patched_for_signup_steps = true;
-      }
-    } catch (e) {}
-  }
-
-  ready(function(){
-    initSignupController();
-    patchSetTab();
-    document.addEventListener('ah:auth:opened', function(e){
-      try {
-        const view = (e && e.detail && e.detail.view) ? String(e.detail.view).toLowerCase() : '';
-        if (view === 'signup') setTimeout(initSignupController, 0);
-      } catch(_){}
-    });
-  });
-})();
-</script>
-<style id="ah-interests-accessibility-css">
-  /* Desktop login/sign-up modal: interest chips */
-  #dsu-interests button {
-    transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;
-  }
-  #dsu-interests button:hover {
-    background: #f8fafc; /* hover:bg-gray-50 */
-    border-color: #d1d5db; /* hover:border-gray-300 */
-    color: #111827; /* hover:text-gray-900 */
-  }
-  #dsu-interests button:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(59,130,246,.55); /* focus ring */
-  }
-  /* Selected state: high-contrast blue pill */
-  #dsu-interests button[data-sel="true"]{
-    background: #e8f0ff;
-    color: var(--ah-primary-strong);
-    border-color: #c3d6ff;
-    box-shadow: 0 0 0 3px rgba(11,75,224,.12);
-    font-weight: 600;
-  }
-</style>
-<script id="ah-interests-accessibility-js">
-(function(){
-  function syncAria(btn){
-    const sel = (btn.getAttribute('data-sel') === 'true');
-    btn.setAttribute('aria-pressed', sel ? 'true' : 'false');
-  }
-  function enhance(){
-    const root = document.getElementById('dsu-interests');
-    if (!root) return;
-    const chips = root.querySelectorAll('button');
-    chips.forEach(btn => {
-      // Initialize aria-pressed from current data-sel
-      if (!btn.hasAttribute('aria-pressed')) syncAria(btn);
-      // Make sure keyboard focus is clear
-      btn.setAttribute('type','button');
-      btn.classList.add('ah-chip-enhanced'); // marker (no visual style by itself)
-      // Toggle handler to keep aria-pressed in sync
-      if (!btn.__ahBound){
-        btn.addEventListener('click', () => {
-          // If the app already toggles data-sel, read it after a tick
-          setTimeout(() => syncAria(btn), 0);
-        });
-        btn.__ahBound = true;
-      }
-    });
-  }
-  // Run now and also after modal/step changes
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', enhance);
-  } else {
-    enhance();
-  }
-  // If the app swaps steps dynamically, observe for chips being re-rendered
-  const obs = new MutationObserver((muts)=>{
-    for (const m of muts){
-      if (m.addedNodes && m.addedNodes.length){
-        if (document.getElementById('dsu-interests')) enhance();
-      }
-    }
-  });
-  try {
-    obs.observe(document.body, {childList:true, subtree:true});
-  } catch(e){}
-})();
-</script>
-<script id="ah-interests-hidden-sync">
-(function(){
-  function ensureHidden(){
-    const form = document.querySelector('#panel-signup #dsu-form');
-    if (!form) return null;
-    let hidden = form.querySelector('#dsu-interests-hidden');
-    if (!hidden){
-      hidden = document.createElement('input');
-      hidden.type = 'hidden';
-      hidden.id = 'dsu-interests-hidden';
-      hidden.name = 'interests'; // fallback name; fetch() still uses FIELD_MAP
-      form.appendChild(hidden);
-    }
-    return hidden;
-  }
-  function setHiddenFromSet(){
-    const hidden = ensureHidden();
-    try {
-      let csv = '';
-      const root = document.querySelector('#panel-signup #dsu-interests');
-      if (root){
-        csv = Array.from(root.querySelectorAll('button[data-sel="true"]')).map(b=>b.textContent.trim()).join(', ');
-      }
-      if (hidden) hidden.value = csv;
-    } catch(e){}
-  }
-  // Update on any click in the interests area or form changes
-  document.addEventListener('click', (e)=>{
-    if (e.target && (e.target.closest && e.target.closest('#dsu-interests'))) {
-      setTimeout(setHiddenFromSet, 0);
-    }
-  });
-  document.addEventListener('change', setHiddenFromSet);
-  document.addEventListener('DOMContentLoaded', setHiddenFromSet);
-  // Also run a periodic light sync during the signup step in case chips are re-rendered
-  setInterval(setHiddenFromSet, 800);
-})();
-</script>
-<script id="smart-enter-script">
-(function () {
-  function wireSmartEnter(formSelector) {
-    const form = document.querySelector(formSelector);
-    if (!form) return;
-
-    const all = Array.from(form.querySelectorAll('input, select, textarea'))
-      .filter(el => !el.disabled && el.offsetParent !== null);
-
-    // Only text-like inputs participate in Enter progression
-    const textLikes = all.filter(el => {
-      if (el.tagName === 'SELECT') return false;
-      const t = (el.getAttribute('type') || '').toLowerCase();
-      return el.tagName === 'TEXTAREA' ||
-             ['','text','search','email','url','password','tel','number'].includes(t);
-    });
-
-    // Set sensible enterkeyhint defaults on text-like inputs
-    textLikes.forEach((el, i) => {
-      const last = i === textLikes.length - 1;
-      if (!el.getAttribute('enterkeyhint')) {
-        el.setAttribute('enterkeyhint', last ? 'done' : 'next');
-      }
-    });
-
-    form.addEventListener('keydown', (e) => {
-      if (e.key !== 'Enter') return;
-      const active = document.activeElement;
-      if (!active) return;
-
-      // Let selects behave normally
-      if (active.tagName === 'SELECT') return;
-
-      const idx = textLikes.indexOf(active);
-      if (idx === -1) return;
-
-      // Prevent native submit so we can control flow
-      e.preventDefault();
-
-      const last = idx === textLikes.length - 1;
-      if (!last) {
-        textLikes[idx + 1].focus();
-      } else {
-        if (!form.dataset.submitting) {
-          form.dataset.submitting = '1';
-          if (form.requestSubmit) form.requestSubmit();
-          else form.submit();
-          setTimeout(() => { delete form.dataset.submitting; }, 1500);
-        }
-      }
-    });
-  }
-
-  // Wire up known forms
-  wireSmartEnter('#view-onboarding-account form');
-  wireSmartEnter('#auth-modal form');
-  wireSmartEnter('#dsu-signup-form');
-})();
-</script><script>
-/** ---------- Multi-source account validation patch (ChatGPT) ---------- **/
-(function(){
-  const AH_ACCOUNTS_SOURCES = [
-    'https://sheet2api.com/v1/6ZHKuaw2RnaO/created_accounts', // new
-    'https://sheet2api.com/v1/6ZHKuaw2RnaO/legacy-accounts',  // legacy
-  ];
-
-  async function fetchJson(url, { timeoutMs = 8000 } = {}) {
-    const ctrl = new AbortController();
-    const t = setTimeout(() => ctrl.abort(), timeoutMs);
-    try {
-      const res = await fetch(url, { signal: ctrl.signal, credentials: 'omit', cache: 'no-store' });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      return await res.json();
-    } catch (err) {
-      console.warn('[Auth] Failed to fetch', url, err);
-      return [];
-    } finally {
-      clearTimeout(t);
-    }
-  }
-
-  function mergeByEmailUnique(...lists) {
-    const seen = new Set();
-    const merged = [];
-    for (const list of lists) {
-      if (!Array.isArray(list)) continue;
-      for (const row of list) {
-        const emailKey = (row && row.Email ? String(row.Email) : '').trim().toLowerCase();
-        if (!emailKey || seen.has(emailKey)) continue;
-        seen.add(emailKey);
-        merged.push(row);
-      }
-    }
-    return merged;
-  }
-
-  function normalizeRow(row) {
-    const out = { ...row };
-    if (typeof out.Email === 'string') out.Email = out.Email.trim();
-    if (typeof out.Password === 'string') out.Password = out.Password.trim();
-    if (typeof out['Profile Image URL'] === 'string') out['Profile Image URL'] = out['Profile Image URL'].trim();
-    return out;
-  }
-
-  // Replacement: this overrides any earlier function with the same name
-  window.validateCredentials = async function(email, password) {
-    const inputEmail = (email || '').trim().toLowerCase();
-    const inputPass  = (password || '').trim();
-    const [createdRows, legacyRows] = await Promise.all(
-      AH_ACCOUNTS_SOURCES.map(u => fetchJson(u))
-    );
-    const merged = mergeByEmailUnique(createdRows, legacyRows).map(normalizeRow);
-    const match = merged.find(r =>
-      r && typeof r.Email === 'string' && typeof r.Password === 'string' &&
-      r.Email.trim().toLowerCase() === inputEmail &&
-      r.Password.trim() === inputPass
-    );
-    if (!match) return null;
-    const { Password, ...safe } = match;
-    return safe;
-  };
-
-  // Optional cached variant: call validateCredentialsCached(...) if desired
-  let __ahAccountsCache = null;
-  window.validateCredentialsCached = async function(email, password) {
-    if (!__ahAccountsCache) {
-      const [createdRows, legacyRows] = await Promise.all(
-        AH_ACCOUNTS_SOURCES.map(u => fetchJson(u))
-      );
-      __ahAccountsCache = mergeByEmailUnique(createdRows, legacyRows).map(normalizeRow);
-    }
-    const inputEmail = (email || '').trim().toLowerCase();
-    const inputPass  = (password || '').trim();
-    const match = __ahAccountsCache.find(r =>
-      r && typeof r.Email === 'string' && typeof r.Password === 'string' &&
-      r.Email.trim().toLowerCase() === inputEmail &&
-      r.Password.trim() === inputPass
-    );
-    if (!match) return null;
-    const { Password, ...safe } = match;
-    return safe;
-  };
-})();
-</script><script>
-(function(){
-  function hideInterstitial(){
-    document.documentElement.classList.remove('is-mobile-browser');
-    var overlay = document.getElementById('mobile-browser-interstitial');
-    if (overlay) overlay.style.display = 'none';
-  }
-  // Optional: remember for this session
-  function rememberDismiss(){
-    try { sessionStorage.setItem('dismissedInterstitial', '1'); } catch(e){}
-  }
-  // Click handler
-  document.addEventListener('click', function(e){
-    var t = e.target;
-    if (t && t.id === 'interstitial-continue') {
-      e.preventDefault();
-      hideInterstitial();
-      rememberDismiss();
-    }
-  }, true);
-
-  // On load, skip if dismissed already this session
-  try {
-    if (sessionStorage.getItem('dismissedInterstitial') === '1') {
-      hideInterstitial();
-    }
-  } catch(e){}
-})();
-</script>
-<script>
-(function(){
-  // Guard: only define if not already present
-  if (typeof window.makeLink !== "function") {
-    const DDG_ICON  = (host) => `https://icons.duckduckgo.com/ip3/${host}.ico`;
-    const getHost   = (url) => { try { return new URL(url).hostname.replace(/^www\./,''); } catch { return ''; } };
-    const faviconFor = (platform, href) => {
-      switch (platform) {
-        case 'website':   return DDG_ICON(getHost(href) || 'example.com');
-        case 'instagram': return DDG_ICON('instagram.com');
-        case 'x':         return DDG_ICON('x.com');
-        case 'facebook':  return DDG_ICON('facebook.com');
-        case 'linkedin':  return DDG_ICON('linkedin.com');
-        case 'youtube':   return DDG_ICON('youtube.com');
-        case 'tiktok':    return DDG_ICON('tiktok.com');
-        case 'discord':   return DDG_ICON('discord.gg');
-        case 'groupme':   return DDG_ICON('groupme.com');
-        case 'linktree':  return DDG_ICON('linktr.ee');
-        case 'email':     return DDG_ICON('gmail.com');
-        default:          return DDG_ICON('example.com');
-      }
-    };
-    window.makeLink = (platform, raw) => {
-      try {
-        // use site's existing normPlatform if present
-        const href = (typeof window.normPlatform === "function")
-          ? window.normPlatform(platform, raw)
-          : (raw || '').toString();
-        if (!href) return null;
-        return { platform, href, icon: faviconFor(platform, href) };
-      } catch (e) { return null; }
-    };
-  }
-})();
-</script>
-
-<script>
-(function(){
-  var bar = document.getElementById('bottom-bar');
-  if (!bar) return;
-
-  function onActivate(e){
-    var a = e.target && e.target.closest ? e.target.closest('[data-route]') : null;
-    if (!a) return;
-    e.preventDefault();
-    e.stopPropagation();
-
-    var view = a.getAttribute('data-route');
-    try {
-      if (typeof navigateToView === 'function') {
-        navigateToView(view, true);
-      } else {
-        // Fallback router: push state, update active states, scroll top
-        if (history && history.pushState) {
-          history.pushState({view:view}, '', '?view=' + encodeURIComponent(view));
-        }
-        if (typeof updateNavCurrent === 'function') updateNavCurrent(view);
-        if (typeof setActiveSidebar === 'function') setActiveSidebar(view);
-        if (typeof setActiveBottomBar === 'function') setActiveBottomBar(view);
-        if (typeof window.scrollTo === 'function') window.scrollTo(0, 0);
-      }
-    } catch (err) {
-      console && console.error && console.error('bottom-bar activation error:', err);
-    }
-  }
-
-  // Use pointerup for reliable touch activation; keep click as a fallback.
-  bar.addEventListener('pointerup', onActivate, { passive: true });
-  bar.addEventListener('click', onActivate, { passive: true });
-})();
-</script>
-
-
-<!-- unified-email-render: begin -->
-<script>
-(function(){
-  // Helper: de-dup & validate emails
-  function __ah_parseEmails(v){
-    try{
-      v = String(v||'').trim();
-      if(!v) return [];
-      // split by common separators
-      var parts = v.split(/[|,;\s]+/g).map(function(s){ return s.trim(); }).filter(Boolean);
-      // also strip any stray protocol fragments
-      var uniq = Array.from(new Set(parts.map(function(x){ return x.toLowerCase(); })));
-      var rx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return uniq.filter(function(x){ return rx.test(x); });
-    }catch(e){ return []; }
-  }
-
-  // Helper: derive emails from a raw row
-  function __ah_emailsFromRow(row){
-    if(!row) return [];
-    var emails = __ah_parseEmails(row.emails || row.email || "");
-    if(!emails.length && row.other_links){
-      try{
-        var matches = String(row.other_links||"").match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi);
-        if(matches) emails = __ah_parseEmails(matches.join(" "));
-      }catch(e){}
-    }
-    return emails;
-  }
-
-  // Patch normalize() to include { email, emails } on the normalized object
-  try{
-    if (typeof window !== "undefined" && typeof window.normalize === "function" && !window.__normalizeEmailPatched){
-      var __oldNormalize = window.normalize;
-      window.normalize = function(row){
-        var o = __oldNormalize(row);
-        try{
-          var emails = __ah_emailsFromRow(row);
-          if(o && Array.isArray(emails)){
-            o.emails = emails;
-            o.email = emails[0] || "";
-          }
-        }catch(e){}
-        return o;
-      };
-      window.__normalizeEmailPatched = true;
-    }
-  }catch(e){ console.warn("normalize email patch failed", e); }
-
-  // Provide Contact render helpers once
-  try{
-    if (typeof window.emailChip !== "function"){
-      window.emailChip = function(addr){
-        var href = "mailto:" + addr;
-        return '<a class="contact-item px-3 py-2 rounded-full bg-gray-100 border border-gray-200 hover:bg-gray-200 transition"'
-             + ' href="'+href+'" rel="nofollow noopener" target="_self">'
-             + ' <i class="fa-solid fa-envelope"></i><span>'+addr+'</span>'
-             + '</a>';
-      };
-    }
-    if (typeof window.setContact !== "function"){
-      window.setContact = function(el, emails){
-        if(!el) return;
-        if(!emails || !emails.length){
-          el.innerHTML = '<div class="text-gray-500">No email provided.</div>';
-          return;
-        }
-        el.innerHTML = emails.map(window.emailChip).join('');
-      };
-    }
-  }catch(e){ console.warn("contact helpers init failed", e); }
-
-  // Patch renderDetail to hydrate Overview → Contact from normalized data in the same render pass
-  try{
-    if (typeof window.renderDetail === "function" && !window.__renderDetailEmailPatched){
-      var __oldRenderDetail = window.renderDetail;
-      window.renderDetail = function(o){
-        var ret = __oldRenderDetail.apply(this, arguments);
-        try{
-          var wrap = document.querySelector('#overview-emails');
-          var emails = Array.isArray(o && o.emails) ? o.emails : (o && o.email ? [o.email] : []);
-          window.setContact && window.setContact(wrap, emails);
-        }catch(e){ console.warn("contact hydrate failed", e); }
-        return ret;
-      };
-      window.__renderDetailEmailPatched = true;
-    }
-  }catch(e){ console.warn("renderDetail email patch failed", e); }
-
-})();
-</script>
-<!-- unified-email-render: end -->
-
-<script id="detail-mode-complete-toggle">
-(function(){
-  const ROOT = document.documentElement;
-
-  function isElementVisible(el){
-    if(!el) return false;
-    const cs = getComputedStyle(el);
-    if(cs.display === 'none' || cs.visibility === 'hidden') return false;
-    return el.offsetParent !== null || cs.position === 'fixed';
-  }
-
-  function isDetailView(){
-    const detail = document.getElementById('view-detail');
-    return isElementVisible(detail);
-  }
-
-  function setDetailMode(on){
-    ROOT.classList.toggle('detail-mode', !!on);
-    // a11y
-    const topEl = document.getElementById('appTopBar') || document.querySelector('.topbar,[data-topbar]');
-    const bottomEl = document.getElementById('bottom-bar');
-    if(topEl)   topEl.setAttribute('aria-hidden', on ? 'true' : 'false');
-    if(bottomEl)bottomEl.setAttribute('aria-hidden', on ? 'true' : 'false');
-    document.body.classList.toggle('has-bottom-bar', !on);
-  }
-
-  function refresh(){ setDetailMode(isDetailView()); }
-
-  // initial
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', refresh, { once: true });
-  } else { refresh(); }
-
-  // watch detail node for visibility/class changes
-  const detail = document.getElementById('view-detail');
-  if(detail){
-    const mo = new MutationObserver(refresh);
-    mo.observe(detail, { attributes: true, attributeFilter: ['class','style','hidden'] });
-  }
-
-  // router changes
-  ['popstate','hashchange'].forEach(ev => window.addEventListener(ev, refresh));
-  const _push = history.pushState, _replace = history.replaceState;
-  history.pushState = function(){ _push.apply(this, arguments); refresh(); };
-  history.replaceState = function(){ _replace.apply(this, arguments); refresh(); };
-
-  // small rechecks
-  setTimeout(refresh, 150);
-  setTimeout(refresh, 600);
-})();
-</script>
-
-
-<style id="cta-equal-width-patch">
-/* Equal-width CTAs (Claim + Share) — last-wins patch */
-#claimBtn, #shareBtn{
-  /* make each button take equal share of the row */
-  flex: 1 1 0% !important;
-  width: auto !important;
-  max-width: none !important;
-  min-width: 0 !important;
-
-  /* center contents and unify size */
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 8px !important;
-  min-height: 48px !important;
-  padding-inline: 12px !important;
-  white-space: nowrap !important; /* avoid awkward wraps */
-}
-
-/* If only one button remains visible, it'll still expand to full width via flex:1 */
-/* Optional: slight tweak to the parent row if needed */
-#claimBtn, #shareBtn{
-  /* prevent inherited 'shrink-0' from fighting the flex grow */
-  flex-shrink: 1 !important;
-}
-</style>
-
-
-<style id="cta-equal-width-patch-v2">
-/* Force the parent row that contains both buttons to fill the full width */
-:where(.flex, .inline-flex, .block, .contents):has(> #claimBtn):has(> #shareBtn){
-  width: 100% !important;
-  max-width: none !important;
-  align-self: stretch !important;   /* override parent items-center centering */
-  justify-self: stretch !important;
-  display: grid !important;         /* grid for bulletproof equal columns */
-  grid-template-columns: 1fr 1fr !important;
-  gap: 12px !important;
-}
-
-/* Make each button fill its grid cell and look consistent */
-#claimBtn, #shareBtn{
-  width: 100% !important;
-  max-width: none !important;
-  min-width: 0 !important;
-  flex: initial !important;         /* grid now handles sizing */
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 8px !important;
-  min-height: 48px !important;
-  white-space: nowrap !important;
-}
-
-/* If only one button is visible, let it span two columns automatically */
-:where(.flex, .inline-flex, .block, .contents):has(> #claimBtn):has(> #shareBtn) > :only-child{
-  grid-column: 1 / -1 !important;
-}
-
-/* Small devices fallback: stack vertically if extremely narrow */
-@media (max-width: 360px){
-  :where(.flex, .inline-flex, .block, .contents):has(> #claimBtn):has(> #shareBtn){
-    grid-template-columns: 1fr !important;
-  }
-}
-</style>
-
-
-<style id="detail-top-gap-fix">
-/* Make the dedicated view start closer to the very top (while respecting notches) */
-html.detail-mode {
-  --detail-top-gap: max(8px, env(safe-area-inset-top, 0px));
-}
-
-/* 1) Remove any reserved top space for the hidden header */
-html.detail-mode #view-detail{
-  padding-top: var(--detail-top-gap) !important;
-}
-
-/* 2) Kill any spacer elements that were used for the top bar */
-html.detail-mode .topbar-spacer,
-html.detail-mode [data-topbar-spacer],
-html.detail-mode .app-topbar-spacer{
-  display:none !important;
-  height:0 !important;
-}
-
-/* 3) Neutralize large first-child margins (common on the 'All listings' link/hero block) */
-html.detail-mode #view-detail > :first-child{
-  margin-top: 0 !important;
-}
-
-/* 4) Safety: if the first element is a wrapper with its own first child, flatten that too */
-html.detail-mode #view-detail > :first-child > :first-child{
-  margin-top: 0 !important;
-}
-</style>
-
-
-<style id="detail-top-gap-fix-v4">
-/* Hard override the inner page wrapper that currently has Tailwind 'py-6' */
-html.detail-mode #view-detail > .mx-auto{
-  padding-top: max(4px, env(safe-area-inset-top, 0px)) !important;
-}
-
-/* Remove any extra margin on the first visible block (the back-link <nav>) */
-html.detail-mode #view-detail > .mx-auto > :first-child{
-  margin-top: 0 !important;
-}
-
-/* Optional: tighten the spacing between the back-link and the hero block */
-html.detail-mode #view-detail nav{
-  margin-bottom: 8px !important; /* from mb-4 (~16px) to 8px */
-}
-</style>
-
-<style id="detail-kebab-menu-position">
-/* Position kebab dropdown as a fixed overlay in detail view to avoid clipping in PWA */
-html.detail-mode #detail-kebab-menu.kebab-menu-dropdown{
-  position: fixed;
-  top: calc(max(env(safe-area-inset-top, 0px), 8px) + 32px);
-  right: max(16px, env(safe-area-inset-right, 0px));
-  max-width: 80vw;
-}
-</style>
-
-
-
-<script>
-(function () {
-  var kebabBtn = document.getElementById('detail-kebab-btn');
-  var kebabMenu = document.getElementById('detail-kebab-menu');
-  var reportBtn = document.getElementById('detail-report-btn');
-  var wrapper = document.getElementById('detail-kebab-wrapper');
-
-  if (!kebabBtn || !kebabMenu || !wrapper) return;
-
-  function closeMenu() {
-    kebabMenu.classList.add('hidden');
-    kebabBtn.setAttribute('aria-expanded', 'false');
-  }
-
-  function toggleMenu(e) {
-    e.stopPropagation();
-    var isOpen = !kebabMenu.classList.contains('hidden');
-    if (isOpen) {
-      closeMenu();
-    } else {
-      kebabMenu.classList.remove('hidden');
-      kebabBtn.setAttribute('aria-expanded', 'true');
-    }
-  }
-
-  kebabBtn.addEventListener('click', toggleMenu);
-
-  document.addEventListener('click', function (e) {
-    if (kebabMenu.classList.contains('hidden')) return;
-    if (!wrapper.contains(e.target)) {
-      closeMenu();
-    }
-  });
-
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' || e.key === 'Esc') {
-      closeMenu();
-    }
-  });
-
-  if (reportBtn) {
-    reportBtn.addEventListener('click', function () {
-      closeMenu();
-      // TODO: wire this up to the real report flow (modal, endpoint, etc.)
-      alert('Report clicked');
-    });
-  }
-})();
-</script>
 </body>
-</link></html>
-<script>
-// Ensure closing the auth modal always restores body scroll
-document.addEventListener('click', function(e){
-  var closeEl = e.target && e.target.closest && e.target.closest('#authModal [data-close]');
-  if (closeEl) {
-    try { document.body.style.overflow = ''; } catch(e){}
-  }
-});
-document.addEventListener('keydown', function(e){
-  if (e.key === 'Escape') {
-    try { document.body.style.overflow = ''; } catch(e){}
-  }
-});
-</script>
-<script>
-// Resilient stepper override: keeps the Continue button working even if other scripts error.
-(function(){
-  const order = Array.from(document.querySelectorAll('[data-step-panel]')).map(s=> s.getAttribute('data-step-panel'));
-  if (!order.length) return;
-  let index = Math.max(0, order.findIndex(k => !document.querySelector(`[data-step-panel="${k}"]`)?.classList.contains('hidden')));
-  if (index === -1) index = 0;
-
-  const panels = k => document.querySelector(`[data-step-panel="${k}"]`);
-  const backBtn = document.getElementById('dsu-back') || document.querySelector('button#dsu-back, button:has(#dsu-back)');
-  const nextBtn = document.getElementById('dsu-next');
-  const finishBtn = document.getElementById('dsu-finish');
-
-  function show(i){
-    index = Math.max(0, Math.min(order.length-1, i));
-    order.forEach((k, j) => {
-      const el = panels(k);
-      if (!el) return;
-      if (j === index) el.classList.remove('hidden'); else el.classList.add('hidden');
-    });
-    if (backBtn){ backBtn.disabled = (index===0); backBtn.classList.toggle('opacity-50', index===0); }
-    if (nextBtn){ nextBtn.classList.toggle('hidden', index===order.length-1); }
-    if (finishBtn){ finishBtn.classList.toggle('hidden', index!==order.length-1); }
-    // Optional: update pill highlights
-    document.querySelectorAll('#dsu-progress [data-step]').forEach(p=>{
-      const step = p.getAttribute('data-step');
-      if (!step) return;
-      const j = order.indexOf(step);
-      p.classList.toggle('bg-blue-600', j <= index);
-      p.classList.toggle('text-white', j <= index);
-    });
-  }
-
-  if (nextBtn){
-    nextBtn.addEventListener('click', (e)=>{
-      e.preventDefault();
-      // minimal validation on account step
-      if (order[index]==='account'){
-        const name = document.getElementById('dsu-fullname')?.value?.trim();
-        const email = document.getElementById('dsu-email')?.value?.trim();
-        const pwd = document.getElementById('dsu-password')?.value;
-        if (!name || !email || !pwd){
-          alert('Please fill Full name, Email, and Password.');
-          return;
-        }
-      }
-      show(index+1);
-    });
-  }
-  if (backBtn){
-    backBtn.addEventListener('click', (e)=>{ e.preventDefault(); show(index-1); });
-  }
-  show(index);
-})();
-</script>
-<script>
-(function(){
-  // 1) Fill interests if empty
-  const wrap = document.getElementById('dsu-interests');
-  const defaults = ["Academic","Cultural & Identity","Arts & Media","Tech & Engineering","Entrepreneurship","Health & Wellness","Sports & Recreation","Community Service","Business & Finance","Science & Research"];
-  if (wrap && !wrap.children.length){
-    defaults.forEach(v=>{
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.textContent = v;
-      b.setAttribute('data-value', v);
-      b.className = 'px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-50';
-      wrap.appendChild(b);
-    });
-    wrap.addEventListener('click', (e)=>{
-      const btn = e.target.closest('button[data-value]');
-      if(!btn) return;
-      btn.classList.toggle('bg-blue-600');
-      btn.classList.toggle('text-white');
-    });
-  }
-
-  // 2) Progress pill sync
-  const pills = document.querySelectorAll('#dsu-progress [data-step]');
-  const order = ['account','school','academics','interests'];
-  function setActiveStep(step){
-    const idx = order.indexOf(step);
-    pills.forEach((li,i)=>{
-      if (i <= idx){
-        li.classList.add('bg-blue-600','text-white');
-        li.classList.remove('bg-gray-100','text-gray-700');
-      } else {
-        li.classList.remove('bg-blue-600','text-white');
-        li.classList.add('bg-gray-100','text-gray-700');
-      }
-    });
-  }
-
-  // Wire to our override stepper if present
-  window.__ah_setStep = function(step){ setActiveStep(step); }
-
-  // Observe visibility changes to panels and update pills
-  const obs = new MutationObserver(()=>{
-    const cur = order.find(k => !document.querySelector(`[data-step-panel="${k}"]`)?.classList.contains('hidden'));
-    if (cur) setActiveStep(cur);
-  });
-  order.forEach(k=>{
-    const el = document.querySelector(`[data-step-panel="${k}"]`);
-    if (el) obs.observe(el, { attributes:true, attributeFilter:['class'] });
-  });
-  // Initialize once
-  const first = order.find(k => document.querySelector(`[data-step-panel="${k}"]`));
-  if (first) setActiveStep(first);
-})();
-</script>
+</html>
