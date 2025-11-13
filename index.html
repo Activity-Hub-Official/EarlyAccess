@@ -13,6 +13,23 @@ if (typeof window.esc !== 'function') {
   };
 }
 </script>
+<script>
+// Emoji/diacritics-insensitive normalizer for facet labels (global)
+if (typeof window.foldFacet !== 'function') {
+  window.foldFacet = function(s){
+    s = String(s || '').toLowerCase();
+    try {
+      s = s.replace(/\p{Extended_Pictographic}|\p{Emoji_Component}|\p{Emoji_Presentation}|\uFE0F/ug, '');
+    } catch(e) {
+      // Fallback for environments without Unicode property escapes
+      s = s.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g,'');
+    }
+    s = s.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+    return s;
+  };
+}
+</script>
+
 
   <meta name="twitter:image" content="https://i.imgur.com/ZivX6GV.png">
   <meta name="twitter:description" content="Discover campus clubs, events, and student projects in one place.">
