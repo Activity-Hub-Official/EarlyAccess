@@ -401,37 +401,29 @@ html.detail-mode #view-detail :is(#detail-logo, .detail-logo, .logo, .org-logo, 
   }
 </style>
 
-<style id="ios-statusbar-safearea-fix">
-  /* Ensure the base background matches the app surface */
-  html,
-  body {
-    background-color: #f7f8fa;
+<style id="pwa-topbar-safe-area-v1">
+  /* Tweak nav vertical padding only for standalone PWA so extra safe-area doesn't make it feel too tall */
+  html.is-pwa {
+    --nav-pad-y: 4px;
   }
 
-  /* Let the top bar flow into the iOS status bar safe area in standalone PWA */
+  /* Make the mobile PWA top bar visually extend into the iOS status bar safe-area */
   @supports (padding-top: env(safe-area-inset-top)) {
-    #appTopBar {
-      padding-top: env(safe-area-inset-top);
+    html.is-pwa #appTopBar {
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-top: constant(safe-area-inset-top, 0px); /* older iOS fallback */
+
+      /* Ensure the header background is what appears behind the status bar icons */
+      background-color: #ffffff;
     }
 
-    /* Keep the inner toolbar row at a consistent height */
-    #appTopBar > div {
-      height: 3.5rem;
+    html.is-pwa #appTopBar > .mx-auto {
+      height: 3.5rem !important; /* same as Tailwind h-14 */
+      display: flex;
       align-items: center;
     }
   }
 </style>
-
-<!-- PWA: iOS system splash + required metas -->
-<meta content="yes" name="apple-mobile-web-app-capable"/>
-<meta content="default" name="apple-mobile-web-app-status-bar-style"/>
-<meta name="theme-color" content="#f7f8fa"/>
-<!-- Startup images for common iPhones (portrait) -->
-<link href="https://i.imgur.com/4QZU5pe.png" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" rel="apple-touch-startup-image"/>
-<link href="https://i.imgur.com/u51sv1r.png" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" rel="apple-touch-startup-image"/>
-<link href="https://i.imgur.com/ptKMkaV.png" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" rel="apple-touch-startup-image"/>
-<link href="https://i.imgur.com/HcPLzqL.png" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" rel="apple-touch-startup-image"/>
-<link href="https://i.imgur.com/5x08eAG.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" rel="apple-touch-startup-image"/>
 
 </head>
 <style>
@@ -1222,6 +1214,15 @@ html.is-mobile-browser .site-header{
 /* Hardened scroll lock to prevent double scrollbars when modal is open */
 html.ah-modal-open, body.ah-modal-open { overflow: hidden !important; height: 100% !important; }
 </style>
+<!-- PWA: iOS system splash + required metas -->
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
+<!-- Startup images for common iPhones (portrait) -->
+<link href="https://i.imgur.com/4QZU5pe.png" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" rel="apple-touch-startup-image"/>
+<link href="https://i.imgur.com/u51sv1r.png" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" rel="apple-touch-startup-image"/>
+<link href="https://i.imgur.com/ptKMkaV.png" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" rel="apple-touch-startup-image"/>
+<link href="https://i.imgur.com/HcPLzqL.png" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" rel="apple-touch-startup-image"/>
+<link href="https://i.imgur.com/5x08eAG.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" rel="apple-touch-startup-image"/>
 <body class="has-bottom-bar min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
 <script id="ah-form-bootstrap-early">
 (function(){
