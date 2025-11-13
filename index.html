@@ -12,19 +12,7 @@
 <link href="https://i.imgur.com/SeNBgAx.png" rel="shortcut icon"/>
 <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.basic.min.js"></script>
-<script>
-// Optional WordPOS loader (non-blocking for file://)
-(function(){
-  try {
-    var s = document.createElement('script');
-    s.src = 'wordpos-browser.js';
-    s.async = true;
-    s.onload = function(){ window.__wordposReady = true; };
-    s.onerror = function(){ console.warn('WordPOS optional dependency not found'); };
-    document.head.appendChild(s);
-  } catch(e) { console.warn('WordPOS loader failed', e); }
-})();
-</script>
+<script src="wordpos-browser.js"></script>
 <script>
 // --- DuckDuckGo favicon helpers (GLOBAL). Must load before renderDetail ---
 (function(){
@@ -169,26 +157,30 @@ input, textarea, select { font-size: 16px; }
   background:#fcfdff;
   border:1px solid #e3e8ef;
   border-radius:16px;
+  box-shadow: 0 4px 16px rgba(17,24,39,0.05);
   transition: transform .2s ease, box-shadow .2s ease;
 }
 .soft-card:hover{
+  box-shadow:0 8px 20px rgba(17,24,39,0.08);
   transform: translateY(-1px) scale(1.01);
 }
 .fade-in{opacity:0;transform:translateY(6px);transition:opacity .3s cubic-bezier(.4,0,.2,1),transform .3s cubic-bezier(.4,0,.2,1)}
 .fade-in.show{opacity:1;transform:none}
 .nav-active{background:#e5f0ff !important; color:#0b4be0 !important; font-weight:600}
-.topbar{backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+.topbar{backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 1px 0 rgba(17,24,39,0.06);}
 .search-soft{
   background:#f3f6fa !important;
   border:1px solid #e2e7ed !important;
-  }
+  box-shadow: inset 2px 2px 6px rgba(0,0,0,.04), inset -2px -2px 6px rgba(255,255,255,.8) !important;
+}
 .card-elev{
   background:#fcfdff !important;
   border:1px solid #e3e8ef !important;
   border-radius:16px !important;
+  box-shadow:0 4px 16px rgba(17,24,39,.05) !important;
   transition: transform .2s ease, box-shadow .2s ease !important;
 }
-.card-elev:hover{ transform: translateY(-1px) scale(1.01) }
+.card-elev:hover{ box-shadow:0 8px 20px rgba(17,24,39,.08) !important; transform: translateY(-1px) scale(1.01) }
 .sidebar-grad{ background: linear-gradient(180deg,#f8fafc 0%, #f0f4f9 100%); }
 
 
@@ -244,7 +236,7 @@ input, textarea, select { font-size: 16px; }
   #shareModal .share-row::-webkit-scrollbar-thumb { background: rgba(17,24,39,.15); border-radius: 9999px; }
   #shareModal .share-chip { display:flex; flex-direction:column; align-items:center; gap:8px; text-decoration:none; }
   
-  #shareModal .share-chip:hover .share-chip__circle { transform: translateY(-1px); }
+  #shareModal .share-chip:hover .share-chip__circle { transform: translateY(-1px); box-shadow: 0 2px 6px rgba(0,0,0,.12), 0 10px 30px rgba(0,0,0,.10); }
   
   #shareModal .share-chip__label { font-size: 12px; color:#111827; }
   #shareModal .share-section-title { font-size: .875rem; color: #6B7280; margin: 6px 0 6px; }
@@ -254,7 +246,7 @@ input, textarea, select { font-size: 16px; }
     height:64px; width:64px; border-radius:9999px;
     background: transparent; /* no white fill */
     display:flex; align-items:center; justify-content:center;
-    /* no border-like ring */
+    box-shadow: none; /* no border-like ring */
     transition: transform .08s ease;
   }
   #shareModal .share-chip:hover .share-chip__circle { transform: translateY(-1px) scale(1.02); }
@@ -274,7 +266,8 @@ input, textarea, select { font-size: 16px; }
   #shareModal .share-chip:hover { background: rgba(17,24,39,.06); transform: translateY(-1px); }
   #shareModal .share-chip__circle {
     height:72px; width:72px; border-radius:9999px;
-    background: transparent; display:flex; align-items:center; justify-content:center;
+    background: transparent; box-shadow: none;
+    display:flex; align-items:center; justify-content:center;
     transition: transform .08s ease;
   }
   #shareModal .share-chip:hover .share-chip__circle { transform: scale(1.02); }
@@ -301,6 +294,7 @@ input, textarea, select { font-size: 16px; }
   #shareModal .share-chip__circle {
     height:64px; width:64px; border-radius:9999px;
     background: transparent !important;
+    box-shadow: none !important;
     border: none !important;
     display:flex; align-items:center; justify-content:center;
     transition: transform .08s ease;
@@ -354,6 +348,7 @@ input, textarea, select { font-size: 16px; }
   color:#0B4BE0 !important;
   font-weight:600 !important;
   background: transparent !important;
+  box-shadow:none !important;
   border-color: transparent !important;
 }
 #bottom-bar a[data-route]::before,
@@ -456,6 +451,7 @@ body.onboarding-mode {
   background: #ffffff;
   color: #111827;
   font-weight: 600; line-height: 1;
+  box-shadow: 0 1px 2px rgba(0,0,0,.06);
   cursor: pointer;
 }
 .create-btn:hover { background: #f9fafb; }
@@ -467,6 +463,7 @@ body.onboarding-mode {
   background: #ffffff;
   border: 1px solid rgba(0,0,0,.08);
   border-radius: .75rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
   padding: .4rem;
   display: none;
   z-index: 1000;
@@ -489,7 +486,7 @@ body.onboarding-mode {
 #createMenu{min-width: 18rem;}
 #createMenu .create-menu-item{display:flex;flex-direction:row;align-items:center;gap:0.75rem;padding:0.6rem 0.7rem;border-radius:0.75rem;}
 #createMenu .create-menu-item:hover{background:rgba(0,0,0,0.04);}
-#createMenu .icon-chip{display:inline-grid;place-items:center;width:1.9rem;height:1.9rem;border-radius:6px;}
+#createMenu .icon-chip{display:inline-grid;place-items:center;width:1.9rem;height:1.9rem;border-radius:6px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06);}
 #createMenu .icon-chip i{font-size:0.95rem;line-height:1;}
 #createMenu .create-menu-text{display:flex;flex-direction:column;line-height:1.15;}
 #createMenu .create-menu-title{font-weight:600;font-size:0.95rem;color:#0f172a;}
@@ -510,7 +507,7 @@ body.onboarding-mode {
 #authModal[data-open="true"]{display:block;}
 #authModal .backdrop{position:absolute; inset:0; background:rgba(15,23,42,.55);}
 #authModal .panel-wrap{position:absolute; inset:0; display:grid; place-items:center; overflow:auto; padding:0;}
-#authModal .panel{width:100vw; max-width:100vw; height:100vh; max-height:100vh; background:#fff; border-radius:0; }
+#authModal .panel{width:100vw; max-width:100vw; height:100vh; max-height:100vh; background:#fff; border-radius:0; box-shadow:0 20px 50px rgba(2,6,23,.25);}
 .auth-grid{display:grid; grid-template-columns:1fr; height:100vh;}
 @media (min-width: 1024px){
   .auth-grid{grid-template-columns:1.1fr 0.9fr;}
@@ -531,7 +528,7 @@ body.onboarding-mode {
 .field{display:grid; gap:6px;}
 .label{font-size:.88rem; color:#334155; font-weight:600;}
 .input{border:1px solid #e5e7eb; border-radius:12px; padding:10px 12px; outline:0;}
-.input:focus{border-color:#6366f1; }
+.input:focus{border-color:#6366f1; box-shadow:0 0 0 3px rgba(99,102,241,.18);}
 .auth-actions{display:grid; gap:10px; margin-top:12px;}
 .auth-primary{height:44px; border-radius:12px; background:#3b82f6; color:#fff; font-weight:700; display:flex; align-items:center; justify-content:center;}
 .auth-primary:hover{background:#2563eb;}
@@ -571,214 +568,6 @@ body.onboarding-mode {
 }
 #authModal .auth-form{display:flex;flex-direction:column;justify-content:center;padding:40px 48px;}
 </style>
-
-<style>
-/* ---------- Tokens ---------- */
-:root{
-  --card-bg: #ffffff;
-  --card-border: rgba(15,23,42,.10);
-  --card-border-w: 2px;
-  --card-radius: 14px;
-  --card-hover-bg: #f7f9ff;
-  --card-focus-ring: rgba(59,130,246,.22);
-  --card-accent: #3b82f6;
-
-  --field-bg: var(--card-bg);
-  --field-border: var(--card-border);
-  --field-border-w: var(--card-border-w);
-  --field-radius: 12px;
-  --field-hover-bg: var(--card-hover-bg);
-  --field-focus-ring: var(--card-focus-ring);
-}
-
-/* ---------- Navbar room so search fits ---------- */
-:root{
-  --nav-min-h: 72px;
-  --nav-pad-y: 10px;
-}
-header, nav, .site-header, .topbar, .navbar {
-  min-height: var(--nav-min-h);
-  padding-top: var(--nav-pad-y);
-  padding-bottom: var(--nav-pad-y);
-}
-
-/* ---------- Flatten all card-like surfaces ---------- */
-.card-elev,
-.soft-card,
-article.rounded-xl.border,
-div.rounded-xl.border,
-.card,
-[data-card],
-.skeleton-card,
-.panel,
-.sheet,
-.modal-surface,
-.search-soft {
-  box-shadow: none !important;
-  border: var(--card-border-w) solid var(--card-border) !important;
-  background: var(--card-bg) !important;
-  border-radius: var(--card-radius) !important;
-  transform: none !important;
-}
-
-/* ---------- Card hover: selector color (no motion) ---------- */
-a.card-elev, a.soft-card, a[data-card], a.card,
-button.card, [role="link"].card {
-  cursor: pointer;
-  position: relative;
-  transition: background-color .18s ease, border-color .18s ease;
-
-  overflow: hidden;
-}
-a.card-elev:hover,
-a.soft-card:hover,
-a[data-card]:hover,
-a.card:hover,
-button.card:hover,
-[role="link"].card:hover {
-  background: var(--card-hover-bg);
-  border-color: rgba(15,23,42,.22);
-}
-/* Left selector bar that rounds with the card radius, aligned to border width */
-a.card-elev::before,
-a.soft-card::before,
-a[data-card]::before,
-a.card::before,
-button.card::before,
-[role="link"].card::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background: var(--card-accent);
-  border-top-left-radius: var(--card-radius);
-  border-bottom-left-radius: var(--card-radius);
-  opacity: 0;
-  transition: opacity .18s ease;
-  pointer-events: none;
-}
-a.card-elev:hover::before,
-a.soft-card:hover::before,
-a[data-card]:hover::before,
-a.card:hover::before,
-button.card:hover::before,
-[role="link"].card:hover::before {
-  opacity: 1;
-}
-
-/* Focus-visible for a11y */
-a.card-elev:focus-visible,
-a.soft-card:focus-visible,
-a[data-card]:focus-visible,
-a.card:focus-visible,
-button.card:focus-visible,
-[role="link"].card:focus-visible {
-  outline: 2px solid var(--card-focus-ring);
-  outline-offset: 2px;
-}
-
-/* ---------- Fields: NO accent bar; hover/focus use tint + border ---------- */
-input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
-select, textarea {
-  -webkit-appearance: none;
-  appearance: none;
-  background: var(--field-bg) !important;
-  border: var(--field-border-w) solid var(--field-border) !important;
-  border-radius: var(--field-radius) !important;
-  box-shadow: none !important;
-  outline: none;
-  color: inherit;
-  padding: 0.625rem 0.75rem;
-  transition: background-color .18s ease, border-color .18s ease;
-}
-input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):hover,
-select:hover, textarea:hover {
-  background: var(--field-hover-bg) !important;
-  border-color: rgba(15,23,42,.22) !important;
-}
-input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):focus,
-select:focus, textarea:focus,
-input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):focus-visible,
-select:focus-visible, textarea:focus-visible {
-  background: var(--field-hover-bg) !important;
-  border-color: rgba(15,23,42,.28) !important;
-  outline: 2px solid var(--field-focus-ring) !important;
-  outline-offset: 2px !important;
-}
-input:disabled, select:disabled, textarea:disabled {
-  background: #f3f5f8 !important;
-  border-color: rgba(15,23,42,.12) !important;
-  color: #94a3b8 !important;
-  cursor: not-allowed !important;
-  box-shadow: none !important;
-}
-input::placeholder, textarea::placeholder { color: #94a3b8 !important; opacity: 1; }
-
-/* Iconed field layout */
-.input-with-icon { position: relative; }
-.input-with-icon > i, .input-with-icon > svg {
-  pointer-events: none;
-  position: absolute;
-  left: 0.9rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 18px;
-}
-.input-with-icon > input { padding-left: 2.25rem; }
-
-/* Custom select arrow */
-select {
-  background-image:
-    linear-gradient(45deg, transparent 50%, currentColor 50%),
-    linear-gradient(135deg, currentColor 50%, transparent 50%);
-  background-position:
-    calc(100% - 18px) calc(50% - 3px),
-    calc(100% - 13px) calc(50% - 3px);
-  background-size: 5px 5px, 5px 5px;
-  background-repeat: no-repeat;
-  padding-right: 2rem;
-}
-
-/* Validation feedback (border color only) */
-input:invalid, select:invalid, textarea:invalid {
-  border-color: rgba(220, 38, 38, .55) !important;
-}
-
-/* ---------- Search bar sizing (slightly shorter) ---------- */
-#global-search {
-  min-height: 52px;
-  padding-top: 12px;
-  padding-bottom: 12px;
-  font-size: 16px;
-  line-height: 1.25;
-}
-.search-soft input[type="search"],
-.search-soft input[type="text"] {
-  min-height: 52px;
-  padding-top: 12px;
-  padding-bottom: 12px;
-  font-size: 16px;
-}
-
-/* Responsive tweak for narrow screens */
-@media (max-width: 420px){
-  :root{ --nav-min-h: 64px; --nav-pad-y: 8px; }
-  #global-search,
-  .search-soft input[type="search"],
-  .search-soft input[type="text"]{
-    min-height: 50px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    font-size: 15px;
-  }
-}
-
-/* Last-resort kill for stray inline shadows */
-*[style*="box-shadow"] { box-shadow: none !important; }
-</style>
-
 </head>
 <body class="has-bottom-bar min-h-screen bg-[#f7f8fa] text-[#222831] overflow-x-hidden">
 <div class="flex w-full">
@@ -798,7 +587,7 @@ input:invalid, select:invalid, textarea:invalid {
 <a aria-current="page" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" href="#"><i class="fa-solid fa-graduation-cap text-[18px]"></i> Schools</a>
 </nav>
 <div class="mt-auto p-4">
-<div class="rounded-xl border border-gray-200 p-4">
+<div class="rounded-xl border border-gray-200 p-4 shadow-card">
 <div class="text-sm text-gray-700 font-medium">1 profile view</div>
 <div class="text-xs text-gray-500">in the past 90 days</div>
 </div>
@@ -808,7 +597,7 @@ input:invalid, select:invalid, textarea:invalid {
 <!-- Mobile sidebar drawer -->
 <div aria-hidden="true" class="lg:hidden fixed inset-0 z-40 hidden" id="sidebar-drawer">
 <button class="absolute inset-0 bg-black/40 opacity-0 transition-opacity" id="drawer-overlay"></button>
-<aside class="absolute left-0 top-0 h-full w-72 max-w-[85vw] bg-white border-r border-gray-200 -translate-x-full transition-transform duration-300" id="drawer-panel">
+<aside class="absolute left-0 top-0 h-full w-72 max-w-[85vw] bg-white border-r border-gray-200 shadow-xl -translate-x-full transition-transform duration-300" id="drawer-panel">
 <div class="flex items-center justify-between p-4">
 <div class="flex items-center gap-3">
 <div class="w-9 h-9 grid place-items-center rounded-xl ah-grad text-white font-bold"><img alt="Activity Hub" class="w-full h-full object-cover pointer-events-none" loading="lazy" src="https://i.imgur.com/7dO0mhL.png"/></div>
@@ -826,7 +615,7 @@ input:invalid, select:invalid, textarea:invalid {
 <a aria-current="page" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50" href="#"><i class="fa-solid fa-graduation-cap text-[18px]"></i> Schools</a>
 </nav>
 <div class="mt-auto p-4 border-t border-gray-100">
-<div class="rounded-xl border border-gray-200 p-4 mb-3">
+<div class="rounded-xl border border-gray-200 p-4 shadow-card mb-3">
 <div class="text-sm text-gray-700 font-medium">1 profile view</div>
 <div class="text-xs text-gray-500">in the past 90 days</div>
 </div>
@@ -847,7 +636,7 @@ input:invalid, select:invalid, textarea:invalid {
 <i class="fa-solid fa-bars text-[20px]"></i>
 </button>
 <!-- Brand logo (mobile only) -->
-<div class="w-8 h-8 rounded-xl overflow-hidden md:hidden">
+<div class="w-8 h-8 rounded-xl overflow-hidden shadow-sm md:hidden">
 <img alt="Activity Hub" class="w-full h-full object-cover pointer-events-none select-none" loading="lazy" src="https://i.imgur.com/7dO0mhL.png"/>
 </div>
 <!-- Current view label (desktop only) -->
@@ -870,10 +659,10 @@ input:invalid, select:invalid, textarea:invalid {
 <i class="fa-solid fa-xmark"></i>
 </button>
 <!-- keyboard hint "/" -->
-<span class="pointer-events-none flex items-center justify-center absolute right-2 top-1/2 -translate-y-1/2 h-5 min-w-[20px] rounded border border-gray-300 bg-white px-1 text-[10px] font-medium leading-none tracking-wider text-gray-500">/</span>
+<span class="pointer-events-none flex items-center justify-center absolute right-2 top-1/2 -translate-y-1/2 h-5 min-w-[20px] rounded border border-gray-300 bg-white px-1 text-[10px] font-medium leading-none tracking-wider text-gray-500 shadow-sm">/</span>
 <!-- dropdown menu -->
 <div class="search-menu hidden" id="search-menu">
-<div class="rounded-xl border border-gray-200 bg-white overflow-hidden">
+<div class="rounded-xl border border-gray-200 bg-white shadow-2xl overflow-hidden">
 <!-- scope tabs -->
 <div class="flex items-center gap-1 p-2 border-b border-gray-100">
 <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="all">All</button>
@@ -899,7 +688,7 @@ input:invalid, select:invalid, textarea:invalid {
 <!-- RIGHT: mobile search trigger + login CTA -->
 <div class="ml-auto flex items-center gap-2">
 <!-- mobile / small-screen search button -->
-<button aria-label="Search" class="md:hidden h-9 w-9 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 active:bg-gray-100" id="mobile-search-btn">
+<button aria-label="Search" class="md:hidden h-9 w-9 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 active:bg-gray-100 shadow-sm" id="mobile-search-btn">
 <i class="fa-solid fa-magnifying-glass text-[18px]"></i>
 </button>
 <!-- login button (all breakpoints) -->
@@ -925,7 +714,7 @@ input:invalid, select:invalid, textarea:invalid {
 <button aria-expanded="false" aria-haspopup="menu" aria-label="Account" class="hidden h-9 w-9 rounded-full border border-gray-300 bg-white overflow-hidden grid place-items-center" id="avatarBtn">
 <i class="fa-regular fa-user text-[18px] text-gray-700"></i>
 </button>
-<div aria-label="Account menu" class="hidden absolute right-0 mt-2 w-44 rounded-xl border border-gray-200 bg-white ring-1 ring-black/5 focus:outline-none z-50" id="avatarMenu" role="menu">
+<div aria-label="Account menu" class="hidden absolute right-0 mt-2 w-44 rounded-xl border border-gray-200 bg-white shadow-lg ring-1 ring-black/5 focus:outline-none z-50" id="avatarMenu" role="menu">
 <button class="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 rounded-xl" id="logoutBtn" role="menuitem" tabindex="-1">
 <i class="fa-solid fa-arrow-right-from-bracket mr-2"></i> Log out
     </button>
@@ -943,7 +732,7 @@ input:invalid, select:invalid, textarea:invalid {
 <input class="w-full rounded-full bg-gray-50 border border-gray-300 pl-8 pr-3 py-2 text-[14px] text-gray-900 placeholder-gray-400 focus:bg-white focus:border-ah-500 focus:ring-2 focus:ring-ah-500/20 outline-none transition search-soft" id="mobile-global-search" placeholder="Search clubs, businesses, projects…" type="search"/>
 <!-- Mobile dropdown (same structure) -->
 <div class="search-menu hidden" id="m-search-menu">
-<div class="rounded-xl border border-gray-200 bg-white overflow-hidden">
+<div class="rounded-xl border border-gray-200 bg-white shadow-2xl overflow-hidden">
 <div class="flex items-center gap-1 p-2 border-b border-gray-100">
 <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="all">All</button>
 <button class="search-tab px-3 py-1.5 text-sm rounded-md hover:bg-gray-50 font-medium" data-scope="orgs"><i class="fa-solid fa-users mr-1.5"></i> Orgs</button>
@@ -967,13 +756,13 @@ input:invalid, select:invalid, textarea:invalid {
 <div class="p-6 flex-1 flex flex-col items-center justify-center text-center" data-onboarding-scroll="true">
 <div class="mb-6">
 <!-- Brand Logo -->
-<img alt="Activity Hub" class="w-24 h-24 rounded-2xl object-cover pointer-events-none select-none" height="96" loading="lazy" src="https://i.imgur.com/7dO0mhL.png" width="96"/>
+<img alt="Activity Hub" class="w-24 h-24 rounded-2xl object-cover shadow pointer-events-none select-none" height="96" loading="lazy" src="https://i.imgur.com/7dO0mhL.png" width="96"/>
 </div>
 <h1 class="text-2xl font-semibold text-gray-900">Welcome to Activity Hub</h1>
 <p class="text-sm text-gray-500 mt-2 max-w-sm">
             Discover clubs, events, student businesses, and projects at St. John’s — all in one place.
           </p>
-<button aria-label="Continue with email" class="mt-8 inline-flex items-center justify-center rounded-lg bg-ah-600 text-white font-medium px-5 py-3 hover:bg-ah-700 active:bg-ah-800 active:scale-[.99] transition" onclick="nextOnboardingStep('account')" type="button">
+<button aria-label="Continue with email" class="mt-8 inline-flex items-center justify-center rounded-lg bg-ah-600 text-white font-medium px-5 py-3 shadow hover:bg-ah-700 active:bg-ah-800 active:scale-[.99] transition" onclick="nextOnboardingStep('account')" type="button">
             Continue with email
           </button>
 <p class="text-[12px] text-gray-400 mt-6">
@@ -985,7 +774,7 @@ input:invalid, select:invalid, textarea:invalid {
 <div class="hidden min-h-screen bg-white flex flex-col" id="view-onboarding-account">
 <div class="p-6 flex-1 flex flex-col" data-onboarding-scroll="true">
 <div class="text-center mb-8">
-<div class="mx-auto w-12 h-12 rounded-xl bg-ah-600 text-white flex items-center justify-center text-xl font-semibold">
+<div class="mx-auto w-12 h-12 rounded-xl bg-ah-600 text-white flex items-center justify-center text-xl font-semibold shadow">
               AH
             </div>
 <h1 class="mt-4 text-2xl font-semibold text-gray-900">Create your account</h1>
@@ -1005,7 +794,7 @@ input:invalid, select:invalid, textarea:invalid {
 <input class="w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-ah-500 focus:border-ah-500" id="ob-password" placeholder="••••••••" type="password"/>
 <p class="text-[12px] text-gray-400 mt-1">No worries, this is just a demo ✌️</p>
 </div>
-<button class="w-full mt-6 bg-ah-600 text-white rounded-lg font-medium hover:bg-ah-700 active:bg-ah-800 transition active:scale-[.99]" onclick="nextOnboardingStep('school')" type="button">
+<button class="w-full mt-6 bg-ah-600 text-white rounded-lg font-medium shadow hover:bg-ah-700 active:bg-ah-800 transition active:scale-[.99]" onclick="nextOnboardingStep('school')" type="button">
               Continue
             </button>
 </form>
@@ -1122,7 +911,7 @@ input:invalid, select:invalid, textarea:invalid {
 <button class="flex-1 rounded-lg border border-gray-300 bg-white text-gray-700 font-medium py-3 active:scale-[.99]" onclick="prevOnboardingStep('academics')" type="button">
               Back
             </button>
-<button class="flex-1 bg-ah-600 text-white rounded-lg font-medium py-3 hover:bg-ah-700 active:bg-ah-800 transition disabled:opacity-50 disabled:cursor-not-allowed" disabled="" id="ob-finish" onclick="finishOnboarding()" type="button">
+<button class="flex-1 bg-ah-600 text-white rounded-lg font-medium py-3 shadow hover:bg-ah-700 active:bg-ah-800 transition disabled:opacity-50 disabled:cursor-not-allowed" disabled="" id="ob-finish" onclick="finishOnboarding()" type="button">
               Finish
             </button>
 </div>
@@ -1171,7 +960,7 @@ input:invalid, select:invalid, textarea:invalid {
 <button class="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-gray-200 bg-white hover:bg-gray-50" id="sort-orgs-btn">
 <i class="fa-solid fa-arrow-up-wide-short"></i><span id="sort-orgs-label">Popular</span>
 </button>
-<div class="menu hidden bg-white border border-gray-200 rounded-lg overflow-hidden" id="sort-orgs-menu">
+<div class="menu hidden bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden" id="sort-orgs-menu">
 <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="relevance">Relevance</button>
 <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="az">A → Z</button>
 <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="za">Z → A</button>
@@ -1190,7 +979,7 @@ input:invalid, select:invalid, textarea:invalid {
 <button class="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-gray-200 bg-white hover:bg-gray-50" id="sort-biz-btn">
 <i class="fa-solid fa-arrow-up-wide-short"></i><span id="sort-biz-label">Popular</span>
 </button>
-<div class="menu hidden bg-white border border-gray-200 rounded-lg overflow-hidden" id="sort-biz-menu">
+<div class="menu hidden bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden" id="sort-biz-menu">
 <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="relevance">Relevance</button>
 <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="az">A → Z</button>
 <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="za">Z → A</button>
@@ -1209,7 +998,7 @@ input:invalid, select:invalid, textarea:invalid {
 <button class="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-gray-200 bg-white hover:bg-gray-50" id="sort-projects-btn">
 <i class="fa-solid fa-arrow-up-wide-short"></i><span id="sort-projects-label">Popular</span>
 </button>
-<div class="menu hidden bg-white border border-gray-200 rounded-lg overflow-hidden" id="sort-projects-menu">
+<div class="menu hidden bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden" id="sort-projects-menu">
 <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="relevance">Relevance</button>
 <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="az">A → Z</button>
 <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="za">Z → A</button>
@@ -1248,7 +1037,7 @@ input:invalid, select:invalid, textarea:invalid {
 <button class="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-gray-200 bg-white hover:bg-gray-50" id="srch-sort-btn">
 <i class="fa-solid fa-arrow-up-wide-short"></i><span id="srch-sort-label">Relevance</span>
 </button>
-<div class="menu hidden bg-white border border-gray-200 rounded-lg overflow-hidden" id="srch-sort-menu">
+<div class="menu hidden bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden" id="srch-sort-menu">
 <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="relevance">Relevance</button>
 <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="az">A → Z</button>
 <button class="menu-item px-3 py-2 hover:bg-gray-50" data-sort="za">Z → A</button>
@@ -1301,7 +1090,7 @@ input:invalid, select:invalid, textarea:invalid {
 <i class="fa-solid fa-arrow-left"></i> All listings
             </a>
 </nav>
-<article class="rounded-xl border border-gray-200 bg-white">
+<article class="rounded-xl border border-gray-200 bg-white shadow-card">
 <div class="p-6 md:p-8">
 <div class="flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-5">
 <img alt="" class="w-20 h-20 rounded-xl object-contain bg-white p-1 ring-1 ring-gray-200 hidden" id="d_logo"/>
@@ -1351,8 +1140,8 @@ input:invalid, select:invalid, textarea:invalid {
 </div>
 </section>
 <section class="py-6" id="overview-contact-inline">
-  <h2 class="text-lg font-semibold mb-2">Contact Info</h2>
-  <div class="flex flex-wrap gap-2" id="overview-emails"></div>
+<h2 class="text-lg font-semibold mb-2">Contact Info</h2>
+<div class="text-sm text-gray-700">this is a test</div>
 </section>
 <section class="py-6">
 <h2 class="text-lg font-semibold mb-2">Links</h2>
@@ -1394,7 +1183,7 @@ input:invalid, select:invalid, textarea:invalid {
 <div class="fixed inset-0 z-50 hidden" id="shareModal">
 <div class="absolute inset-0 bg-gray-900/60" data-close="share"></div>
 <div class="relative grid place-items-center min-h-dvh p-4">
-<div class="w-full max-w-md rounded-xl border border-gray-200 bg-white p-6">
+<div class="w-full max-w-md rounded-xl border border-gray-200 bg-white p-6 shadow-card">
 <div class="mt-2 flex items-center justify-between w-full pr-2">
 <h3 class="text-lg font-semibold">Share</h3>
 <button aria-label="Close" class="h-9 w-9 grid place-items-center rounded-lg border border-gray-200 hover:bg-gray-50" data-close="share">
@@ -1473,8 +1262,7 @@ input:invalid, select:invalid, textarea:invalid {
       const name = safe(row.org_name || row.name);
       if(!name) return null;
       return {
-        email: safe(row.email || row.emails),
-    slug: slugify(name),
+        slug: slugify(name),
         name,
         kind: kindOf(row.page_type || row.type || 'org'),
         logo: safe(row.logo_url),
@@ -1531,23 +1319,9 @@ input:invalid, select:invalid, textarea:invalid {
     // ---- Card & Event HTML ----
     function token(t){ return `<span class="inline-flex items-center text-[11px] px-2.5 py-1 rounded-full bg-gray-100 border border-gray-200">${t}</span>`; }
 
-    
-// Helpers — safe over file://
-if (typeof window.getSchoolLabel !== 'function') {
-  window.getSchoolLabel = function getSchoolLabel(o){
-    if (!o) return null;
-    const raw = (o.school && String(o.school).trim())
-             || (o.schoolName && String(o.schoolName).trim())
-             || (o.university && String(o.university).trim())
-             || "";
-    return raw || null;
-  };
-}
-
-function cardHTML(o){
+    function cardHTML(o){
       const hasLogo = isHttp(o.logo);
-      const school = getSchoolLabel(o);
-      const members = (o.members != null ? Number(o.members) : null);
+      const members = o.members!=null ? token(`${o.members} members`) : '';
       const verified = o.verified ? `<i class="fa-solid fa-circle-check text-sky-600 ml-1"></i>` : '';
       const c = colorsFor(o.name);
       return `
@@ -1563,7 +1337,7 @@ function cardHTML(o){
               <h3 class="text-[15px] font-semibold tracking-tight truncate">${o.name}${verified}</h3>
               ${o.tagline ? `<p class="text-[13px] text-gray-500 mt-0.5 line-clamp-2">${o.tagline}</p>` : ''}
               <div class="mt-2 flex flex-wrap gap-2 justify-start md:justify-start">
-                ${o.theme ? token(o.theme) : ''} ${o.industry ? token(o.industry) : ''} ${(()=>{let parts=[];if(school){parts.push(`<span class=\"inline-flex items-center gap-1 text-[12px] text-gray-700\"><i class=\"fa-solid fa-location-dot text-gray-500\"></i><span class=\"truncate max-w-[20ch]\">${school}</span></span>`);}if(school && members!=null){parts.push(`<span class=\"mx-1.5 text-gray-300\">&middot;</span>`);}if(members!=null){const n=Number(members)||0;parts.push(`<span class=\"inline-flex items-center gap-1 text-[12px] text-gray-700\"><span class=\"inline-block w-2 h-2 rounded-full bg-green-500\"></span><span>${n.toLocaleString()} ${n===1?'member':'members'}</span></span>`);}return parts.join('');})()}
+                ${o.theme ? token(o.theme) : ''} ${o.industry ? token(o.industry) : ''} ${members}
               </div>
             </div>
           </div>
@@ -1754,7 +1528,7 @@ $('#shareBtn').onclick = ()=>{
     function showSkeletons(gridId, n=6){
       const g = document.getElementById(gridId);
       g.innerHTML = Array.from({length:n}).map(()=>`
-        <article class="rounded-xl border border-gray-200 bg-white p-4 animate-pulse">
+        <article class="rounded-xl border border-gray-200 bg-white p-4 shadow-card animate-pulse">
           <div class="flex items-start gap-3">
             <div class="w-14 h-14 rounded-xl bg-gray-200"></div>
             <div class="flex-1 space-y-2">
@@ -2183,7 +1957,7 @@ function getSuggestion(q){
         projects:   {label:'Projects', icon:'fa-diagram-project'},
       }[searchScope];
       if(scopePill){
-        scopePill.innerHTML = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-full bg-white border border-gray-200">
+        scopePill.innerHTML = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-full bg-white border border-gray-200 shadow-sm">
           <i class="fa-solid ${meta.icon}"></i>${meta.label}
           <button type="button" id="clear-scope" class="ml-1 -mr-1 p-1 hover:bg-gray-100 rounded"><i class="fa-solid fa-xmark text-[10px]"></i></button>
         </span>`;
@@ -2207,7 +1981,7 @@ function getSuggestion(q){
         projects:   {label:'Projects', icon:'fa-diagram-project'},
       }[searchScope];
       if(mScopePill){
-        mScopePill.innerHTML = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-full bg-white border border-gray-200">
+        mScopePill.innerHTML = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-full bg-white border border-gray-200 shadow-sm">
           <i class="fa-solid ${meta.icon}"></i>${meta.label}
           <button type="button" id="m-clear-scope" class="ml-1 -mr-1 p-1 hover:bg-gray-100 rounded"><i class="fa-solid fa-xmark text-[10px]"></i></button>
         </span>`;
@@ -3311,7 +3085,7 @@ async function routeFromURL(){
 <!-- Claim Modal -->
 <div class="fixed inset-0 z-50 hidden" id="claim-modal">
 <div class="absolute inset-0 bg-black/30" data-dismiss=""></div>
-<div class="mx-auto mt-20 w-[92vw] max-w-lg rounded-2xl bg-white border border-gray-200">
+<div class="mx-auto mt-20 w-[92vw] max-w-lg rounded-2xl bg-white shadow-card border border-gray-200">
 <div class="flex items-center justify-between px-5 py-3 border-b border-gray-100">
 <h2 class="text-lg font-semibold">
         Claim this <span id="claim-type-label">listing</span>
@@ -3585,7 +3359,7 @@ document.addEventListener('click', function(e){
 <!-- Get the app (QR) modal -->
 <div class="fixed inset-0 z-[70] hidden" id="qrModal">
 <div class="absolute inset-0 bg-black/40 backdrop-blur-[1px] opacity-0 transition-opacity duration-200" id="qrOverlay"></div>
-<div class="absolute left-1/2 top-1/2 w-[min(92vw,480px)] -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white ring-1 ring-black/5 p-6 sm:p-7 transition-transform duration-200 scale-95" id="qrPanel">
+<div class="absolute left-1/2 top-1/2 w-[min(92vw,480px)] -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white shadow-2xl ring-1 ring-black/5 p-6 sm:p-7 transition-transform duration-200 scale-95" id="qrPanel">
 <div class="flex items-start justify-between">
 <h3 class="text-lg font-semibold text-gray-900">Scan to try the beta</h3>
 <button class="inline-flex h-9 w-9 items-center justify-start rounded-full hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500" id="qrClose" type="button">
@@ -3656,7 +3430,7 @@ document.addEventListener('click', function(e){
   el.innerHTML = `
   <div id="logoLightbox" class="fixed inset-0 z-[70] hidden">
     <div id="lbOverlay" class="absolute inset-0 bg-black/60 opacity-0 transition-opacity"></div>
-    <div id="lbStage" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[86vw] max-w-sm aspect-square rounded-2xl bg-white overflow-hidden scale-95 transition-transform duration-200 will-change-transform touch-none">
+    <div id="lbStage" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[86vw] max-w-sm aspect-square rounded-2xl bg-white shadow-2xl overflow-hidden scale-95 transition-transform duration-200 will-change-transform touch-none">
       <img id="lbImg" src="" alt="" class="w-full h-full object-contain bg-white select-none pointer-events-none" draggable="false"/>
       <div class="absolute top-2 right-2 flex gap-2">
         <button id="lbDownload" class="px-3 py-1.5 rounded-md bg-black/70 text-white text-sm backdrop-blur-sm">
@@ -3999,7 +3773,7 @@ document.addEventListener('DOMContentLoaded', function(){
         const s = slug(name);
         if(s === orgSlug){ hit = r; break; }
       }
-      const container = document.querySelector('#overview-emails');
+      const container = document.querySelector('#panel-contact #d_links');
       if(!hit){ setContact(container, []); return; }
 
       // Primary: r.emails (string). Fallback: scrape r.other_links for embedded email-like tokens.
@@ -4011,7 +3785,7 @@ document.addEventListener('DOMContentLoaded', function(){
       }
       setContact(container, emails);
     }catch(e){
-      const container = document.querySelector('#overview-emails');
+      const container = document.querySelector('#panel-contact #d_links');
       if(container){
         container.innerHTML = '<div class="text-red-600">Failed to load contact info.</div>';
       }
@@ -4025,7 +3799,7 @@ document.addEventListener('DOMContentLoaded', function(){
   window.addEventListener('hashchange', loadAndRender);
   // Also refresh when user switches to the Contact tab (if tabs are buttons)
   document.body.addEventListener('click', function(ev){
-    const t = ev.target.closest && ev.target.closest('[data-tab="ai"], #tab-overview, [href="#overview"]');
+    const t = ev.target.closest && ev.target.closest('[data-tab="ai"], #tab-contact, [href="#contact"]');
     if(t) setTimeout(loadAndRender, 0);
   }, { passive: true });
 })();
@@ -4782,7 +4556,7 @@ document.addEventListener('DOMContentLoaded', function(){
       ov = document.createElement('div');
       ov.id = 'ah-loading-overlay';
       ov.className = "fixed inset-0 z-[999] grid place-items-center bg-black/50";
-      ov.innerHTML = '<div class="rounded-2xl bg-white px-6 py-5"><div class="text-center"><div class="animate-spin inline-block w-6 h-6 border-2 border-gray-300 border-t-gray-900 rounded-full mb-3"></div><div class="text-sm text-gray-700">Personalizing clubs for you…</div></div></div>';
+      ov.innerHTML = '<div class="rounded-2xl bg-white px-6 py-5 shadow-lg"><div class="text-center"><div class="animate-spin inline-block w-6 h-6 border-2 border-gray-300 border-t-gray-900 rounded-full mb-3"></div><div class="text-sm text-gray-700">Personalizing clubs for you…</div></div></div>';
       document.body.appendChild(ov);
     } else {
       ov.classList.remove('hidden');
