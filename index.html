@@ -400,6 +400,27 @@ html.detail-mode #view-detail :is(#detail-logo, .detail-logo, .logo, .org-logo, 
     }
   }
 </style>
+
+<style id="ios-statusbar-safearea-fix">
+  /* Ensure the base background matches the app surface */
+  html,
+  body {
+    background-color: #f7f8fa;
+  }
+
+  /* Let the top bar flow into the iOS status bar safe area in standalone PWA */
+  @supports (padding-top: env(safe-area-inset-top)) {
+    #appTopBar {
+      padding-top: env(safe-area-inset-top);
+    }
+
+    /* Keep the inner toolbar row at a consistent height */
+    #appTopBar > div {
+      height: 3.5rem;
+      align-items: center;
+    }
+  }
+</style>
 </head>
 <style>
 /* Bottom footer link for interstitial */
@@ -1191,7 +1212,8 @@ html.ah-modal-open, body.ah-modal-open { overflow: hidden !important; height: 10
 </style>
 <!-- PWA: iOS system splash + required metas -->
 <meta content="yes" name="apple-mobile-web-app-capable"/>
-<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
+<meta content="default" name="apple-mobile-web-app-status-bar-style"/>
+<meta name="theme-color" content="#f7f8fa"/>
 <!-- Startup images for common iPhones (portrait) -->
 <link href="https://i.imgur.com/4QZU5pe.png" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" rel="apple-touch-startup-image"/>
 <link href="https://i.imgur.com/u51sv1r.png" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" rel="apple-touch-startup-image"/>
